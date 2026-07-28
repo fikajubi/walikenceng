@@ -191,7 +191,7 @@
                 <div id="initialPaymentGroup" class="space-y-2.5">
                     <div>
                         <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Pendaftaran (DDMMYYYY)</label>
-                        <input type="date" id="form-peserta-tgl" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
+                        <input type="text" id="form-peserta-tgl" placeholder="28072026" maxlength="8" pattern="[0-9]{8}" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
                     </div>
                     <div>
                         <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Pembayaran Awal / DP (Rp)</label>
@@ -214,8 +214,8 @@
             <form onsubmit="handleBayarSubmit(event)" class="space-y-2.5">
                 <input type="hidden" id="form-cicilan-id" value="">
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi</label>
-                    <input type="date" id="form-bayar-tgl" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi (DDMMYYYY)</label>
+                    <input type="text" id="form-bayar-tgl" placeholder="28072026" maxlength="8" pattern="[0-9]{8}" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Keterangan Pembayaran</label>
@@ -291,7 +291,14 @@
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
 
-        // Fetch API GET Data dari Google Sheets
+        function getCurrentDDMMYYYY() {
+            const today = new Date();
+            const d = String(today.getDate()).padStart(2, '0');
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const y = today.getFullYear();
+            return `${d}${m}${y}`;
+        }
+
         function loadDataFromServer() {
             showLoading("Mengambil Data Google Sheets...");
             fetch(SCRIPT_URL + "?action=getData")
@@ -307,7 +314,6 @@
                 });
         }
 
-        // Fetch API POST Data ke Google Sheets
         function postDataToServer(actionName, payload, callbackSuccess) {
             showLoading("Proses Menyimpan Ke Server...");
             fetch(SCRIPT_URL, {
@@ -333,12 +339,6 @@
 
         function formatShortRupiah(num) {
             return num >= 1000 ? (num / 1000) + "rb" : num;
-        }
-
-        function dmyToYmd(dmy) {
-            if (!dmy) return "";
-            const parts = dmy.split('/');
-            return parts.length === 3 ? `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}` : "";
         }
 
         function renderTables() {
@@ -438,7 +438,7 @@
             document.getElementById('form-peserta-nama').value = "";
             document.getElementById('form-peserta-jk').value = "L";
             document.getElementById('form-peserta-hp').value = "";
-            document.getElementById('form-peserta-tgl').value = new Date().toISOString().split('T')[0];
+            document.getElementById('form-peserta-tgl').value = getCurrentDDMMYYYY();
             document.getElementById('form-peserta-dp').value = "0";
             document.getElementById('initialPaymentGroup').classList.remove('hidden');
             document.getElementById('modalPesertaForm').classList.remove('hidden');
@@ -462,10 +462,7 @@
             const nama = document.getElementById('form-peserta-nama').value.trim();
             const jk = document.getElementById('form-peserta-jk').value;
             const hp = document.getElementById('form-peserta-hp').value.trim();
-
-            const tglRaw = document.getElementById('form-peserta-tgl').value;
-            const parts = tglRaw.split('-');
-            const tglFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+            const tglFormatted = document.getElementById('form-peserta-tgl').value.trim();
             const dp = parseInt(document.getElementById('form-peserta-dp').value) || 0;
 
             const payload = { data: { id, nama, jk, hp, tglDaftar: tglFormatted, dp } };
@@ -480,7 +477,7 @@
             document.getElementById('bayarFormTitle').innerText = "Input Bayar Cicilan";
             document.getElementById('bayarTargetNama').innerText = "Peserta: " + item.nama;
             document.getElementById('form-cicilan-id').value = "";
-            document.getElementById('form-bayar-tgl').value = new Date().toISOString().split('T')[0];
+            document.getElementById('form-bayar-tgl').value = getCurrentDDMMYYYY();
             document.getElementById('form-bayar-ket').value = "Cicilan";
             document.getElementById('form-bayar-nominal').value = "";
             document.getElementById('modalBayarForm').classList.remove('hidden');
@@ -494,7 +491,7 @@
             document.getElementById('bayarFormTitle').innerText = "Edit Transaksi Cicilan";
             document.getElementById('bayarTargetNama').innerText = "Peserta: " + item.nama;
             document.getElementById('form-cicilan-id').value = cData.idCicilan;
-            document.getElementById('form-bayar-tgl').value = dmyToYmd(cData.tgl);
+            document.getElementById('form-bayar-tgl').value = cData.tgl;
             document.getElementById('form-bayar-ket').value = cData.ket;
             document.getElementById('form-bayar-nominal').value = cData.nominal;
             document.getElementById('modalBayarForm').classList.remove('hidden');
@@ -503,9 +500,7 @@
         function handleBayarSubmit(e) {
             e.preventDefault();
             const idCicilan = document.getElementById('form-cicilan-id').value;
-            const tglRaw = document.getElementById('form-bayar-tgl').value;
-            const parts = tglRaw.split('-');
-            const tglFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+            const tglFormatted = document.getElementById('form-bayar-tgl').value.trim();
             const ket = document.getElementById('form-bayar-ket').value.trim();
             const nominal = parseInt(document.getElementById('form-bayar-nominal').value) || 0;
 
