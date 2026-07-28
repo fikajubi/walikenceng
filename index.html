@@ -20,6 +20,7 @@
             background-color: #059669; width: 0%; transition: width 3s linear;
         }
         .long-press-row.holding::after { width: 100%; }
+        .uppercase-input { text-transform: uppercase; }
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-2 px-2 sm:py-4 sm:px-4">
@@ -47,7 +48,7 @@
                     <span id="statusText" class="text-[8px] sm:text-[9px] font-extrabold text-lime-400 uppercase tracking-widest">SYSTEM ONLINE</span>
                 </div>
                 <p class="text-[9px] sm:text-[10px] text-slate-100 font-bold uppercase tracking-wider">TOTAL TERKUMPUL SAAT INI</p>
-                <h2 id="total-pembayaran-header" class="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">Rp 0</h2>
+                <h2 id="total-pembayaran-header" class="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">Rp. 0</h2>
             </div>
             
             <!-- Icon Masjid Kanan -->
@@ -79,11 +80,11 @@
                         <thead>
                             <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
                                 <th class="py-1.5 px-1 sm:px-2 w-[7%] text-center">No</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[22%] text-center">Tgl</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[32%]">Nama (A-Z)</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
                                 <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[18%]">No. HP</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[13%] text-right">Total</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[17%]">No. HP</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
@@ -103,11 +104,11 @@
                         <thead>
                             <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
                                 <th class="py-1.5 px-1 sm:px-2 w-[7%] text-center">No</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[22%] text-center">Tgl</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[32%]">Nama (A-Z)</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
                                 <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[18%]">No. HP</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[13%] text-right">Total</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[17%]">No. HP</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
@@ -118,7 +119,7 @@
             </div>
             
             <p class="text-[9px] sm:text-[10px] text-slate-400 mt-1.5 italic">
-                * Klik 1x untuk lihat detail cicilan.<br>
+                * Klik 1x untuk lihat detail angsuran.<br>
                 * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
             </p>
         </div>
@@ -128,7 +129,7 @@
         </div>
     </div>
 
-    <!-- MODAL RINCIAN CICILAN -->
+    <!-- MODAL RINCIAN ANGSURAN -->
     <div id="modalRincian" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2.5">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm sm:max-w-md overflow-hidden">
             <div class="bg-slate-800 text-white p-2.5 sm:p-3 flex justify-between items-center">
@@ -141,7 +142,7 @@
                 <div class="mb-2 bg-slate-50 p-2 rounded-lg border border-slate-200 flex justify-between items-center">
                     <div>
                         <span class="text-[9px] text-slate-500 font-bold block uppercase">Nama Peserta:</span>
-                        <span id="modalNama" class="font-black text-slate-800 text-xs sm:text-sm"></span>
+                        <span id="modalNama" class="font-black text-slate-800 text-xs sm:text-sm uppercase"></span>
                     </div>
                     <span id="modalJKBadge" class="px-2 py-0.5 rounded-full text-[10px] font-black"></span>
                 </div>
@@ -163,7 +164,7 @@
             <div class="bg-slate-50 p-2.5 px-3 flex justify-between items-center border-t border-slate-100">
                 <button onclick="closeModal('modalRincian')" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg uppercase">Tutup</button>
                 <button onclick="requestAccess('bayar_cicilan')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 uppercase shadow-sm">
-                    <i class="fa-solid fa-plus text-[10px]"></i> Bayar Cicilan
+                    <i class="fa-solid fa-plus text-[10px]"></i> Bayar Angsuran
                 </button>
             </div>
         </div>
@@ -177,7 +178,7 @@
                 <input type="hidden" id="form-peserta-id">
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nama Lengkap</label>
-                    <input type="text" id="form-peserta-nama" placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                    <input type="text" id="form-peserta-nama" placeholder="Contoh: BUDI SANTOSO 01" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 uppercase-input" required>
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Jenis Kelamin</label>
@@ -208,10 +209,10 @@
         </div>
     </div>
 
-    <!-- MODAL FORM BAYAR / EDIT CICILAN -->
+    <!-- MODAL FORM BAYAR / EDIT ANGSURAN -->
     <div id="modalBayarForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2.5">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-4 relative">
-            <h3 id="bayarFormTitle" class="font-black text-emerald-800 text-xs sm:text-sm uppercase mb-0.5">Input Bayar Cicilan</h3>
+            <h3 id="bayarFormTitle" class="font-black text-emerald-800 text-xs sm:text-sm uppercase mb-0.5">Input Bayar Angsuran</h3>
             <p id="bayarTargetNama" class="text-[10px] font-bold text-slate-500 mb-3 uppercase"></p>
             <form onsubmit="handleBayarSubmit(event)" class="space-y-2.5">
                 <input type="hidden" id="form-cicilan-id" value="">
@@ -221,7 +222,7 @@
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Keterangan Pembayaran</label>
-                    <input type="text" id="form-bayar-ket" placeholder="Contoh: Cicilan Ke-2" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                    <input type="text" id="form-bayar-ket" placeholder="Contoh: Angsuran Ke-2" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 uppercase-input" required>
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nominal Pembayaran (Rp)</label>
@@ -229,7 +230,7 @@
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeModal('modalBayarForm')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-bold uppercase">Batal</button>
-                    <button type="submit" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold uppercase tracking-wider">Simpan Cicilan</button>
+                    <button type="submit" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold uppercase tracking-wider">Simpan Angsuran</button>
                 </div>
             </form>
         </div>
@@ -241,7 +242,7 @@
             <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-2 text-lg">
                 <i class="fa-solid fa-user-gear"></i>
             </div>
-            <h3 class="font-black text-slate-800 text-sm" id="actionNama">Nama Peserta</h3>
+            <h3 class="font-black text-slate-800 text-sm uppercase" id="actionNama">Nama Peserta</h3>
             <p class="text-[10px] font-bold text-slate-500 mb-3">Pilih tindakan yang ingin dilakukan:</p>
             <div class="flex flex-col gap-1.5">
                 <button onclick="requestAccess('edit_peserta')" class="w-full py-2 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-bold text-xs rounded-lg border border-slate-200 transition uppercase">
@@ -296,7 +297,6 @@
             }
         }
 
-        // Mendapatkan Tanggal Hari Ini dengan Format DD/MM/YYYY
         function getCurrentDDMMYYYY() {
             const today = new Date();
             const d = String(today.getDate()).padStart(2, '0');
@@ -331,11 +331,7 @@
         }
 
         function formatRupiah(num) {
-            return "Rp " + new Intl.NumberFormat('id-ID').format(num);
-        }
-
-        function formatShortRupiah(num) {
-            return num >= 1000 ? (num / 1000) + "rb" : num;
+            return "Rp. " + new Intl.NumberFormat('id-ID').format(num);
         }
 
         function renderTables() {
@@ -387,11 +383,11 @@
             tr.innerHTML = `
                 <td class="py-2 px-1 text-center font-bold text-slate-500">${no}</td>
                 <td class="py-2 px-1 text-center font-bold text-slate-600 truncate">${tglDisplay}</td>
-                <td class="py-2 px-1 font-bold text-slate-800 truncate">${item.nama}</td>
+                <td class="py-2 px-1 font-bold text-slate-800 truncate uppercase">${item.nama}</td>
                 <td class="py-2 px-1 text-center">${badgeJk}</td>
                 <td class="py-2 px-1 text-slate-500 truncate">${item.hp}</td>
                 <td class="py-2 px-1 text-right">
-                    <span class="font-black text-emerald-600 underline decoration-dashed underline-offset-2">${formatShortRupiah(totalBayar)}</span>
+                    <span class="font-black text-emerald-600 underline decoration-dashed underline-offset-2">${formatRupiah(totalBayar)}</span>
                 </td>
             `;
             return tr;
@@ -464,7 +460,7 @@
         function handlePesertaSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('form-peserta-id').value;
-            const nama = document.getElementById('form-peserta-nama').value.trim();
+            const nama = document.getElementById('form-peserta-nama').value.trim().toUpperCase();
             const jk = document.getElementById('form-peserta-jk').value;
             const hp = document.getElementById('form-peserta-hp').value.trim();
             const tglFormatted = document.getElementById('form-peserta-tgl').value.trim();
@@ -479,11 +475,11 @@
         function openBayarModal() {
             const item = dataPeserta.find(x => x.id === activePesertaId);
             if (!item) return;
-            document.getElementById('bayarFormTitle').innerText = "Input Bayar Cicilan";
+            document.getElementById('bayarFormTitle').innerText = "Input Bayar Angsuran";
             document.getElementById('bayarTargetNama').innerText = "Peserta: " + item.nama;
             document.getElementById('form-cicilan-id').value = "";
             document.getElementById('form-bayar-tgl').value = getCurrentDDMMYYYY();
-            document.getElementById('form-bayar-ket').value = "Cicilan";
+            document.getElementById('form-bayar-ket').value = "ANGSURAN";
             document.getElementById('form-bayar-nominal').value = "";
             document.getElementById('modalBayarForm').classList.remove('hidden');
         }
@@ -493,7 +489,7 @@
             if (!item || !item.cicilan[cIndex]) return;
 
             const cData = item.cicilan[cIndex];
-            document.getElementById('bayarFormTitle').innerText = "Edit Transaksi Cicilan";
+            document.getElementById('bayarFormTitle').innerText = "Edit Transaksi Angsuran";
             document.getElementById('bayarTargetNama').innerText = "Peserta: " + item.nama;
             document.getElementById('form-cicilan-id').value = cData.idCicilan;
             document.getElementById('form-bayar-tgl').value = cData.tgl;
@@ -506,7 +502,7 @@
             e.preventDefault();
             const idCicilan = document.getElementById('form-cicilan-id').value;
             const tglFormatted = document.getElementById('form-bayar-tgl').value.trim();
-            const ket = document.getElementById('form-bayar-ket').value.trim();
+            const ket = document.getElementById('form-bayar-ket').value.trim().toUpperCase();
             const nominal = parseInt(document.getElementById('form-bayar-nominal').value) || 0;
 
             const payload = {
@@ -558,7 +554,7 @@
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50">
                             <td class="p-1.5 text-slate-500">${c.tgl}</td>
-                            <td class="p-1.5 font-bold text-slate-700">${c.ket}</td>
+                            <td class="p-1.5 font-bold text-slate-700 uppercase">${c.ket}</td>
                             <td class="p-1.5 text-right font-black text-slate-800">${formatRupiah(c.nominal)}</td>
                             <td class="p-1.5 text-center">
                                 <div class="flex items-center justify-center gap-1">
