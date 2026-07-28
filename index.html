@@ -23,152 +23,149 @@
         .uppercase-input { text-transform: uppercase; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-0 px-0 sm:py-2">
+<!-- Padding Kiri-Kanan Diatur px-1 (Sangat Tipis) -->
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-1 px-1 sm:py-3 sm:px-2">
 
-    <!-- CONTAINER UTAMA -->
-    <div class="w-full max-w-4xl mx-auto space-y-2">
+    <!-- Container Lebar Penuh dengan Celah Tipis -->
+    <div class="w-full max-w-full mx-auto space-y-1.5">
         
-        <!-- HEADER KARTU ATAS (Full Rata Kanan-Kiri Tepi Layar) -->
-        <div class="w-full bg-[#115e37] text-white rounded-none sm:rounded-xl p-3 sm:p-4 text-center shadow-md relative overflow-hidden">
+        <!-- HEADER KARTU ATAS -->
+        <div class="w-full bg-[#115e37] text-white rounded-lg p-2.5 sm:p-4 text-center shadow-sm relative overflow-hidden">
             <i class="fa-solid fa-snowflake absolute top-2 right-1/3 text-white/10 text-xs"></i>
             <i class="fa-solid fa-asterisk absolute bottom-2 right-6 text-white/20 text-xs"></i>
-            <h1 class="text-sm sm:text-lg font-black uppercase tracking-wider text-center">MUSHOLA WAKAF AN-NUR</h1>
-            <p class="text-lime-400 font-bold text-[10px] sm:text-xs uppercase mt-0.5 tracking-widest text-center">DATA PESERTA ZIARAH WALI KENCENG</p>
+            <h1 class="text-xs sm:text-lg font-black uppercase tracking-wider">MUSHOLA WAKAF AN-NUR</h1>
+            <p class="text-lime-400 font-bold text-[9px] sm:text-xs uppercase mt-0.5 tracking-widest">DATA PESERTA ZIARAH WALI KENCENG</p>
         </div>
 
-        <!-- HEADER KARTU BAWAH (Full Rata Kanan-Kiri Tepi Layar) -->
-        <div class="w-full bg-[#2563eb] text-white rounded-none sm:rounded-xl p-3 sm:p-4 shadow-md relative overflow-hidden flex justify-between items-center px-4 sm:px-6">
-            <!-- Icon Bus Kiri -->
-            <div class="w-10 sm:w-14 shrink-0 flex items-center justify-start text-lime-400 text-2xl sm:text-3xl filter drop-shadow-md select-none">
+        <!-- HEADER KARTU BAWAH -->
+        <div class="w-full bg-[#2563eb] text-white rounded-lg p-2.5 sm:p-4 shadow-sm relative overflow-hidden flex justify-between items-center px-3 sm:px-6">
+            <!-- Icon Bus Kiri Menyamping -->
+            <div class="w-8 sm:w-14 shrink-0 flex items-center justify-start text-lime-400 text-xl sm:text-3xl filter drop-shadow-md select-none">
                 <i class="fa-solid fa-bus"></i>
             </div>
             
-            <!-- Konten Tengah -->
-            <div class="text-center grow z-10">
+            <div class="text-center z-10">
                 <div class="inline-flex items-center gap-1.5 bg-black/20 px-2.5 py-0.5 rounded-full mb-0.5">
                     <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse-fast"></span>
                     <span id="statusText" class="text-[8px] sm:text-[9px] font-extrabold text-lime-400 uppercase tracking-widest">SYSTEM ONLINE</span>
                 </div>
-                <p class="text-[9px] sm:text-[10px] text-slate-100 font-bold uppercase tracking-wider">TOTAL TERKUMPUL SAAT INI</p>
-                <h2 id="total-pembayaran-header" class="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">Rp. 0</h2>
+                <p class="text-[8px] sm:text-[10px] text-slate-100 font-bold uppercase tracking-wider">TOTAL TERKUMPUL SAAT INI</p>
+                <h2 id="total-pembayaran-header" class="text-xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">Rp. 0</h2>
             </div>
             
             <!-- Icon Masjid Kanan -->
-            <div class="w-10 sm:w-14 shrink-0 flex items-center justify-end text-lime-400 text-2xl sm:text-3xl filter drop-shadow-md select-none">
+            <div class="w-8 sm:w-14 shrink-0 flex items-center justify-end text-lime-400 text-xl sm:text-3xl filter drop-shadow-md select-none">
                 <i class="fa-solid fa-mosque"></i>
             </div>
         </div>
 
-        <!-- MAIN CONTENT CARD (Menggunakan Padding Samping Supaya Konten Tabel Tetap Nyaman Dibaca) -->
-        <div class="px-2 sm:px-0">
-            <div class="w-full bg-white rounded-xl shadow-md p-3 sm:p-4 space-y-3.5">
-                
-                <!-- Input Cari & Tombol Tambah -->
-                <div class="w-full flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2">
-                    <div class="relative w-full sm:w-72">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="text" id="search-input" onkeyup="filterPeserta()" placeholder="Cari nama peserta..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs font-semibold">
-                    </div>
-                    <button onclick="requestAccess('add_peserta')" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs transition shadow-sm uppercase shrink-0">
-                        <i class="fa-solid fa-plus text-[10px]"></i> Tambah Peserta Baru
-                    </button>
+        <!-- MAIN CONTENT CARD -->
+        <div class="w-full bg-white rounded-lg shadow-sm p-2.5 sm:p-4 space-y-3">
+            
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-2">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-input" onkeyup="filterPeserta()" placeholder="Cari nama peserta..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs font-semibold">
                 </div>
-
-                <!-- TABEL PESERTA LAKI-LAKI -->
-                <div class="w-full">
-                    <div class="mb-1.5 pb-0.5 border-b-2 border-emerald-600 flex justify-between items-center">
-                        <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Laki-Laki (L)</h2>
-                    </div>
-                    <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
-                        <table class="w-full text-left border-collapse table-fixed min-w-full">
-                            <thead>
-                                <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
-                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">No</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[16%]">No. HP</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
-                                <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- TABEL PESERTA PEREMPUAN -->
-                <div class="w-full">
-                    <div class="mb-1.5 pb-0.5 border-b-2 border-pink-500 flex justify-between items-center">
-                        <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Perempuan (P)</h2>
-                    </div>
-                    <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
-                        <table class="w-full text-left border-collapse table-fixed min-w-full">
-                            <thead>
-                                <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
-                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">No</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[16%]">No. HP</th>
-                                    <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
-                                <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <p class="text-[9px] sm:text-[10px] text-slate-400 mt-1.5 italic">
-                    * Klik 1x untuk lihat detail angsuran.<br>
-                    * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
-                </p>
+                <button onclick="requestAccess('add_peserta')" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs transition shadow-sm uppercase shrink-0">
+                    <i class="fa-solid fa-plus text-[10px]"></i> Tambah Peserta Baru
+                </button>
             </div>
+
+            <!-- TABEL PESERTA LAKI-LAKI -->
+            <div class="w-full">
+                <div class="mb-1 pb-0.5 border-b-2 border-emerald-600 flex justify-between items-center">
+                    <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Laki-Laki (L)</h2>
+                </div>
+                <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
+                    <table class="w-full text-left border-collapse table-fixed min-w-full">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
+                                <th class="py-1.5 px-1 sm:px-2 w-[7%] text-center">No</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[17%]">No. HP</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                            <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TABEL PESERTA PEREMPUAN -->
+            <div class="w-full">
+                <div class="mb-1 pb-0.5 border-b-2 border-pink-500 flex justify-between items-center">
+                    <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Perempuan (P)</h2>
+                </div>
+                <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
+                    <table class="w-full text-left border-collapse table-fixed min-w-full">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
+                                <th class="py-1.5 px-1 sm:px-2 w-[7%] text-center">No</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[17%]">No. HP</th>
+                                <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                            <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <p class="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">
+                * Klik 1x untuk lihat detail angsuran.<br>
+                * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
+            </p>
         </div>
 
-        <div class="text-center py-2">
+        <div class="text-center py-1">
             <p class="text-[8px] sm:text-[10px] font-bold tracking-widest text-slate-400 uppercase">POWERED BY : MBS ID</p>
         </div>
     </div>
 
     <!-- MODAL RINCIAN ANGSURAN -->
-    <div id="modalRincian" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2.5">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
-            <div class="bg-slate-800 text-white p-3 flex justify-between items-center">
+    <div id="modalRincian" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm sm:max-w-md overflow-hidden">
+            <div class="bg-slate-800 text-white p-2.5 sm:p-3 flex justify-between items-center">
                 <h3 class="font-bold text-xs sm:text-sm flex items-center gap-2 uppercase">
                     <i class="fa-solid fa-receipt text-amber-400"></i> Rincian Pembayaran
                 </h3>
                 <button onclick="closeModal('modalRincian')" class="text-slate-400 hover:text-white text-lg font-bold px-1">&times;</button>
             </div>
-            <div class="p-3.5 space-y-2">
-                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
+            <div class="p-3">
+                <div class="mb-2 bg-slate-50 p-2 rounded-lg border border-slate-200 flex justify-between items-center">
                     <div>
                         <span class="text-[9px] text-slate-500 font-bold block uppercase">Nama Peserta:</span>
                         <span id="modalNama" class="font-black text-slate-800 text-xs sm:text-sm uppercase"></span>
                     </div>
-                    <span id="modalJKBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black"></span>
+                    <span id="modalJKBadge" class="px-2 py-0.5 rounded-full text-[10px] font-black"></span>
                 </div>
-                <h4 class="text-[9px] font-black text-slate-500 uppercase tracking-wider">Riwayat Transaksi:</h4>
+                <h4 class="text-[9px] font-black text-slate-500 uppercase mb-1.5 tracking-wider">Riwayat Transaksi:</h4>
                 <div class="max-h-48 overflow-y-auto border border-slate-100 rounded-lg">
                     <table class="w-full text-left text-[10px] sm:text-xs font-semibold">
                         <thead class="bg-slate-100 text-slate-600 sticky top-0 uppercase font-bold">
                             <tr>
-                                <th class="p-2">Tanggal</th>
-                                <th class="p-2">Keterangan</th>
-                                <th class="p-2 text-right">Nominal</th>
-                                <th class="p-2 text-center w-12">Aksi</th>
+                                <th class="p-1.5">Tanggal</th>
+                                <th class="p-1.5">Keterangan</th>
+                                <th class="p-1.5 text-right">Nominal</th>
+                                <th class="p-1.5 text-center w-12">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="modalListCicilan" class="divide-y divide-slate-100"></tbody>
                     </table>
                 </div>
             </div>
-            <div class="bg-slate-50 p-3 flex justify-between items-center border-t border-slate-100">
-                <button onclick="closeModal('modalRincian')" class="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg uppercase">Tutup</button>
-                <button onclick="requestAccess('bayar_cicilan')" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 uppercase shadow-sm">
+            <div class="bg-slate-50 p-2.5 px-3 flex justify-between items-center border-t border-slate-100">
+                <button onclick="closeModal('modalRincian')" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg uppercase">Tutup</button>
+                <button onclick="requestAccess('bayar_cicilan')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 uppercase shadow-sm">
                     <i class="fa-solid fa-plus text-[10px]"></i> Bayar Angsuran
                 </button>
             </div>
@@ -176,7 +173,7 @@
     </div>
 
     <!-- MODAL FORM TAMBAH / EDIT PESERTA -->
-    <div id="modalPesertaForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2.5">
+    <div id="modalPesertaForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-4 relative">
             <h3 id="pesertaFormTitle" class="font-black text-emerald-800 text-xs sm:text-sm uppercase mb-3 pb-1.5 border-b border-slate-100">Tambah Peserta Baru</h3>
             <form onsubmit="handlePesertaSubmit(event)" class="space-y-2.5">
@@ -215,7 +212,7 @@
     </div>
 
     <!-- MODAL FORM BAYAR / EDIT ANGSURAN -->
-    <div id="modalBayarForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2.5">
+    <div id="modalBayarForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-4 relative">
             <h3 id="bayarFormTitle" class="font-black text-emerald-800 text-xs sm:text-sm uppercase mb-0.5">Input Bayar Angsuran</h3>
             <p id="bayarTargetNama" class="text-[10px] font-bold text-slate-500 mb-3 uppercase"></p>
@@ -242,7 +239,7 @@
     </div>
 
     <!-- MODAL AKSI (EDIT/HAPUS PESERTA) -->
-    <div id="modalAksi" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2.5">
+    <div id="modalAksi" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-xs overflow-hidden text-center p-4">
             <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-2 text-lg">
                 <i class="fa-solid fa-user-gear"></i>
@@ -262,7 +259,7 @@
     </div>
 
     <!-- MODAL SECURITY PIN -->
-    <div id="pin-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3">
+    <div id="pin-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white border border-slate-200 rounded-xl w-full max-w-xs p-4 shadow-2xl relative text-slate-800 text-center">
             <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2">
                 <i class="fa-solid fa-lock text-lg"></i>
