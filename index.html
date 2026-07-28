@@ -36,9 +36,11 @@
 
         <!-- HEADER KARTU BAWAH -->
         <div class="bg-[#2563eb] text-white rounded-xl p-3 sm:p-4 shadow-md relative overflow-hidden flex justify-between items-center">
+            <!-- Icon Bus Kiri Menyamping -->
             <div class="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center text-lime-400 text-2xl sm:text-3xl filter drop-shadow-md select-none">
-                <i class="fa-solid fa-bus-simple"></i>
+                <i class="fa-solid fa-bus"></i>
             </div>
+            
             <div class="text-center z-10">
                 <div class="inline-flex items-center gap-1.5 bg-black/20 px-2.5 py-0.5 rounded-full mb-0.5">
                     <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse-fast"></span>
@@ -47,6 +49,8 @@
                 <p class="text-[9px] sm:text-[10px] text-slate-100 font-bold uppercase tracking-wider">TOTAL TERKUMPUL SAAT INI</p>
                 <h2 id="total-pembayaran-header" class="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">Rp 0</h2>
             </div>
+            
+            <!-- Icon Masjid Kanan -->
             <div class="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center text-lime-400 text-2xl sm:text-3xl filter drop-shadow-md select-none">
                 <i class="fa-solid fa-mosque"></i>
             </div>
@@ -188,8 +192,8 @@
                 </div>
                 <div id="initialPaymentGroup" class="space-y-2.5">
                     <div>
-                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Pendaftaran (DDMMYYYY)</label>
-                        <input type="text" id="form-peserta-tgl" placeholder="28072026" maxlength="8" pattern="[0-9]{8}" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Pendaftaran (DD/MM/YYYY)</label>
+                        <input type="text" id="form-peserta-tgl" placeholder="28/07/2026" maxlength="10" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
                     </div>
                     <div>
                         <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Pembayaran Awal / DP (Rp)</label>
@@ -212,8 +216,8 @@
             <form onsubmit="handleBayarSubmit(event)" class="space-y-2.5">
                 <input type="hidden" id="form-cicilan-id" value="">
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi (DDMMYYYY)</label>
-                    <input type="text" id="form-bayar-tgl" placeholder="28072026" maxlength="8" pattern="[0-9]{8}" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi (DD/MM/YYYY)</label>
+                    <input type="text" id="form-bayar-tgl" placeholder="28/07/2026" maxlength="10" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Keterangan Pembayaran</label>
@@ -292,12 +296,13 @@
             }
         }
 
+        // Mendapatkan Tanggal Hari Ini dengan Format DD/MM/YYYY
         function getCurrentDDMMYYYY() {
             const today = new Date();
             const d = String(today.getDate()).padStart(2, '0');
             const m = String(today.getMonth() + 1).padStart(2, '0');
             const y = today.getFullYear();
-            return `${d}${m}${y}`;
+            return `${d}/${m}/${y}`;
         }
 
         function sendRequest(params, callbackSuccess) {
