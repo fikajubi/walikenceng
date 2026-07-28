@@ -274,7 +274,9 @@
     </div>
 
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw53A3VXnTgjEd-Ri4Rt47r42A6Mj3S7fBEUuv2JQyrYGWyZ-3ZTJjeQ5y1EQqFyrrkHQ/exec";
         const SECURITY_PIN = "909";
+        
         let activePesertaId = null;
         let activeCicilanIndex = null;
         let currentAccessSession = { mode: null };
@@ -289,19 +291,40 @@
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
 
+        // Fetch API GET Data dari Google Sheets
         function loadDataFromServer() {
             showLoading("Mengambil Data Google Sheets...");
-            google.script.run
-                .withSuccessHandler(response => {
-                    dataPeserta = response;
+            fetch(SCRIPT_URL + "?action=getData")
+                .then(res => res.json())
+                .then(res => {
+                    dataPeserta = res;
                     renderTables();
                     hideLoading();
                 })
-                .withFailureHandler(err => {
-                    alert("Gagal memuat data: " + err);
+                .catch(err => {
+                    alert("Gagal memuat data dari server: " + err);
                     hideLoading();
-                })
-                .getDataPeserta();
+                });
+        }
+
+        // Fetch API POST Data ke Google Sheets
+        function postDataToServer(actionName, payload, callbackSuccess) {
+            showLoading("Proses Menyimpan Ke Server...");
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: actionName, ...payload })
+            })
+            .then(res => res.json())
+            .then(res => {
+                dataPeserta = res;
+                renderTables();
+                if (callbackSuccess) callbackSuccess();
+                hideLoading();
+            })
+            .catch(err => {
+                alert("Gagal mengirim data: " + err);
+                hideLoading();
+            });
         }
 
         function formatRupiah(num) {
@@ -445,18 +468,10 @@
             const tglFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
             const dp = parseInt(document.getElementById('form-peserta-dp').value) || 0;
 
-            const payload = { id, nama, jk, hp, tglDaftar: tglFormatted, dp };
+            const payload = { data: { id, nama, jk, hp, tglDaftar: tglFormatted, dp } };
 
             closeModal('modalPesertaForm');
-            showLoading("Menyimpan Data Peserta...");
-
-            google.script.run
-                .withSuccessHandler(res => {
-                    dataPeserta = res;
-                    renderTables();
-                    hideLoading();
-                })
-                .savePeserta(payload);
+            postDataToServer("savePeserta", payload);
         }
 
         function openBayarModal() {
@@ -495,24 +510,17 @@
             const nominal = parseInt(document.getElementById('form-bayar-nominal').value) || 0;
 
             const payload = {
-                idCicilan: idCicilan,
-                idPeserta: activePesertaId,
-                tgl: tglFormatted,
-                ket: ket,
-                nominal: nominal
+                data: {
+                    idCicilan: idCicilan,
+                    idPeserta: activePesertaId,
+                    tgl: tglFormatted,
+                    ket: ket,
+                    nominal: nominal
+                }
             };
 
             closeModal('modalBayarForm');
-            showLoading("Menyimpan Cicilan...");
-
-            google.script.run
-                .withSuccessHandler(res => {
-                    dataPeserta = res;
-                    renderTables();
-                    openDetailModal(activePesertaId);
-                    hideLoading();
-                })
-                .saveCicilan(payload);
+            postDataToServer("saveCicilan", payload, () => openDetailModal(activePesertaId));
         }
 
         function executeDeleteCicilan(cIndex) {
@@ -520,15 +528,7 @@
             if (item && item.cicilan[cIndex]) {
                 const cData = item.cicilan[cIndex];
                 if (confirm(`Hapus transaksi "${cData.ket}" (${formatRupiah(cData.nominal)})?`)) {
-                    showLoading("Menghapus Cicilan...");
-                    google.script.run
-                        .withSuccessHandler(res => {
-                            dataPeserta = res;
-                            renderTables();
-                            openDetailModal(activePesertaId);
-                            hideLoading();
-                        })
-                        .deleteCicilan(cData.idCicilan);
+                    postDataToServer("deleteCicilan", { idCicilan: cData.idCicilan }, () => openDetailModal(activePesertaId));
                 }
             }
         }
@@ -536,14 +536,7 @@
         function executeDeletePeserta() {
             const item = dataPeserta.find(x => x.id === activePesertaId);
             if (item && confirm(`Yakin ingin menghapus peserta "${item.nama}"?`)) {
-                showLoading("Menghapus Peserta...");
-                google.script.run
-                    .withSuccessHandler(res => {
-                        dataPeserta = res;
-                        renderTables();
-                        hideLoading();
-                    })
-                    .deletePeserta(activePesertaId);
+                postDataToServer("deletePeserta", { idPeserta: activePesertaId });
             }
         }
 
