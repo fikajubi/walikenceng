@@ -24,12 +24,6 @@
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-2 px-2 sm:py-4 sm:px-4">
 
-    <!-- OVERLAY LOADING SYSTEM -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center z-[100] text-white">
-        <i class="fa-solid fa-circle-notch fa-spin text-3xl sm:text-4xl text-lime-400 mb-2"></i>
-        <p class="text-xs font-bold uppercase tracking-widest" id="loadingText">Menghubungkan ke Server...</p>
-    </div>
-
     <div class="max-w-4xl mx-auto space-y-2.5">
         
         <!-- HEADER KARTU ATAS -->
@@ -47,8 +41,8 @@
             </div>
             <div class="text-center z-10">
                 <div class="inline-flex items-center gap-1.5 bg-black/20 px-2.5 py-0.5 rounded-full mb-0.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse-fast"></span>
-                    <span class="text-[8px] sm:text-[9px] font-extrabold text-lime-400 uppercase tracking-widest">SYSTEM ONLINE</span>
+                    <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse-fast"></span>
+                    <span id="statusText" class="text-[8px] sm:text-[9px] font-extrabold text-lime-400 uppercase tracking-widest">SYSTEM ONLINE</span>
                 </div>
                 <p class="text-[9px] sm:text-[10px] text-slate-100 font-bold uppercase tracking-wider">TOTAL TERKUMPUL SAAT INI</p>
                 <h2 id="total-pembayaran-header" class="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">Rp 0</h2>
@@ -88,7 +82,9 @@
                                 <th class="py-1.5 px-1 sm:px-2 w-[13%] text-right">Total</th>
                             </tr>
                         </thead>
-                        <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold"></tbody>
+                        <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                            <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -110,7 +106,9 @@
                                 <th class="py-1.5 px-1 sm:px-2 w-[13%] text-right">Total</th>
                             </tr>
                         </thead>
-                        <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold"></tbody>
+                        <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                            <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -282,13 +280,16 @@
         let currentAccessSession = { mode: null };
         let dataPeserta = [];
 
-        function showLoading(msg = "Memuat data...") {
-            document.getElementById('loadingText').innerText = msg;
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
+        function setSyncing(isSyncing) {
+            const txt = document.getElementById('statusText');
+            const dot = document.getElementById('statusDot');
+            if (isSyncing) {
+                txt.innerText = "PROSES DATA...";
+                dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping";
+            } else {
+                txt.innerText = "SYSTEM ONLINE";
+                dot.className = "w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse-fast";
+            }
         }
 
         function getCurrentDDMMYYYY() {
@@ -299,38 +300,29 @@
             return `${d}${m}${y}`;
         }
 
-        function loadDataFromServer() {
-            showLoading("Mengambil Data Google Sheets...");
-            fetch(SCRIPT_URL + "?action=getData")
+        function sendRequest(params, callbackSuccess) {
+            setSyncing(true);
+            const query = new URLSearchParams(params).toString();
+            fetch(`${SCRIPT_URL}?${query}`)
                 .then(res => res.json())
                 .then(res => {
-                    dataPeserta = res;
-                    renderTables();
-                    hideLoading();
+                    if (res && !res.error) {
+                        dataPeserta = res;
+                        renderTables();
+                        if (callbackSuccess) callbackSuccess();
+                    } else if (res.error) {
+                        alert("Error Server: " + res.error);
+                    }
+                    setSyncing(false);
                 })
                 .catch(err => {
-                    alert("Gagal memuat data dari server: " + err);
-                    hideLoading();
+                    alert("Koneksi gagal: " + err);
+                    setSyncing(false);
                 });
         }
 
-        function postDataToServer(actionName, payload, callbackSuccess) {
-            showLoading("Proses Menyimpan Ke Server...");
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: actionName, ...payload })
-            })
-            .then(res => res.json())
-            .then(res => {
-                dataPeserta = res;
-                renderTables();
-                if (callbackSuccess) callbackSuccess();
-                hideLoading();
-            })
-            .catch(err => {
-                alert("Gagal mengirim data: " + err);
-                hideLoading();
-            });
+        function loadDataFromServer() {
+            sendRequest({ action: "getData" });
         }
 
         function formatRupiah(num) {
@@ -352,17 +344,25 @@
 
             let totalGrand = 0;
 
-            dataL.forEach((item, index) => {
-                const totalBayar = item.cicilan.reduce((sum, c) => sum + c.nominal, 0);
-                totalGrand += totalBayar;
-                tableL.appendChild(createRowElement(item, index + 1, totalBayar));
-            });
+            if (dataL.length === 0) {
+                tableL.innerHTML = '<tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Belum ada peserta laki-laki</td></tr>';
+            } else {
+                dataL.forEach((item, index) => {
+                    const totalBayar = item.cicilan.reduce((sum, c) => sum + c.nominal, 0);
+                    totalGrand += totalBayar;
+                    tableL.appendChild(createRowElement(item, index + 1, totalBayar));
+                });
+            }
 
-            dataP.forEach((item, index) => {
-                const totalBayar = item.cicilan.reduce((sum, c) => sum + c.nominal, 0);
-                totalGrand += totalBayar;
-                tableP.appendChild(createRowElement(item, index + 1, totalBayar));
-            });
+            if (dataP.length === 0) {
+                tableP.innerHTML = '<tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Belum ada peserta perempuan</td></tr>';
+            } else {
+                dataP.forEach((item, index) => {
+                    const totalBayar = item.cicilan.reduce((sum, c) => sum + c.nominal, 0);
+                    totalGrand += totalBayar;
+                    tableP.appendChild(createRowElement(item, index + 1, totalBayar));
+                });
+            }
 
             document.getElementById('total-pembayaran-header').innerText = formatRupiah(totalGrand);
             initLongPressEvents();
@@ -465,10 +465,10 @@
             const tglFormatted = document.getElementById('form-peserta-tgl').value.trim();
             const dp = parseInt(document.getElementById('form-peserta-dp').value) || 0;
 
-            const payload = { data: { id, nama, jk, hp, tglDaftar: tglFormatted, dp } };
+            const payload = { id, nama, jk, hp, tglDaftar: tglFormatted, dp };
 
             closeModal('modalPesertaForm');
-            postDataToServer("savePeserta", payload);
+            sendRequest({ action: "savePeserta", data: JSON.stringify(payload) });
         }
 
         function openBayarModal() {
@@ -505,17 +505,15 @@
             const nominal = parseInt(document.getElementById('form-bayar-nominal').value) || 0;
 
             const payload = {
-                data: {
-                    idCicilan: idCicilan,
-                    idPeserta: activePesertaId,
-                    tgl: tglFormatted,
-                    ket: ket,
-                    nominal: nominal
-                }
+                idCicilan: idCicilan,
+                idPeserta: activePesertaId,
+                tgl: tglFormatted,
+                ket: ket,
+                nominal: nominal
             };
 
             closeModal('modalBayarForm');
-            postDataToServer("saveCicilan", payload, () => openDetailModal(activePesertaId));
+            sendRequest({ action: "saveCicilan", data: JSON.stringify(payload) }, () => openDetailModal(activePesertaId));
         }
 
         function executeDeleteCicilan(cIndex) {
@@ -523,7 +521,7 @@
             if (item && item.cicilan[cIndex]) {
                 const cData = item.cicilan[cIndex];
                 if (confirm(`Hapus transaksi "${cData.ket}" (${formatRupiah(cData.nominal)})?`)) {
-                    postDataToServer("deleteCicilan", { idCicilan: cData.idCicilan }, () => openDetailModal(activePesertaId));
+                    sendRequest({ action: "deleteCicilan", idCicilan: cData.idCicilan }, () => openDetailModal(activePesertaId));
                 }
             }
         }
@@ -531,7 +529,7 @@
         function executeDeletePeserta() {
             const item = dataPeserta.find(x => x.id === activePesertaId);
             if (item && confirm(`Yakin ingin menghapus peserta "${item.nama}"?`)) {
-                postDataToServer("deletePeserta", { idPeserta: activePesertaId });
+                sendRequest({ action: "deletePeserta", idPeserta: activePesertaId });
             }
         }
 
