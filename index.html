@@ -23,7 +23,6 @@
         .uppercase-input { text-transform: uppercase; }
     </style>
 </head>
-<!-- Padding Kiri-Kanan Diatur px-1 (Sangat Tipis) -->
 <body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-1 px-1 sm:py-3 sm:px-2">
 
     <!-- Container Lebar Penuh dengan Celah Tipis -->
@@ -195,8 +194,9 @@
                 </div>
                 <div id="initialPaymentGroup" class="space-y-2.5">
                     <div>
-                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Pendaftaran (DD/MM/YYYY)</label>
-                        <input type="text" id="form-peserta-tgl" placeholder="28/07/2026" maxlength="10" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Pendaftaran</label>
+                        <!-- Pilihan Tanggal Otomatis (DatePicker) -->
+                        <input type="date" id="form-peserta-tgl" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 cursor-pointer">
                     </div>
                     <div>
                         <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Pembayaran Awal / DP (Rp)</label>
@@ -219,8 +219,9 @@
             <form onsubmit="handleBayarSubmit(event)" class="space-y-2.5">
                 <input type="hidden" id="form-cicilan-id" value="">
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi (DD/MM/YYYY)</label>
-                    <input type="text" id="form-bayar-tgl" placeholder="28/07/2026" maxlength="10" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi</label>
+                    <!-- Pilihan Tanggal Otomatis (DatePicker) -->
+                    <input type="date" id="form-bayar-tgl" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 cursor-pointer" required>
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Keterangan Pembayaran</label>
@@ -299,12 +300,29 @@
             }
         }
 
-        function getCurrentDDMMYYYY() {
+        // Format Date Picker Input (YYYY-MM-DD)
+        function getTodayYYYYMMDD() {
             const today = new Date();
-            const d = String(today.getDate()).padStart(2, '0');
-            const m = String(today.getMonth() + 1).padStart(2, '0');
             const y = today.getFullYear();
-            return `${d}/${m}/${y}`;
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        // Konversi dari YYYY-MM-DD ke DD/MM/YYYY untuk dikirim ke Sheet
+        function formatToDDMMYYYY(yyyy_mm_dd) {
+            if (!yyyy_mm_dd) return "";
+            const parts = yyyy_mm_dd.split('-');
+            if (parts.length !== 3) return yyyy_mm_dd;
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        // Konversi dari DD/MM/YYYY ke YYYY-MM-DD untuk ditayangkan di DatePicker
+        function formatToYYYYMMDD(dd_mm_yyyy) {
+            if (!dd_mm_yyyy) return getTodayYYYYMMDD();
+            const parts = dd_mm_yyyy.split('/');
+            if (parts.length !== 3) return getTodayYYYYMMDD();
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
         }
 
         function sendRequest(params, callbackSuccess) {
@@ -441,7 +459,7 @@
             document.getElementById('form-peserta-nama').value = "";
             document.getElementById('form-peserta-jk').value = "L";
             document.getElementById('form-peserta-hp').value = "";
-            document.getElementById('form-peserta-tgl').value = getCurrentDDMMYYYY();
+            document.getElementById('form-peserta-tgl').value = getTodayYYYYMMDD();
             document.getElementById('form-peserta-dp').value = "0";
             document.getElementById('initialPaymentGroup').classList.remove('hidden');
             document.getElementById('modalPesertaForm').classList.remove('hidden');
@@ -465,7 +483,8 @@
             const nama = document.getElementById('form-peserta-nama').value.trim().toUpperCase();
             const jk = document.getElementById('form-peserta-jk').value;
             const hp = document.getElementById('form-peserta-hp').value.trim();
-            const tglFormatted = document.getElementById('form-peserta-tgl').value.trim();
+            const rawTgl = document.getElementById('form-peserta-tgl').value;
+            const tglFormatted = formatToDDMMYYYY(rawTgl);
             const dp = parseInt(document.getElementById('form-peserta-dp').value) || 0;
 
             const payload = { id, nama, jk, hp, tglDaftar: tglFormatted, dp };
@@ -480,7 +499,7 @@
             document.getElementById('bayarFormTitle').innerText = "Input Bayar Angsuran";
             document.getElementById('bayarTargetNama').innerText = "Peserta: " + item.nama;
             document.getElementById('form-cicilan-id').value = "";
-            document.getElementById('form-bayar-tgl').value = getCurrentDDMMYYYY();
+            document.getElementById('form-bayar-tgl').value = getTodayYYYYMMDD();
             document.getElementById('form-bayar-ket').value = "ANGSURAN";
             document.getElementById('form-bayar-nominal').value = "";
             document.getElementById('modalBayarForm').classList.remove('hidden');
@@ -494,7 +513,7 @@
             document.getElementById('bayarFormTitle').innerText = "Edit Transaksi Angsuran";
             document.getElementById('bayarTargetNama').innerText = "Peserta: " + item.nama;
             document.getElementById('form-cicilan-id').value = cData.idCicilan;
-            document.getElementById('form-bayar-tgl').value = cData.tgl;
+            document.getElementById('form-bayar-tgl').value = formatToYYYYMMDD(cData.tgl);
             document.getElementById('form-bayar-ket').value = cData.ket;
             document.getElementById('form-bayar-nominal').value = cData.nominal;
             document.getElementById('modalBayarForm').classList.remove('hidden');
@@ -503,7 +522,8 @@
         function handleBayarSubmit(e) {
             e.preventDefault();
             const idCicilan = document.getElementById('form-cicilan-id').value;
-            const tglFormatted = document.getElementById('form-bayar-tgl').value.trim();
+            const rawTgl = document.getElementById('form-bayar-tgl').value;
+            const tglFormatted = formatToDDMMYYYY(rawTgl);
             const ket = document.getElementById('form-bayar-ket').value.trim().toUpperCase();
             const nominal = parseInt(document.getElementById('form-bayar-nominal').value) || 0;
 
