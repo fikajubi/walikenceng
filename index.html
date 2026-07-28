@@ -23,21 +23,21 @@
         .uppercase-input { text-transform: uppercase; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-2 px-2 sm:py-4 sm:px-4">
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-0 px-0 sm:py-2">
 
-    <!-- CONTAINER UTAMA (Presisi Rata Kanan & Kiri) -->
-    <div class="w-full max-w-4xl mx-auto space-y-2.5">
+    <!-- CONTAINER UTAMA -->
+    <div class="w-full max-w-4xl mx-auto space-y-2">
         
-        <!-- HEADER KARTU ATAS -->
-        <div class="w-full bg-[#115e37] text-white rounded-xl p-3 sm:p-4 text-center shadow-md relative overflow-hidden">
+        <!-- HEADER KARTU ATAS (Full Rata Kanan-Kiri Tepi Layar) -->
+        <div class="w-full bg-[#115e37] text-white rounded-none sm:rounded-xl p-3 sm:p-4 text-center shadow-md relative overflow-hidden">
             <i class="fa-solid fa-snowflake absolute top-2 right-1/3 text-white/10 text-xs"></i>
             <i class="fa-solid fa-asterisk absolute bottom-2 right-6 text-white/20 text-xs"></i>
             <h1 class="text-sm sm:text-lg font-black uppercase tracking-wider text-center">MUSHOLA WAKAF AN-NUR</h1>
             <p class="text-lime-400 font-bold text-[10px] sm:text-xs uppercase mt-0.5 tracking-widest text-center">DATA PESERTA ZIARAH WALI KENCENG</p>
         </div>
 
-        <!-- HEADER KARTU BAWAH (Layout Rata Kiri & Kanan Fleksibel) -->
-        <div class="w-full bg-[#2563eb] text-white rounded-xl p-3 sm:p-4 shadow-md relative overflow-hidden flex justify-between items-center gap-2">
+        <!-- HEADER KARTU BAWAH (Full Rata Kanan-Kiri Tepi Layar) -->
+        <div class="w-full bg-[#2563eb] text-white rounded-none sm:rounded-xl p-3 sm:p-4 shadow-md relative overflow-hidden flex justify-between items-center px-4 sm:px-6">
             <!-- Icon Bus Kiri -->
             <div class="w-10 sm:w-14 shrink-0 flex items-center justify-start text-lime-400 text-2xl sm:text-3xl filter drop-shadow-md select-none">
                 <i class="fa-solid fa-bus"></i>
@@ -59,75 +59,77 @@
             </div>
         </div>
 
-        <!-- MAIN CONTENT CARD -->
-        <div class="w-full bg-white rounded-xl shadow-md p-3 sm:p-4 space-y-3.5">
-            
-            <!-- Input Cari & Tombol Tambah (Rata Kanan Kiri Seimbang) -->
-            <div class="w-full flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2">
-                <div class="relative w-full sm:w-72">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="search-input" onkeyup="filterPeserta()" placeholder="Cari nama peserta..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs font-semibold">
+        <!-- MAIN CONTENT CARD (Menggunakan Padding Samping Supaya Konten Tabel Tetap Nyaman Dibaca) -->
+        <div class="px-2 sm:px-0">
+            <div class="w-full bg-white rounded-xl shadow-md p-3 sm:p-4 space-y-3.5">
+                
+                <!-- Input Cari & Tombol Tambah -->
+                <div class="w-full flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2">
+                    <div class="relative w-full sm:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="search-input" onkeyup="filterPeserta()" placeholder="Cari nama peserta..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs font-semibold">
+                    </div>
+                    <button onclick="requestAccess('add_peserta')" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs transition shadow-sm uppercase shrink-0">
+                        <i class="fa-solid fa-plus text-[10px]"></i> Tambah Peserta Baru
+                    </button>
                 </div>
-                <button onclick="requestAccess('add_peserta')" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs transition shadow-sm uppercase shrink-0">
-                    <i class="fa-solid fa-plus text-[10px]"></i> Tambah Peserta Baru
-                </button>
-            </div>
 
-            <!-- TABEL PESERTA LAKI-LAKI -->
-            <div class="w-full">
-                <div class="mb-1.5 pb-0.5 border-b-2 border-emerald-600 flex justify-between items-center">
-                    <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Laki-Laki (L)</h2>
+                <!-- TABEL PESERTA LAKI-LAKI -->
+                <div class="w-full">
+                    <div class="mb-1.5 pb-0.5 border-b-2 border-emerald-600 flex justify-between items-center">
+                        <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Laki-Laki (L)</h2>
+                    </div>
+                    <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
+                        <table class="w-full text-left border-collapse table-fixed min-w-full">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
+                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">No</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[16%]">No. HP</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                                <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
-                    <table class="w-full text-left border-collapse table-fixed min-w-full">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
-                                <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">No</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[16%]">No. HP</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
-                            <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
-            <!-- TABEL PESERTA PEREMPUAN -->
-            <div class="w-full">
-                <div class="mb-1.5 pb-0.5 border-b-2 border-pink-500 flex justify-between items-center">
-                    <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Perempuan (P)</h2>
+                <!-- TABEL PESERTA PEREMPUAN -->
+                <div class="w-full">
+                    <div class="mb-1.5 pb-0.5 border-b-2 border-pink-500 flex justify-between items-center">
+                        <h2 class="font-black text-xs text-slate-700 uppercase tracking-wide">Peserta Perempuan (P)</h2>
+                    </div>
+                    <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
+                        <table class="w-full text-left border-collapse table-fixed min-w-full">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
+                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">No</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[16%]">No. HP</th>
+                                    <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                                <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
-                    <table class="w-full text-left border-collapse table-fixed min-w-full">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-600 font-bold text-[10px] uppercase border-b border-slate-200">
-                                <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">No</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[30%]">Nama (A-Z)</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[16%]">No. HP</th>
-                                <th class="py-1.5 px-1 sm:px-2 w-[18%] text-right">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
-                            <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat data...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                
+                <p class="text-[9px] sm:text-[10px] text-slate-400 mt-1.5 italic">
+                    * Klik 1x untuk lihat detail angsuran.<br>
+                    * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
+                </p>
             </div>
-            
-            <p class="text-[9px] sm:text-[10px] text-slate-400 mt-1.5 italic">
-                * Klik 1x untuk lihat detail angsuran.<br>
-                * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
-            </p>
         </div>
 
-        <div class="text-center py-1">
+        <div class="text-center py-2">
             <p class="text-[8px] sm:text-[10px] font-bold tracking-widest text-slate-400 uppercase">POWERED BY : MBS ID</p>
         </div>
     </div>
