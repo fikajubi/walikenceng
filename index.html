@@ -100,15 +100,13 @@
             <p id="sub-header-title" class="text-[#00FF66] font-bold text-[9px] sm:text-xs uppercase mt-0.5 tracking-widest" style="text-shadow: 0 0 6px rgba(0,255,102,0.3);">DATA PESERTA ZIARAH WALI KENCENG</p>
         </div>
 
-        <!-- HEADER KARTU BAWAH (KARTU SALDO TERKUMPUL) - SELALU TAMPIL DI SEMUA NAVIGASI TAB -->
+        <!-- HEADER KARTU BAWAH (KARTU SALDO TERKUMPUL) -->
         <div id="card-total-saldo" class="w-full bg-[#2563eb] text-white text-center py-6 md:py-8 rounded-lg shadow-md relative overflow-hidden flex items-center justify-between px-6 md:px-12">
             
-            <!-- Icon Bus Kiri -->
             <div class="flex-shrink-0 w-10 sm:w-16 flex items-center justify-center text-[#00FF66] text-2xl sm:text-4xl filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] select-none">
                 <i class="fa-solid fa-bus"></i>
             </div>
             
-            <!-- Area Tampilan Saldo Utama -->
             <div class="flex-1 flex flex-col items-center justify-center px-2 z-10">
                 <div class="flex items-center justify-center gap-2 mb-1.5">
                     <div class="radar-pulse"></div>
@@ -122,7 +120,6 @@
                 </h2>
             </div>
             
-            <!-- Icon Masjid Kanan -->
             <div class="flex-shrink-0 w-10 sm:w-16 flex items-center justify-center text-[#00FF66] text-2xl sm:text-4xl filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] select-none">
                 <i class="fa-solid fa-mosque"></i>
             </div>
@@ -221,8 +218,6 @@
 
             <!-- VIEW TAB 2: DAFTAR ABSENSI -->
             <div id="view-tab-absensi" class="hidden space-y-3">
-                
-                <!-- ABSENSI PESERTA LAKI-LAKI (L) -->
                 <div id="section-absensi-laki" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-blue-600 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-xs text-blue-700 uppercase tracking-wide flex items-center gap-1.5">
@@ -251,7 +246,6 @@
                     </div>
                 </div>
 
-                <!-- ABSENSI PESERTA PEREMPUAN (P) -->
                 <div id="section-absensi-perempuan" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-pink-500 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-xs text-pink-700 uppercase tracking-wide flex items-center gap-1.5">
@@ -280,7 +274,6 @@
                     </div>
                 </div>
 
-                <!-- KETERANGAN RINCIAN DESTINASI -->
                 <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-[8px] sm:text-[9.5px] text-slate-800 space-y-1">
                     <p class="font-extrabold uppercase text-slate-700 tracking-wider">Keterangan Lokasi Destinasi Ziarah:</p>
                     <div class="grid grid-cols-2 gap-x-4 font-semibold border-t border-slate-200 pt-1">
@@ -297,10 +290,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- VIEW TAB 3: ROADMAPS & PETA RUTE ZIARAH -->
+            <!-- VIEW TAB 3: ROADMAPS -->
             <div id="view-tab-roadmaps" class="hidden space-y-3">
                 <div class="border-b-2 border-emerald-700 pb-1 flex justify-between items-center">
                     <h2 class="font-black text-xs sm:text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -311,17 +303,11 @@
                     </span>
                 </div>
 
-                <!-- DOKUMEN GAMBAR ROADMAP DENGAN OVERLAY ANIMASI ICON MAPS MERAH -->
                 <div class="w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-300 shadow-md relative group">
                     <img src="https://lh3.googleusercontent.com/d/1PeZuwV8F9vO2-H81O3WYluR3qg9FyCLP" alt="Peta Roadmap Ziarah" class="w-full object-contain max-h-[600px] mx-auto block">
-                    
-                    <!-- OVERLAY ANIMASI ICON MAPS MERAH PRESISI PADA LINGKARAN NOMOR 1 - 7 -->
-                    <div id="roadmap-map-pins-overlay" class="absolute inset-0 pointer-events-none">
-                        <!-- Dynamic Pins Rendered via JS -->
-                    </div>
+                    <div id="roadmap-map-pins-overlay" class="absolute inset-0 pointer-events-none"></div>
                 </div>
 
-                <!-- DAFTAR CENTANG CHECKLIST DESTINASI DENGAN OTORISASI PIN -->
                 <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 space-y-2">
                     <div class="flex items-center justify-between border-b border-emerald-200 pb-1.5">
                         <p class="text-[10px] sm:text-xs font-black uppercase text-emerald-900 flex items-center gap-1.5">
@@ -329,10 +315,7 @@
                         </p>
                         <span class="text-[8px] sm:text-[9px] font-bold text-slate-500 italic">* Mengubah status kunjungan membutuhkan PIN Takmir</span>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="roadmap-list-container">
-                        <!-- JS Render Buttons Status Kunjungan 1 - 7 -->
-                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="roadmap-list-container"></div>
                 </div>
             </div>
             
@@ -558,6 +541,33 @@
 
         let roadmapVisited = JSON.parse(localStorage.getItem('roadmap_visited_status') || '{}');
 
+        // FUNSI KONVERSI TANGGAL FULL FIX (DD/MM/YYYY <-> YYYY-MM-DD)
+        function getTodayYYYYMMDD() {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        // Konversi dari input type="date" (YYYY-MM-DD) -> Format Tampilan/Simpan (DD/MM/YYYY)
+        function formatToDDMMYYYY(dateStr) {
+            if (!dateStr) return "";
+            if (dateStr.includes('/')) return dateStr; // Sudah format DD/MM/YYYY
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[2].padStart(2,'0')}/${parts[1].padStart(2,'0')}/${parts[0]}`;
+        }
+
+        // Konversi dari (DD/MM/YYYY) -> Format Input HTML type="date" (YYYY-MM-DD)
+        function formatToYYYYMMDD(dd_mm_yyyy) {
+            if (!dd_mm_yyyy) return getTodayYYYYMMDD();
+            if (dd_mm_yyyy.includes('-')) return dd_mm_yyyy; // Sudah format YYYY-MM-DD
+            const parts = dd_mm_yyyy.split('/');
+            if (parts.length !== 3) return getTodayYYYYMMDD();
+            return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+        }
+
         function createSnowflake() {
             const snowChars = ['❄','❅','❆','✻'];
             const snow = document.createElement('div');
@@ -729,28 +739,6 @@
             sendRequest({ action: "getData" });
         }
 
-        function getTodayYYYYMMDD() {
-            const today = new Date();
-            const y = today.getFullYear();
-            const m = String(today.getMonth() + 1).padStart(2, '0');
-            const d = String(today.getDate()).padStart(2, '0');
-            return `${y}-${m}-${d}`;
-        }
-
-        function formatToDDMMYYYY(yyyy_mm_dd) {
-            if (!yyyy_mm_dd) return "";
-            const parts = yyyy_mm_dd.split('-');
-            if (parts.length !== 3) return yyyy_mm_dd;
-            return `${parts[2]}/${parts[1]}/${parts[0]}`;
-        }
-
-        function formatToYYYYMMDD(dd_mm_yyyy) {
-            if (!dd_mm_yyyy) return getTodayYYYYMMDD();
-            const parts = dd_mm_yyyy.split('/');
-            if (parts.length !== 3) return getTodayYYYYMMDD();
-            return `${parts[2]}-${parts[1]}-${parts[0]}`;
-        }
-
         function formatRupiah(num) {
             return "Rp. " + new Intl.NumberFormat('id-ID').format(num);
         }
@@ -829,13 +817,11 @@
             });
         }
 
-        /* --- LOGIKA ABSENSI: SETIAP 1 CENTANG WAJIB MENGGUNAKAN PIN 1 DIGIT (PIN: 9) --- */
         function handleAbsensiCheckboxChange(checkboxElem, pesertaId, locIndex) {
             const item = dataPeserta.find(x => x.id === pesertaId);
             if (!item) return;
 
             const isChecking = checkboxElem.checked;
-
             checkboxElem.checked = !isChecking;
 
             pendingAbsensiChange = {
@@ -974,13 +960,13 @@
             const typedPin = document.getElementById("input-security-pin").value;
 
             if (currentAccessSession.mode === 'absensi_verify') {
-                const isAbsensiPinValid = (typedPin === ABSENSI_PIN); // Memeriksa PIN 1 Digit: '9'
+                const isAbsensiPinValid = (typedPin === ABSENSI_PIN);
                 closeModal('pin-modal');
                 executeAbsensiWithPin(isAbsensiPinValid);
                 return;
             }
 
-            const isMainPinValid = (typedPin === SECURITY_PIN); // Memeriksa PIN Utama: '909'
+            const isMainPinValid = (typedPin === SECURITY_PIN);
             if (isMainPinValid) {
                 closeModal('pin-modal');
                 executeProtectedMode(currentAccessSession.mode);
