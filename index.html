@@ -49,6 +49,16 @@
             100% { transform: scale(1.4); opacity: 0; box-shadow: 0 0 12px #00FF66; }
         }
 
+        /* --- ANIMASI PIN MAPS MERAH BOUNCING --- */
+        @keyframes mapPinBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.2); }
+        }
+        .animate-pin-bounce {
+            display: inline-block;
+            animation: mapPinBounce 1.2s infinite ease-in-out;
+        }
+
         /* --- EFEK SALJU BERJATUHAN --- */
         .snowflake {
             color: rgba(255, 255, 255, 0.6);
@@ -87,11 +97,11 @@
             <i class="fa-solid fa-snowflake absolute top-2 right-1/3 text-white/10 text-xs"></i>
             <i class="fa-solid fa-asterisk absolute bottom-2 right-6 text-white/20 text-xs"></i>
             <h1 class="text-base sm:text-xl font-black uppercase tracking-wider">MUSHOLA WAKAF AN-NUR</h1>
-            <p class="text-[#00FF66] font-bold text-[9px] sm:text-xs uppercase mt-0.5 tracking-widest" style="text-shadow: 0 0 6px rgba(0,255,102,0.3);">DATA PESERTA ZIARAH WALI KENCENG</p>
+            <p id="sub-header-title" class="text-[#00FF66] font-bold text-[9px] sm:text-xs uppercase mt-0.5 tracking-widest" style="text-shadow: 0 0 6px rgba(0,255,102,0.3);">DATA PESERTA ZIARAH WALI KENCENG</p>
         </div>
 
-        <!-- HEADER KARTU BAWAH (PRESISI KARTU SALDO TERKUMPUL) -->
-        <div class="w-full bg-[#2563eb] text-white text-center py-6 md:py-8 rounded-lg shadow-md relative overflow-hidden flex items-center justify-between px-6 md:px-12">
+        <!-- HEADER KARTU BAWAH (KARTU SALDO TERKUMPUL) - SELALU TAMPIL DI SEMUA NAVIGASI TAB -->
+        <div id="card-total-saldo" class="w-full bg-[#2563eb] text-white text-center py-6 md:py-8 rounded-lg shadow-md relative overflow-hidden flex items-center justify-between px-6 md:px-12">
             
             <!-- Icon Bus Kiri -->
             <div class="flex-shrink-0 w-10 sm:w-16 flex items-center justify-center text-[#00FF66] text-2xl sm:text-4xl filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] select-none">
@@ -118,10 +128,24 @@
             </div>
         </div>
 
+        <!-- TOMBOL SWITCH 3 MENU UTAMA -->
+        <div class="w-full flex gap-1 p-1 bg-white rounded-lg shadow-sm border border-slate-200">
+            <button id="btn-tab-peserta" onclick="switchTab('peserta')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-700 text-white shadow-sm">
+                <i class="fa-solid fa-users"></i> Peserta
+            </button>
+            <button id="btn-tab-absensi" onclick="switchTab('absensi')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="fa-solid fa-clipboard-check"></i> Absensi
+            </button>
+            <button id="btn-tab-roadmaps" onclick="switchTab('roadmaps')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="fa-solid fa-route"></i> Roadmaps
+            </button>
+        </div>
+
         <!-- MAIN CONTENT CARD -->
-        <div class="w-full bg-white rounded-lg shadow-sm p-2 sm:p-3 space-y-2">
+        <div class="w-full bg-white rounded-lg shadow-sm p-2 sm:p-3 space-y-3">
             
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-1.5">
+            <!-- CONTROLS SEARCH & INPUT (KHUSUS TAB PESERTA) -->
+            <div id="controls-peserta" class="flex flex-col sm:flex-row justify-between items-center gap-1.5">
                 <div class="relative w-full sm:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                     <input type="text" id="search-input" onkeyup="filterPeserta()" placeholder="Cari nama peserta..." class="w-full pl-8 pr-3 py-1 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs font-semibold">
@@ -131,61 +155,190 @@
                 </button>
             </div>
 
-            <!-- TABEL PESERTA LAKI-LAKI -->
-            <div id="section-tabel-laki" class="w-full">
-                <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
-                    <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Peserta Laki-Laki (L)</h2>
-                </div>
-                <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
-                    <table class="w-full text-left border-collapse table-fixed min-w-full">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-600 font-bold text-[9px] sm:text-[10px] uppercase border-b border-slate-200">
-                                <th class="py-1 px-1 sm:px-2 w-[7%] text-center">No</th>
-                                <th class="py-1 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
-                                <th class="py-1 px-1 sm:px-2 w-[30%]">Nama</th>
-                                <th class="py-1 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                <th class="py-1 px-1 sm:px-2 w-[17%]">No. HP</th>
-                                <th class="py-1 px-1 sm:px-2 w-[18%] text-right">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
-                            <tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
-                        </tbody>
-                    </table>
+            <!-- CONTROLS SEARCH ABSENSI (KHUSUS TAB ABSENSI) -->
+            <div id="controls-absensi" class="hidden flex justify-between items-center gap-1.5">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-absensi-input" onkeyup="filterPeserta()" placeholder="Cari nama di absensi..." class="w-full pl-8 pr-3 py-1 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs font-semibold">
                 </div>
             </div>
 
-            <!-- TABEL PESERTA PEREMPUAN -->
-            <div id="section-tabel-perempuan" class="w-full">
-                <div class="mb-0.5 pb-0 border-b-2 border-pink-500 flex justify-between items-center">
-                    <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Peserta Perempuan (P)</h2>
+            <!-- VIEW TAB 1: DAFTAR PESERTA -->
+            <div id="view-tab-peserta" class="space-y-3">
+                <!-- TABEL PESERTA LAKI-LAKI -->
+                <div id="section-tabel-laki" class="w-full">
+                    <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
+                        <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Peserta Laki-Laki (L)</h2>
+                    </div>
+                    <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
+                        <table class="w-full text-left border-collapse table-fixed min-w-full">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 font-bold text-[9px] sm:text-[10px] uppercase border-b border-slate-200">
+                                    <th class="py-1 px-1 sm:px-2 w-[7%] text-center">No</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[30%]">Nama</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[8%] text-center">JK</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[17%]">No. HP</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[18%] text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-laki" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                                <tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
-                    <table class="w-full text-left border-collapse table-fixed min-w-full">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-600 font-bold text-[9px] sm:text-[10px] uppercase border-b border-slate-200">
-                                <th class="py-1 px-1 sm:px-2 w-[7%] text-center">No</th>
-                                <th class="py-1 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
-                                <th class="py-1 px-1 sm:px-2 w-[30%]">Nama</th>
-                                <th class="py-1 px-1 sm:px-2 w-[8%] text-center">JK</th>
-                                <th class="py-1 px-1 sm:px-2 w-[17%]">No. HP</th>
-                                <th class="py-1 px-1 sm:px-2 w-[18%] text-right">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
-                            <tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
-                        </tbody>
-                    </table>
+
+                <!-- TABEL PESERTA PEREMPUAN -->
+                <div id="section-tabel-perempuan" class="w-full">
+                    <div class="mb-0.5 pb-0 border-b-2 border-pink-500 flex justify-between items-center">
+                        <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Peserta Perempuan (P)</h2>
+                    </div>
+                    <div class="w-full border border-slate-200 rounded-lg overflow-x-auto">
+                        <table class="w-full text-left border-collapse table-fixed min-w-full">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 font-bold text-[9px] sm:text-[10px] uppercase border-b border-slate-200">
+                                    <th class="py-1 px-1 sm:px-2 w-[7%] text-center">No</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[20%] text-center">Tgl</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[30%]">Nama</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[8%] text-center">JK</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[17%]">No. HP</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[18%] text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-perempuan" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
+                                <tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <p id="info-keterangan-bawah" class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic">
+                    * Klik 1x untuk lihat detail angsuran.<br>
+                    * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
+                </p>
+            </div>
+
+            <!-- VIEW TAB 2: DAFTAR ABSENSI -->
+            <div id="view-tab-absensi" class="hidden space-y-3">
+                
+                <!-- ABSENSI PESERTA LAKI-LAKI (L) -->
+                <div id="section-absensi-laki" class="w-full">
+                    <div class="mb-0.5 pb-0 border-b-2 border-blue-600 flex justify-between items-center">
+                        <h2 class="font-black text-[11px] sm:text-xs text-blue-700 uppercase tracking-wide flex items-center gap-1.5">
+                            <i class="fa-solid fa-clipboard-check text-blue-600"></i> Absensi Laki-Laki (L)
+                        </h2>
+                    </div>
+                    <div class="w-full border border-blue-200 rounded-lg overflow-hidden bg-white">
+                        <table class="w-full text-left border-collapse table-fixed">
+                            <thead>
+                                <tr class="bg-blue-600 text-white font-black text-[7px] sm:text-[8.5px] uppercase border-b border-blue-700 leading-tight">
+                                    <th class="py-1.5 px-0.5 w-[5%] text-center">No</th>
+                                    <th class="py-1.5 px-1 w-[25%]">Nama Peserta</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-blue-500">Dest. 1</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-blue-500">Dest. 2</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-blue-500">Dest. 3</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-blue-500">Dest. 4</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-blue-500">Dest. 5</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-blue-500">Dest. 6</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-blue-500 bg-blue-700">Dest. 7</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-absensi-laki" class="divide-y divide-blue-100 text-[9px] sm:text-xs font-semibold">
+                                <tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Memuat data absensi...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ABSENSI PESERTA PEREMPUAN (P) -->
+                <div id="section-absensi-perempuan" class="w-full">
+                    <div class="mb-0.5 pb-0 border-b-2 border-pink-500 flex justify-between items-center">
+                        <h2 class="font-black text-[11px] sm:text-xs text-pink-700 uppercase tracking-wide flex items-center gap-1.5">
+                            <i class="fa-solid fa-clipboard-check text-pink-500"></i> Absensi Perempuan (P)
+                        </h2>
+                    </div>
+                    <div class="w-full border border-pink-200 rounded-lg overflow-hidden bg-white">
+                        <table class="w-full text-left border-collapse table-fixed">
+                            <thead>
+                                <tr class="bg-pink-600 text-white font-black text-[7px] sm:text-[8.5px] uppercase border-b border-pink-700 leading-tight">
+                                    <th class="py-1.5 px-0.5 w-[5%] text-center">No</th>
+                                    <th class="py-1.5 px-1 w-[25%]">Nama Peserta</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-pink-500">Dest. 1</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-pink-500">Dest. 2</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-pink-500">Dest. 3</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-pink-500">Dest. 4</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-pink-500">Dest. 5</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-pink-500">Dest. 6</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[10%] border-l border-pink-500 bg-pink-700">Dest. 7</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-absensi-perempuan" class="divide-y divide-pink-100 text-[9px] sm:text-xs font-semibold">
+                                <tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Memuat data absensi...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- KETERANGAN RINCIAN DESTINASI -->
+                <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-[8px] sm:text-[9.5px] text-slate-800 space-y-1">
+                    <p class="font-extrabold uppercase text-slate-700 tracking-wider">Keterangan Lokasi Destinasi Ziarah:</p>
+                    <div class="grid grid-cols-2 gap-x-4 font-semibold border-t border-slate-200 pt-1">
+                        <div class="space-y-0.5">
+                            <div><b>Destinasi 1:</b> Syekh Abdullah Mursyad</div>
+                            <div><b>Destinasi 2:</b> Syekh Ikhsan Jampes</div>
+                            <div><b>Destinasi 3:</b> Gus Dur Jombang</div>
+                            <div><b>Destinasi 4:</b> Syekh Sulaiman Mojoagung</div>
+                        </div>
+                        <div class="space-y-0.5">
+                            <div><b>Destinasi 5:</b> Sunan Ampel</div>
+                            <div><b>Destinasi 6:</b> Syekh Khona Kholil</div>
+                            <div class="text-blue-700 font-bold"><b>Destinasi 7:</b> Syekh Abdullah Mursyad (Kembali)</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- VIEW TAB 3: ROADMAPS & PETA RUTE ZIARAH -->
+            <div id="view-tab-roadmaps" class="hidden space-y-3">
+                <div class="border-b-2 border-emerald-700 pb-1 flex justify-between items-center">
+                    <h2 class="font-black text-xs sm:text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-map-location-dot text-emerald-600"></i> Roadmap & Status Kunjungan Ziarah
+                    </h2>
+                    <span id="roadmap-status-badge" class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                        0 / 7 Dikunjungi
+                    </span>
+                </div>
+
+                <!-- DOKUMEN GAMBAR ROADMAP DENGAN OVERLAY ANIMASI ICON MAPS MERAH -->
+                <div class="w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-300 shadow-md relative group">
+                    <img src="https://lh3.googleusercontent.com/d/1PeZuwV8F9vO2-H81O3WYluR3qg9FyCLP" alt="Peta Roadmap Ziarah" class="w-full object-contain max-h-[600px] mx-auto block">
+                    
+                    <!-- OVERLAY ANIMASI ICON MAPS MERAH PRESISI PADA LINGKARAN NOMOR 1 - 7 -->
+                    <div id="roadmap-map-pins-overlay" class="absolute inset-0 pointer-events-none">
+                        <!-- Dynamic Pins Rendered via JS -->
+                    </div>
+                </div>
+
+                <!-- DAFTAR CENTANG CHECKLIST DESTINASI DENGAN OTORISASI PIN -->
+                <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 space-y-2">
+                    <div class="flex items-center justify-between border-b border-emerald-200 pb-1.5">
+                        <p class="text-[10px] sm:text-xs font-black uppercase text-emerald-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-location-dot text-emerald-600"></i> Checklist Lokasi Rute Kunjungan:
+                        </p>
+                        <span class="text-[8px] sm:text-[9px] font-bold text-slate-500 italic">* Mengubah status kunjungan membutuhkan PIN Takmir</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="roadmap-list-container">
+                        <!-- JS Render Buttons Status Kunjungan 1 - 7 -->
+                    </div>
                 </div>
             </div>
             
-            <p id="info-keterangan-bawah" class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic">
-                * Klik 1x untuk lihat detail angsuran.<br>
-                * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
-            </p>
         </div>
 
-        <!-- FOOTER TEKS ABU-ABU TANPA LOGO PDF (KLIK UNTUK MUNCUL POPUP PDF + PIN) -->
+        <!-- FOOTER TEKS ABU-ABU -->
         <div id="footer-mbs" class="text-center py-0.5">
             <p onclick="requestAccess('download_pdf')" class="text-[8px] sm:text-[10px] font-bold tracking-widest text-slate-400 uppercase cursor-pointer hover:text-slate-600 transition select-none">
                 POWERED BY : MBS ID
@@ -326,11 +479,11 @@
             <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-1.5 text-sm">
                 <i class="fa-solid fa-lock"></i>
             </div>
-            <h3 class="text-emerald-800 text-[11px] font-black uppercase mb-0.5">PIN Otorisasi Takmir</h3>
-            <p class="text-[8px] font-bold text-slate-400 mb-2.5 uppercase tracking-wide">Masukkan PIN Keamanan Sistem</p>
+            <h3 class="text-emerald-800 text-[11px] font-black uppercase mb-0.5">PIN Otorisasi System</h3>
+            <p id="pin-modal-subtitle" class="text-[8px] font-bold text-slate-400 mb-2.5 uppercase tracking-wide">Masukkan PIN Keamanan Sistem</p>
             <form onsubmit="submitPinVerification(event)">
                 <div class="mb-2.5">
-                    <input type="password" id="input-security-pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" class="w-full text-center bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-sm font-black tracking-widest text-slate-800 focus:outline-none focus:border-emerald-600" required autocomplete="off">
+                    <input type="password" id="input-security-pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="•" class="w-full text-center bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-sm font-black tracking-widest text-slate-800 focus:outline-none focus:border-emerald-600" required autocomplete="off">
                 </div>
                 <div class="flex gap-1.5">
                     <button type="button" onclick="closeModal('pin-modal')" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Batal</button>
@@ -346,7 +499,7 @@
             <div class="bg-emerald-800 text-white p-3 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-file-pdf text-emerald-300 text-base"></i>
-                    <h3 class="font-black text-xs uppercase tracking-wider">Download Web PDF (UHD)</h3>
+                    <h3 id="pdf-modal-title" class="font-black text-xs uppercase tracking-wider">Download Web PDF (UHD)</h3>
                 </div>
                 <button onclick="closeModal('modalPdf')" class="text-emerald-200 hover:text-white text-base font-bold">&times;</button>
             </div>
@@ -355,10 +508,10 @@
                     <p class="font-bold uppercase flex items-center gap-1 mb-0.5">
                         <i class="fa-solid fa-circle-check text-emerald-600"></i> Mode Cetak Presisi Tinggi:
                     </p>
-                    <p class="text-slate-600 font-semibold">Meng-capture seluruh tampilan web lengkap dengan resolusi UHD 300 DPI.</p>
+                    <p id="pdf-modal-desc" class="text-slate-600 font-semibold">Meng-capture seluruh tampilan web dengan resolusi UHD 300 DPI.</p>
                 </div>
 
-                <div class="text-left">
+                <div id="pdf-gender-group" class="text-left">
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Pilih Data Yang Ingin Dicetak:</label>
                     <select id="pdf-gender-filter" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
                         <option value="ALL">Semua Peserta (Laki-Laki & Perempuan)</option>
@@ -381,14 +534,30 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw53A3VXnTgjEd-Ri4Rt47r42A6Mj3S7fBEUuv2JQyrYGWyZ-3ZTJjeQ5y1EQqFyrrkHQ/exec";
-        const SECURITY_PIN = "909";
-        
+        const SECURITY_PIN = "909"; // PIN Utama Fitur Admin
+        const ABSENSI_PIN = "9";    // PIN 1 Digit Khusus Centang Absensi
+
         let activePesertaId = null;
         let activeCicilanIndex = null;
+        let activeRoadmapDestId = null;
+        let pendingAbsensiChange = null;
         let currentAccessSession = { mode: null };
         let dataPeserta = [];
+        let currentTab = 'peserta';
+        let syncTimeoutTimer = null;
 
-        // EFEK SALJU BERJATUHAN
+        const destinasiRoadmap = [
+            { id: 1, name: "Destinasi 1: Syekh Abdullah Mursyad", x: 58.2, y: 30.1 },
+            { id: 2, name: "Destinasi 2: Syekh Ikhsan Jampes", x: 81.5, y: 41.2 },
+            { id: 3, name: "Destinasi 3: Gus Dur Jombang", x: 56.4, y: 47.9 },
+            { id: 4, name: "Destinasi 4: Syekh Sulaiman Mojoagung", x: 82.5, y: 58.2 },
+            { id: 5, name: "Destinasi 5: Sunan Ampel", x: 51.0, y: 69.8 },
+            { id: 6, name: "Destinasi 6: Syekh Khona Kholil", x: 63.6, y: 82.5 },
+            { id: 7, name: "Destinasi 7: Syekh Abdullah Mursyad (Kembali)", x: 77.2, y: 30.1 }
+        ];
+
+        let roadmapVisited = JSON.parse(localStorage.getItem('roadmap_visited_status') || '{}');
+
         function createSnowflake() {
             const snowChars = ['❄','❅','❆','✻'];
             const snow = document.createElement('div');
@@ -403,13 +572,161 @@
         }
         for (let i = 0; i < 12; i++) { createSnowflake(); }
 
+        function switchTab(tabName) {
+            currentTab = tabName;
+            const btnPeserta = document.getElementById('btn-tab-peserta');
+            const btnAbsensi = document.getElementById('btn-tab-absensi');
+            const btnRoadmaps = document.getElementById('btn-tab-roadmaps');
+
+            const viewPeserta = document.getElementById('view-tab-peserta');
+            const viewAbsensi = document.getElementById('view-tab-absensi');
+            const viewRoadmaps = document.getElementById('view-tab-roadmaps');
+
+            const controlsPeserta = document.getElementById('controls-peserta');
+            const controlsAbsensi = document.getElementById('controls-absensi');
+            const subTitle = document.getElementById('sub-header-title');
+
+            btnPeserta.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnAbsensi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnRoadmaps.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+
+            viewPeserta.classList.add('hidden');
+            viewAbsensi.classList.add('hidden');
+            viewRoadmaps.classList.add('hidden');
+            controlsPeserta.classList.add('hidden');
+            controlsAbsensi.classList.add('hidden');
+
+            if (tabName === 'peserta') {
+                btnPeserta.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-700 text-white shadow-sm";
+                viewPeserta.classList.remove('hidden');
+                controlsPeserta.classList.remove('hidden');
+                subTitle.innerText = "DATA PESERTA ZIARAH WALI KENCENG";
+            } else if (tabName === 'absensi') {
+                btnAbsensi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm";
+                viewAbsensi.classList.remove('hidden');
+                controlsAbsensi.classList.remove('hidden');
+                subTitle.innerText = "ABSENSI KUNJUNGAN DESTINASI 1 - 7";
+                renderTableAbsensi();
+            } else if (tabName === 'roadmaps') {
+                btnRoadmaps.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-800 text-white shadow-sm";
+                viewRoadmaps.classList.remove('hidden');
+                subTitle.innerText = "ROADMAP & PETA RUTE PERJALANAN ZIARAH";
+                renderRoadmapChecklist();
+            }
+        }
+
+        function renderRoadmapChecklist() {
+            const container = document.getElementById('roadmap-list-container');
+            const mapOverlay = document.getElementById('roadmap-map-pins-overlay');
+            if (!container) return;
+
+            container.innerHTML = '';
+            if (mapOverlay) mapOverlay.innerHTML = '';
+            let visitedCount = 0;
+
+            destinasiRoadmap.forEach((dest) => {
+                const isVisited = !!roadmapVisited[dest.id];
+                if (isVisited) visitedCount++;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => requestAccess('toggle_roadmap', dest.id);
+                
+                if (isVisited) {
+                    btn.className = "p-2 rounded-lg border flex items-center justify-between transition text-left bg-emerald-600 text-white border-emerald-700 shadow-sm";
+                    btn.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-location-dot text-rose-300 text-base animate-pin-bounce"></i>
+                            <span class="font-bold text-[10px] sm:text-xs uppercase">${dest.name}</span>
+                        </div>
+                        <span class="bg-emerald-800 text-emerald-200 text-[9px] font-black px-1.5 py-0.5 rounded flex items-center gap-1 uppercase shrink-0">
+                            <i class="fa-solid fa-check text-emerald-300"></i> Dikunjungi
+                        </span>
+                    `;
+                } else {
+                    btn.className = "p-2 rounded-lg border flex items-center justify-between transition text-left bg-white text-slate-700 border-slate-300 hover:border-emerald-500 hover:bg-slate-50";
+                    btn.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-location-dot text-rose-500 text-base animate-pin-bounce"></i>
+                            <span class="font-bold text-[10px] sm:text-xs uppercase">${dest.name}</span>
+                        </div>
+                        <span class="bg-rose-100 text-rose-600 text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 uppercase shrink-0">
+                            <i class="fa-solid fa-xmark text-rose-600"></i> Belum
+                        </span>
+                    `;
+                }
+                container.appendChild(btn);
+
+                if (mapOverlay) {
+                    const pinOverlay = document.createElement('div');
+                    pinOverlay.style.left = `${dest.x}%`;
+                    pinOverlay.style.top = `${dest.y}%`;
+                    pinOverlay.className = "absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center z-10 pointer-events-none";
+
+                    const badgeStatusHtml = isVisited
+                        ? `<span class="bg-emerald-700 text-white font-black text-[9px] sm:text-[11px] px-1 py-0.2 rounded-full shadow -mt-1 border border-white whitespace-nowrap flex items-center justify-center">
+                            <i class="fa-solid fa-check text-[#00FF66]"></i>
+                           </span>`
+                        : `<span class="bg-rose-700 text-white font-black text-[9px] sm:text-[11px] px-1 py-0.2 rounded-full shadow -mt-1 border border-white whitespace-nowrap flex items-center justify-center">
+                            <i class="fa-solid fa-xmark text-rose-200"></i>
+                           </span>`;
+
+                    pinOverlay.innerHTML = `
+                        <i class="fa-solid fa-location-dot text-rose-600 text-xl sm:text-3xl drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] animate-pin-bounce"></i>
+                        ${badgeStatusHtml}
+                    `;
+                    mapOverlay.appendChild(pinOverlay);
+                }
+            });
+
+            document.getElementById('roadmap-status-badge').innerText = `${visitedCount} / 7 Dikunjungi`;
+        }
+
+        function toggleRoadmapVisited(id) {
+            roadmapVisited[id] = !roadmapVisited[id];
+            localStorage.setItem('roadmap_visited_status', JSON.stringify(roadmapVisited));
+            renderRoadmapChecklist();
+        }
+
         function setSyncing(isSyncing) {
             const txt = document.getElementById('statusText');
+            if (syncTimeoutTimer) clearTimeout(syncTimeoutTimer);
+
             if (isSyncing) {
                 txt.innerText = "PROSES DATA...";
+                syncTimeoutTimer = setTimeout(() => {
+                    txt.innerText = "SYSTEM ONLINE";
+                }, 8000);
             } else {
                 txt.innerText = "SYSTEM ONLINE";
             }
+        }
+
+        function sendRequest(params, callbackSuccess) {
+            setSyncing(true);
+            const query = new URLSearchParams(params).toString();
+            fetch(`${SCRIPT_URL}?${query}`)
+                .then(res => res.json())
+                .then(res => {
+                    if (res && !res.error) {
+                        dataPeserta = res;
+                        renderTables();
+                        renderTableAbsensi();
+                        if (callbackSuccess) callbackSuccess();
+                    } else if (res && res.error) {
+                        alert("Error Server: " + res.error);
+                    }
+                })
+                .catch(err => {
+                    console.log("Koneksi bermasalah: ", err);
+                })
+                .finally(() => {
+                    setSyncing(false);
+                });
+        }
+
+        function loadDataFromServer() {
+            sendRequest({ action: "getData" });
         }
 
         function getTodayYYYYMMDD() {
@@ -432,31 +749,6 @@
             const parts = dd_mm_yyyy.split('/');
             if (parts.length !== 3) return getTodayYYYYMMDD();
             return `${parts[2]}-${parts[1]}-${parts[0]}`;
-        }
-
-        function sendRequest(params, callbackSuccess) {
-            setSyncing(true);
-            const query = new URLSearchParams(params).toString();
-            fetch(`${SCRIPT_URL}?${query}`)
-                .then(res => res.json())
-                .then(res => {
-                    if (res && !res.error) {
-                        dataPeserta = res;
-                        renderTables();
-                        if (callbackSuccess) callbackSuccess();
-                    } else if (res.error) {
-                        alert("Error Server: " + res.error);
-                    }
-                    setSyncing(false);
-                })
-                .catch(err => {
-                    alert("Koneksi gagal: " + err);
-                    setSyncing(false);
-                });
-        }
-
-        function loadDataFromServer() {
-            sendRequest({ action: "getData" });
         }
 
         function formatRupiah(num) {
@@ -523,27 +815,173 @@
         }
 
         function filterPeserta() {
-            const query = document.getElementById('search-input').value.toLowerCase();
+            const queryPeserta = document.getElementById('search-input').value.toLowerCase();
+            const queryAbsensi = document.getElementById('search-absensi-input').value.toLowerCase();
+
             document.querySelectorAll('.long-press-row').forEach(row => {
                 const nama = row.children[2].innerText.toLowerCase();
-                row.style.display = nama.includes(query) ? '' : 'none';
+                row.style.display = nama.includes(queryPeserta) ? '' : 'none';
+            });
+
+            document.querySelectorAll('.absensi-row').forEach(row => {
+                const nama = row.children[1].innerText.toLowerCase();
+                row.style.display = nama.includes(queryAbsensi) ? '' : 'none';
             });
         }
 
-        function requestAccess(mode, cicilanIndex = null) {
+        /* --- LOGIKA ABSENSI: SETIAP 1 CENTANG WAJIB MENGGUNAKAN PIN 1 DIGIT (PIN: 9) --- */
+        function handleAbsensiCheckboxChange(checkboxElem, pesertaId, locIndex) {
+            const item = dataPeserta.find(x => x.id === pesertaId);
+            if (!item) return;
+
+            const isChecking = checkboxElem.checked;
+
+            checkboxElem.checked = !isChecking;
+
+            pendingAbsensiChange = {
+                pesertaId: pesertaId,
+                locIndex: locIndex,
+                targetState: isChecking
+            };
+
+            const subtitle = document.getElementById("pin-modal-subtitle");
+            subtitle.innerText = "🔒 Masukkan PIN 1 Digit Absensi";
+            
+            requestAccess('absensi_verify');
+        }
+
+        function executeAbsensiWithPin(isPinValid) {
+            if (!pendingAbsensiChange) return;
+
+            const { pesertaId, locIndex, targetState } = pendingAbsensiChange;
+            const item = dataPeserta.find(x => x.id === pesertaId);
+
+            if (!item) {
+                pendingAbsensiChange = null;
+                return;
+            }
+
+            if (!item.absensi) {
+                item.absensi = {1:false, 2:false, 3:false, 4:false, 5:false, 6:false, 7:false};
+            }
+
+            if (isPinValid) {
+                item.absensi[locIndex] = targetState;
+                saveAbsensiStateToServer(pesertaId, locIndex, targetState);
+            } else {
+                alert("⚠️ PIN Absensi Salah! Perubahan dibatalkan.");
+                renderTableAbsensi();
+            }
+
+            pendingAbsensiChange = null;
+        }
+
+        function saveAbsensiStateToServer(pesertaId, locIndex, isChecked) {
+            const item = dataPeserta.find(x => x.id === pesertaId);
+            if (!item) return;
+
+            if (!item.absensi) {
+                item.absensi = {1:false, 2:false, 3:false, 4:false, 5:false, 6:false, 7:false};
+            }
+            item.absensi[locIndex] = isChecked;
+
+            const payload = {
+                idPeserta: pesertaId,
+                absensi: item.absensi
+            };
+
+            sendRequest({ action: "saveAbsensi", data: JSON.stringify(payload) });
+        }
+
+        function renderTableAbsensi() {
+            const tbodyL = document.getElementById('table-absensi-laki');
+            const tbodyP = document.getElementById('table-absensi-perempuan');
+            if (!tbodyL || !tbodyP) return;
+
+            tbodyL.innerHTML = '';
+            tbodyP.innerHTML = '';
+
+            const dataL = dataPeserta.filter(x => x.jk === 'L').sort((a,b) => a.nama.localeCompare(b.nama));
+            const dataP = dataPeserta.filter(x => x.jk === 'P').sort((a,b) => a.nama.localeCompare(b.nama));
+
+            if (dataL.length === 0) {
+                tbodyL.innerHTML = `<tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Belum ada data peserta laki-laki.</td></tr>`;
+            } else {
+                dataL.forEach((item, idx) => {
+                    tbodyL.appendChild(createAbsensiRow(item, idx + 1, 'L'));
+                });
+            }
+
+            if (dataP.length === 0) {
+                tbodyP.innerHTML = `<tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Belum ada data peserta perempuan.</td></tr>`;
+            } else {
+                dataP.forEach((item, idx) => {
+                    tbodyP.appendChild(createAbsensiRow(item, idx + 1, 'P'));
+                });
+            }
+        }
+
+        function createAbsensiRow(item, no, jk) {
+            const tr = document.createElement('tr');
+            const hoverColor = jk === 'L' ? 'hover:bg-blue-50/50 border-blue-50' : 'hover:bg-pink-50/50 border-pink-50';
+            const checkboxColor = jk === 'L' ? 'text-blue-600 focus:ring-blue-500 accent-blue-600 border-blue-100' : 'text-pink-600 focus:ring-pink-500 accent-pink-600 border-pink-100';
+
+            tr.className = `transition border-b absensi-row ${hoverColor}`;
+
+            let checkboxesHtml = '';
+            for (let i = 1; i <= 7; i++) {
+                const isChecked = (item.absensi && item.absensi[i]) ? 'checked' : '';
+                checkboxesHtml += `
+                    <td class="py-1 px-0.5 text-center border-l ${checkboxColor.split(' ').pop()}">
+                        <input type="checkbox" ${isChecked} onchange="handleAbsensiCheckboxChange(this, '${item.id}', ${i})" class="w-3.5 h-3.5 rounded cursor-pointer ${checkboxColor}">
+                    </td>
+                `;
+            }
+
+            tr.innerHTML = `
+                <td class="py-1 px-0.5 text-center text-slate-500 font-bold">${no}</td>
+                <td class="py-1 px-1 font-bold text-slate-800 uppercase truncate" title="${item.nama}">${item.nama}</td>
+                ${checkboxesHtml}
+            `;
+            return tr;
+        }
+
+        function requestAccess(mode, extraId = null) {
             currentAccessSession.mode = mode;
-            if (cicilanIndex !== null) activeCicilanIndex = cicilanIndex;
+            if (mode === 'edit_cicilan' || mode === 'delete_cicilan') activeCicilanIndex = extraId;
+            if (mode === 'toggle_roadmap') activeRoadmapDestId = extraId;
 
             closeModal('modalAksi');
-            document.getElementById("input-security-pin").value = "";
+            
+            const pinInput = document.getElementById("input-security-pin");
+            pinInput.value = "";
+            
+            if (mode === 'absensi_verify') {
+                pinInput.maxLength = 1;
+                pinInput.placeholder = "•";
+            } else {
+                pinInput.maxLength = 6;
+                pinInput.placeholder = "••••••";
+                document.getElementById("pin-modal-subtitle").innerText = "Masukkan PIN Keamanan Sistem";
+            }
+
             document.getElementById("pin-modal").classList.remove("hidden");
-            document.getElementById("input-security-pin").focus();
+            pinInput.focus();
         }
 
         function submitPinVerification(e) {
             e.preventDefault();
             const typedPin = document.getElementById("input-security-pin").value;
-            if (typedPin === SECURITY_PIN) {
+
+            if (currentAccessSession.mode === 'absensi_verify') {
+                const isAbsensiPinValid = (typedPin === ABSENSI_PIN); // Memeriksa PIN 1 Digit: '9'
+                closeModal('pin-modal');
+                executeAbsensiWithPin(isAbsensiPinValid);
+                return;
+            }
+
+            const isMainPinValid = (typedPin === SECURITY_PIN); // Memeriksa PIN Utama: '909'
+            if (isMainPinValid) {
                 closeModal('pin-modal');
                 executeProtectedMode(currentAccessSession.mode);
             } else {
@@ -561,6 +999,7 @@
             else if (mode === 'edit_cicilan') openEditCicilanModal(activeCicilanIndex);
             else if (mode === 'delete_cicilan') executeDeleteCicilan(activeCicilanIndex);
             else if (mode === 'download_pdf') openPdfModal();
+            else if (mode === 'toggle_roadmap') toggleRoadmapVisited(activeRoadmapDestId);
         }
 
         function openAddPesertaModal() {
@@ -730,8 +1169,25 @@
             document.getElementById(idModal).classList.add('hidden');
         }
 
-        /* --- LOGIKA CETAK PDF TERPISAH (GENDER) + PIN SAFE --- */
         function openPdfModal() {
+            const title = document.getElementById('pdf-modal-title');
+            const desc = document.getElementById('pdf-modal-desc');
+            const genderGroup = document.getElementById('pdf-gender-group');
+
+            if (currentTab === 'peserta') {
+                title.innerText = "Download PDF Data Peserta (UHD)";
+                desc.innerText = "Meng-capture tabel Data Peserta Ziarah (Laki-Laki / Perempuan) dengan resolusi UHD 300 DPI.";
+                genderGroup.classList.remove('hidden');
+            } else if (currentTab === 'absensi') {
+                title.innerText = "Download PDF Absensi Destinasi (UHD)";
+                desc.innerText = "Meng-capture tabel Absensi Kehadiran Destinasi 1 - 7 lengkap dengan centang dengan resolusi UHD 300 DPI.";
+                genderGroup.classList.add('hidden');
+            } else {
+                title.innerText = "Download PDF Roadmap & Rute (UHD)";
+                desc.innerText = "Meng-capture peta roadmap & status kunjungan destinasi ziarah dengan resolusi UHD 300 DPI.";
+                genderGroup.classList.add('hidden');
+            }
+
             document.getElementById('modalPdf').classList.remove('hidden');
         }
 
@@ -748,22 +1204,27 @@
             const sectionL = document.getElementById('section-tabel-laki');
             const sectionP = document.getElementById('section-tabel-perempuan');
 
-            // Pengaturan Sembunyi/Tampil Tabel Sesuai Pilihan Filter
-            if (filterValue === 'L') {
-                sectionP.classList.add('hidden');
-            } else if (filterValue === 'P') {
-                sectionL.classList.add('hidden');
+            if (currentTab === 'peserta') {
+                if (filterValue === 'L') {
+                    sectionP.classList.add('hidden');
+                } else if (filterValue === 'P') {
+                    sectionL.classList.add('hidden');
+                }
             }
 
             setTimeout(() => {
                 const element = document.getElementById('main-web-content');
+                let fileNamePrefix = 'Data_Peserta';
+                if (currentTab === 'peserta') fileNamePrefix = `Data_Peserta_${filterValue}`;
+                else if (currentTab === 'absensi') fileNamePrefix = 'Absensi_Destinasi_1-7';
+                else fileNamePrefix = 'Roadmap_Peta_Ziarah';
 
                 const opt = {
                     margin:       [5, 5, 5, 5],
-                    filename:     `Laporan_Ziarah_${filterValue}_${getTodayYYYYMMDD()}.pdf`,
+                    filename:     `${fileNamePrefix}_${getTodayYYYYMMDD()}.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
-                        scale: 3.125, // Setara 300 DPI High Resolution
+                        scale: 3.125,
                         useCORS: true, 
                         logging: false,
                         scrollY: 0
@@ -772,7 +1233,6 @@
                 };
 
                 html2pdf().set(opt).from(element).save().then(() => {
-                    // Kembalikan tampilan semula
                     sectionL.classList.remove('hidden');
                     sectionP.classList.remove('hidden');
                     btn.innerHTML = originalBtnHtml;
@@ -822,7 +1282,10 @@
             });
         }
 
-        window.addEventListener('DOMContentLoaded', loadDataFromServer);
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDataFromServer();
+            renderRoadmapChecklist();
+        });
     </script>
 </body>
 </html>
