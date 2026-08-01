@@ -132,7 +132,7 @@
             </div>
 
             <!-- TABEL PESERTA LAKI-LAKI -->
-            <div class="w-full">
+            <div id="section-tabel-laki" class="w-full">
                 <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
                     <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Peserta Laki-Laki (L)</h2>
                 </div>
@@ -156,7 +156,7 @@
             </div>
 
             <!-- TABEL PESERTA PEREMPUAN -->
-            <div class="w-full">
+            <div id="section-tabel-perempuan" class="w-full">
                 <div class="mb-0.5 pb-0 border-b-2 border-pink-500 flex justify-between items-center">
                     <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Peserta Perempuan (P)</h2>
                 </div>
@@ -179,15 +179,15 @@
                 </div>
             </div>
             
-            <p class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic">
+            <p id="info-keterangan-bawah" class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic">
                 * Klik 1x untuk lihat detail angsuran.<br>
                 * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
             </p>
         </div>
 
         <!-- FOOTER DENGAN FITUR DOWNLOAD PDF -->
-        <div class="text-center py-1.5">
-            <button onclick="openPdfModal()" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/60 hover:bg-emerald-100 text-slate-500 hover:text-emerald-700 transition cursor-pointer text-[9px] sm:text-[10px] font-black tracking-widest uppercase border border-slate-300/50 shadow-xs">
+        <div id="footer-mbs" class="text-center py-1.5">
+            <button onclick="requestAccess('download_pdf')" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/60 hover:bg-emerald-100 text-slate-500 hover:text-emerald-700 transition cursor-pointer text-[9px] sm:text-[10px] font-black tracking-widest uppercase border border-slate-300/50 shadow-xs">
                 <i class="fa-solid fa-file-pdf text-red-500 text-xs"></i> POWERED BY : MBS ID
             </button>
         </div>
@@ -340,7 +340,7 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP DOWNLOAD PDF UHD 300DPI -->
+    <!-- MODAL POPUP DOWNLOAD PDF UHD 300DPI DENGAN PILIHAN GENDER -->
     <div id="modalPdf" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden text-center border border-slate-200">
             <div class="bg-emerald-800 text-white p-3 flex justify-between items-center">
@@ -353,9 +353,18 @@
             <div class="p-4 space-y-3">
                 <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-left text-[10px] text-emerald-900">
                     <p class="font-bold uppercase flex items-center gap-1 mb-0.5">
-                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Mode Cetak Tampilan Full Web:
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Mode Cetak Presisi Tinggi:
                     </p>
-                    <p class="text-slate-600 font-semibold">Meng-capture seluruh tampilan web (Header, Saldo, & Tabel Data) dengan kerapatan 300 DPI Ultra High Definition.</p>
+                    <p class="text-slate-600 font-semibold">Meng-capture seluruh tampilan web lengkap dengan resolusi UHD 300 DPI.</p>
+                </div>
+
+                <div class="text-left">
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Pilih Data Yang Ingin Dicetak:</label>
+                    <select id="pdf-gender-filter" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
+                        <option value="ALL">Semua Peserta (Laki-Laki & Perempuan)</option>
+                        <option value="L">Peserta Laki-Laki Saja (L)</option>
+                        <option value="P">Peserta Perempuan Saja (P)</option>
+                    </select>
                 </div>
 
                 <div class="pt-1 flex flex-col gap-2">
@@ -551,6 +560,7 @@
             else if (mode === 'delete_peserta') executeDeletePeserta();
             else if (mode === 'edit_cicilan') openEditCicilanModal(activeCicilanIndex);
             else if (mode === 'delete_cicilan') executeDeleteCicilan(activeCicilanIndex);
+            else if (mode === 'download_pdf') openPdfModal();
         }
 
         function openAddPesertaModal() {
@@ -720,31 +730,40 @@
             document.getElementById(idModal).classList.add('hidden');
         }
 
-        /* --- FUNGSI EKSPORT SEMUA TAMPILAN WEB KE PDF 300 DPI --- */
+        /* --- LOGIKA CETAK PDF TERPISAH (GENDER) + PIN SAFE --- */
         function openPdfModal() {
             document.getElementById('modalPdf').classList.remove('hidden');
         }
 
         function generatePdfUHD() {
+            const filterValue = document.getElementById('pdf-gender-filter').value;
             const btn = document.getElementById('btnDownloadPdfProcess');
             const originalBtnHtml = btn.innerHTML;
             
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDF UHD...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDF...';
             btn.disabled = true;
 
-            // Tutup pop-up modal agar tidak ikut terrekam dalam PDF
             closeModal('modalPdf');
+
+            const sectionL = document.getElementById('section-tabel-laki');
+            const sectionP = document.getElementById('section-tabel-perempuan');
+
+            // Pengaturan Sembunyi/Tampil Tabel Sesuai Pilihan Filter
+            if (filterValue === 'L') {
+                sectionP.classList.add('hidden');
+            } else if (filterValue === 'P') {
+                sectionL.classList.add('hidden');
+            }
 
             setTimeout(() => {
                 const element = document.getElementById('main-web-content');
 
-                // Konfigurasi html2pdf untuk ekspor seluruh tampilan web
                 const opt = {
                     margin:       [5, 5, 5, 5],
-                    filename:     `Web_Ziarah_AnNur_${getTodayYYYYMMDD()}.pdf`,
+                    filename:     `Laporan_Ziarah_${filterValue}_${getTodayYYYYMMDD()}.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
-                        scale: 3.125, // Presisi tinggi setara 300 DPI
+                        scale: 3.125, // Setara 300 DPI High Resolution
                         useCORS: true, 
                         logging: false,
                         scrollY: 0
@@ -753,10 +772,15 @@
                 };
 
                 html2pdf().set(opt).from(element).save().then(() => {
+                    // Kembalikan tampilan semula
+                    sectionL.classList.remove('hidden');
+                    sectionP.classList.remove('hidden');
                     btn.innerHTML = originalBtnHtml;
                     btn.disabled = false;
                 }).catch(err => {
                     alert("Gagal membuat PDF: " + err);
+                    sectionL.classList.remove('hidden');
+                    sectionP.classList.remove('hidden');
                     btn.innerHTML = originalBtnHtml;
                     btn.disabled = false;
                 });
