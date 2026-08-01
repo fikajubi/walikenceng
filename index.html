@@ -100,9 +100,8 @@
             <p id="sub-header-title" class="text-[#00FF66] font-bold text-[9px] sm:text-xs uppercase mt-0.5 tracking-widest" style="text-shadow: 0 0 6px rgba(0,255,102,0.3);">DATA PESERTA ZIARAH WALI KENCENG</p>
         </div>
 
-        <!-- HEADER KARTU BAWAH (KARTU SALDO TERKUMPUL) -->
+        <!-- HEADER KARTU BAWAH -->
         <div id="card-total-saldo" class="w-full bg-[#2563eb] text-white text-center py-6 md:py-8 rounded-lg shadow-md relative overflow-hidden flex items-center justify-between px-6 md:px-12">
-            
             <div class="flex-shrink-0 w-10 sm:w-16 flex items-center justify-center text-[#00FF66] text-2xl sm:text-4xl filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] select-none">
                 <i class="fa-solid fa-bus"></i>
             </div>
@@ -141,7 +140,7 @@
         <!-- MAIN CONTENT CARD -->
         <div class="w-full bg-white rounded-lg shadow-sm p-2 sm:p-3 space-y-3">
             
-            <!-- CONTROLS SEARCH & INPUT (KHUSUS TAB PESERTA) -->
+            <!-- CONTROLS SEARCH & INPUT -->
             <div id="controls-peserta" class="flex flex-col sm:flex-row justify-between items-center gap-1.5">
                 <div class="relative w-full sm:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -152,7 +151,7 @@
                 </button>
             </div>
 
-            <!-- CONTROLS SEARCH ABSENSI (KHUSUS TAB ABSENSI) -->
+            <!-- CONTROLS SEARCH ABSENSI -->
             <div id="controls-absensi" class="hidden flex justify-between items-center gap-1.5">
                 <div class="relative w-full sm:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -466,7 +465,7 @@
             <p id="pin-modal-subtitle" class="text-[8px] font-bold text-slate-400 mb-2.5 uppercase tracking-wide">Masukkan PIN Keamanan Sistem</p>
             <form onsubmit="submitPinVerification(event)">
                 <div class="mb-2.5">
-                    <input type="password" id="input-security-pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="•" class="w-full text-center bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-sm font-black tracking-widest text-slate-800 focus:outline-none focus:border-emerald-600" required autocomplete="off">
+                    <input type="password" id="input-security-pin" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" class="w-full text-center bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-sm font-black tracking-widest text-slate-800 focus:outline-none focus:border-emerald-600" required autocomplete="off">
                 </div>
                 <div class="flex gap-1.5">
                     <button type="button" onclick="closeModal('pin-modal')" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Batal</button>
@@ -476,7 +475,7 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP DOWNLOAD PDF UHD 300DPI DENGAN PILIHAN GENDER -->
+    <!-- MODAL POPUP DOWNLOAD PDF -->
     <div id="modalPdf" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden text-center border border-slate-200">
             <div class="bg-emerald-800 text-white p-3 flex justify-between items-center">
@@ -518,7 +517,7 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw53A3VXnTgjEd-Ri4Rt47r42A6Mj3S7fBEUuv2JQyrYGWyZ-3ZTJjeQ5y1EQqFyrrkHQ/exec";
         const SECURITY_PIN = "909"; // PIN Utama Fitur Admin
-        const ABSENSI_PIN = "9";    // PIN 1 Digit Khusus Centang Absensi
+        const ABSENSI_PIN = "9";    // PIN Asli Absensi HANYA angka 9
 
         let activePesertaId = null;
         let activeCicilanIndex = null;
@@ -541,7 +540,6 @@
 
         let roadmapVisited = JSON.parse(localStorage.getItem('roadmap_visited_status') || '{}');
 
-        // FUNSI KONVERSI TANGGAL FULL FIX (DD/MM/YYYY <-> YYYY-MM-DD)
         function getTodayYYYYMMDD() {
             const today = new Date();
             const y = today.getFullYear();
@@ -550,20 +548,37 @@
             return `${y}-${m}-${d}`;
         }
 
-        // Konversi dari input type="date" (YYYY-MM-DD) -> Format Tampilan/Simpan (DD/MM/YYYY)
-        function formatToDDMMYYYY(dateStr) {
-            if (!dateStr) return "";
-            if (dateStr.includes('/')) return dateStr; // Sudah format DD/MM/YYYY
-            const parts = dateStr.split('-');
-            if (parts.length !== 3) return dateStr;
-            return `${parts[2].padStart(2,'0')}/${parts[1].padStart(2,'0')}/${parts[0]}`;
+        function cleanDisplayDate(dateStr) {
+            if (!dateStr || dateStr === '-') return '-';
+            const str = String(dateStr).trim();
+
+            if (str.includes('Jan') || str.includes('Feb') || str.includes('Mar') || 
+                str.includes('Apr') || str.includes('May') || str.includes('Jun') || 
+                str.includes('Jul') || str.includes('Aug') || str.includes('Sep') || 
+                str.includes('Oct') || str.includes('Nov') || str.includes('Dec')) {
+                const d = new Date(str);
+                if (!isNaN(d.getTime())) {
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const year = d.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+            }
+
+            if (str.includes('-')) {
+                const parts = str.split('-');
+                if (parts.length === 3) {
+                    return `${parts[2].padStart(2,'0')}/${parts[1].padStart(2,'0')}/${parts[0]}`;
+                }
+            }
+
+            return str;
         }
 
-        // Konversi dari (DD/MM/YYYY) -> Format Input HTML type="date" (YYYY-MM-DD)
         function formatToYYYYMMDD(dd_mm_yyyy) {
             if (!dd_mm_yyyy) return getTodayYYYYMMDD();
-            if (dd_mm_yyyy.includes('-')) return dd_mm_yyyy; // Sudah format YYYY-MM-DD
-            const parts = dd_mm_yyyy.split('/');
+            const cleanStr = cleanDisplayDate(dd_mm_yyyy);
+            const parts = cleanStr.split('/');
             if (parts.length !== 3) return getTodayYYYYMMDD();
             return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
         }
@@ -787,7 +802,8 @@
                 ? '<span class="bg-blue-100 text-blue-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">L</span>'
                 : '<span class="bg-pink-100 text-pink-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">P</span>';
 
-            const tglDisplay = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
+            const rawTgl = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
+            const tglDisplay = cleanDisplayDate(rawTgl);
 
             tr.innerHTML = `
                 <td class="py-1 px-1 text-center font-bold text-slate-500">${no}</td>
@@ -831,7 +847,7 @@
             };
 
             const subtitle = document.getElementById("pin-modal-subtitle");
-            subtitle.innerText = "🔒 Masukkan PIN 1 Digit Absensi";
+            subtitle.innerText = "🔒 Masukkan PIN Verification Absensi";
             
             requestAccess('absensi_verify');
         }
@@ -942,12 +958,13 @@
             const pinInput = document.getElementById("input-security-pin");
             pinInput.value = "";
             
+            // Izinkan input hingga 6 digit untuk semua aksi (termasuk absensi)
+            pinInput.maxLength = 6;
+            pinInput.placeholder = "••••••";
+
             if (mode === 'absensi_verify') {
-                pinInput.maxLength = 1;
-                pinInput.placeholder = "•";
+                document.getElementById("pin-modal-subtitle").innerText = "🔒 Masukkan PIN Verification Absensi";
             } else {
-                pinInput.maxLength = 6;
-                pinInput.placeholder = "••••••";
                 document.getElementById("pin-modal-subtitle").innerText = "Masukkan PIN Keamanan Sistem";
             }
 
@@ -960,13 +977,14 @@
             const typedPin = document.getElementById("input-security-pin").value;
 
             if (currentAccessSession.mode === 'absensi_verify') {
-                const isAbsensiPinValid = (typedPin === ABSENSI_PIN);
+                // Memeriksa bahwa nilai PIN murni angka "9"
+                const isAbsensiPinValid = (typedPin.trim() === ABSENSI_PIN);
                 closeModal('pin-modal');
                 executeAbsensiWithPin(isAbsensiPinValid);
                 return;
             }
 
-            const isMainPinValid = (typedPin === SECURITY_PIN);
+            const isMainPinValid = (typedPin.trim() === SECURITY_PIN);
             if (isMainPinValid) {
                 closeModal('pin-modal');
                 executeProtectedMode(currentAccessSession.mode);
@@ -1031,7 +1049,7 @@
             const jk = document.getElementById('form-peserta-jk').value;
             const hp = document.getElementById('form-peserta-hp').value.trim();
             const rawTgl = document.getElementById('form-peserta-tgl').value;
-            const tglFormatted = formatToDDMMYYYY(rawTgl);
+            const tglFormatted = cleanDisplayDate(rawTgl);
             const dp = parseInt(document.getElementById('form-peserta-dp').value) || 0;
 
             const payload = { id, nama, jk, hp, tglDaftar: tglFormatted, dp };
@@ -1070,7 +1088,7 @@
             e.preventDefault();
             const idCicilan = document.getElementById('form-cicilan-id').value;
             const rawTgl = document.getElementById('form-bayar-tgl').value;
-            const tglFormatted = formatToDDMMYYYY(rawTgl);
+            const tglFormatted = cleanDisplayDate(rawTgl);
             const ket = document.getElementById('form-bayar-ket').value.trim().toUpperCase();
             const nominal = parseInt(document.getElementById('form-bayar-nominal').value) || 0;
 
@@ -1122,7 +1140,7 @@
                 item.cicilan.forEach((c, idx) => {
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50">
-                            <td class="p-1 text-slate-500">${c.tgl}</td>
+                            <td class="p-1 text-slate-500">${cleanDisplayDate(c.tgl)}</td>
                             <td class="p-1 font-bold text-slate-700 uppercase">${c.ket}</td>
                             <td class="p-1 text-right font-black text-slate-800">${formatRupiah(c.nominal)}</td>
                             <td class="p-1 text-center">
