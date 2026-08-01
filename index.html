@@ -79,8 +79,8 @@
     <!-- Container Efek Salju -->
     <div id="snow-container"></div>
 
-    <!-- Container Lebar Penuh dengan Celah Kanan-Kiri Tipis -->
-    <div class="w-full max-w-full mx-auto space-y-1.5 relative z-10">
+    <!-- CONTAINER UTAMA HALAMAN WEB -->
+    <div id="main-web-content" class="w-full max-w-full mx-auto space-y-1.5 relative z-10 bg-slate-100 p-1">
         
         <!-- HEADER KARTU ATAS -->
         <div class="w-full bg-[#115e37] text-white rounded-lg p-3 sm:p-4 text-center shadow-sm relative overflow-hidden">
@@ -346,30 +346,21 @@
             <div class="bg-emerald-800 text-white p-3 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-file-pdf text-emerald-300 text-base"></i>
-                    <h3 class="font-black text-xs uppercase tracking-wider">Eksport PDF Laporan (UHD)</h3>
+                    <h3 class="font-black text-xs uppercase tracking-wider">Download Web PDF (UHD)</h3>
                 </div>
                 <button onclick="closeModal('modalPdf')" class="text-emerald-200 hover:text-white text-base font-bold">&times;</button>
             </div>
             <div class="p-4 space-y-3">
                 <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-left text-[10px] text-emerald-900">
                     <p class="font-bold uppercase flex items-center gap-1 mb-0.5">
-                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Mode Cetak Presisi Tinggi:
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Mode Cetak Tampilan Full Web:
                     </p>
-                    <p class="text-slate-600 font-semibold">Format standar A4 Portrait dengan kerapatan 300 DPI Ultra High Definition.</p>
-                </div>
-
-                <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1 text-left">Pilih Filter Data Laporan:</label>
-                    <select id="pdf-filter-type" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
-                        <option value="ALL">Semua Peserta (Laki-Laki & Perempuan)</option>
-                        <option value="L">Peserta Laki-Laki Saja (L)</option>
-                        <option value="P">Peserta Perempuan Saja (P)</option>
-                    </select>
+                    <p class="text-slate-600 font-semibold">Meng-capture seluruh tampilan web (Header, Saldo, & Tabel Data) dengan kerapatan 300 DPI Ultra High Definition.</p>
                 </div>
 
                 <div class="pt-1 flex flex-col gap-2">
                     <button id="btnDownloadPdfProcess" onclick="generatePdfUHD()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-lg shadow-md transition uppercase tracking-wider flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-download"></i> Download PDF 300 DPI
+                        <i class="fa-solid fa-download"></i> Download PDF Web 300 DPI
                     </button>
                     <button onclick="closeModal('modalPdf')" class="w-full py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded-lg uppercase">
                         Batal
@@ -377,11 +368,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- CONTAINER TERSEMBUNYI UNTUK RENDER PDF 300 DPI -->
-    <div id="pdf-render-area" class="fixed top-[-9999px] left-[-9999px] bg-white p-8 w-[800px] text-slate-900 font-sans">
-        <!-- Rendered dynamically via JavaScript -->
     </div>
 
     <script>
@@ -734,112 +720,41 @@
             document.getElementById(idModal).classList.add('hidden');
         }
 
-        /* --- LOGIK FUNGSI EKSPORT PDF UHD 300 DPI --- */
+        /* --- FUNGSI EKSPORT SEMUA TAMPILAN WEB KE PDF 300 DPI --- */
         function openPdfModal() {
             document.getElementById('modalPdf').classList.remove('hidden');
         }
 
         function generatePdfUHD() {
-            const filterType = document.getElementById('pdf-filter-type').value;
             const btn = document.getElementById('btnDownloadPdfProcess');
             const originalBtnHtml = btn.innerHTML;
             
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDF UHD...';
             btn.disabled = true;
 
+            // Tutup pop-up modal agar tidak ikut terrekam dalam PDF
+            closeModal('modalPdf');
+
             setTimeout(() => {
-                const renderArea = document.getElementById('pdf-render-area');
-                
-                let listFiltered = dataPeserta;
-                if (filterType === 'L') listFiltered = dataPeserta.filter(x => x.jk === 'L');
-                if (filterType === 'P') listFiltered = dataPeserta.filter(x => x.jk === 'P');
+                const element = document.getElementById('main-web-content');
 
-                listFiltered.sort((a,b) => a.nama.localeCompare(b.nama));
-
-                let totalPembayaran = 0;
-                let rowsHtml = '';
-
-                listFiltered.forEach((item, index) => {
-                    const totalBayar = item.cicilan.reduce((sum, c) => sum + c.nominal, 0);
-                    totalPembayaran += totalBayar;
-                    const tglDisplay = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
-
-                    rowsHtml += `
-                        <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
-                            <td style="padding: 6px; text-align: center;">${index + 1}</td>
-                            <td style="padding: 6px; text-align: center;">${tglDisplay}</td>
-                            <td style="padding: 6px; font-weight: bold; text-transform: uppercase;">${item.nama}</td>
-                            <td style="padding: 6px; text-align: center; font-weight: bold;">${item.jk}</td>
-                            <td style="padding: 6px;">${item.hp}</td>
-                            <td style="padding: 6px; text-align: right; font-weight: bold; color: #059669;">${formatRupiah(totalBayar)}</td>
-                        </tr>
-                    `;
-                });
-
-                const dateNow = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-                renderArea.innerHTML = `
-                    <div style="font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b;">
-                        <!-- HEADER DOCUMENT -->
-                        <div style="border-bottom: 3px double #115e37; padding-bottom: 12px; margin-bottom: 16px; text-align: center;">
-                            <h1 style="font-size: 18px; font-weight: 900; color: #115e37; text-transform: uppercase; margin: 0; tracking-wide: 1px;">MUSHOLA WAKAF AN-NUR</h1>
-                            <h2 style="font-size: 13px; font-weight: 800; color: #2563eb; text-transform: uppercase; margin: 4px 0 0 0;">LAPORAN DATA PESERTA ZIARAH WALI KENCENG</h2>
-                            <p style="font-size: 10px; color: #64748b; margin-top: 4px; font-weight: 600;">Dicetak Pada: ${dateNow} | Kategori: ${filterType === 'ALL' ? 'Semua Peserta' : (filterType === 'L' ? 'Peserta Laki-Laki' : 'Peserta Perempuan')}</p>
-                        </div>
-
-                        <!-- TABEL DATA -->
-                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                            <thead>
-                                <tr style="background-color: #f1f5f9; font-size: 10px; text-transform: uppercase; color: #475569; border-top: 1px solid #cbd5e1; border-bottom: 2px solid #cbd5e1;">
-                                    <th style="padding: 8px 6px; text-align: center; width: 5%;">NO</th>
-                                    <th style="padding: 8px 6px; text-align: center; width: 15%;">TANGGAL</th>
-                                    <th style="padding: 8px 6px; text-align: left; width: 35%;">NAMA PESERTA</th>
-                                    <th style="padding: 8px 6px; text-align: center; width: 8%;">JK</th>
-                                    <th style="padding: 8px 6px; text-align: left; width: 17%;">NO. HP</th>
-                                    <th style="padding: 8px 6px; text-align: right; width: 20%;">TOTAL BAYAR</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${rowsHtml || '<tr><td colspan="6" style="text-align:center; padding: 12px; color: #94a3b8;">Tidak ada data peserta.</td></tr>'}
-                            </tbody>
-                            <tfoot>
-                                <tr style="background-color: #f8fafc; font-size: 12px; font-weight: 900; border-top: 2px solid #059669;">
-                                    <td colspan="5" style="padding: 8px; text-align: right; text-transform: uppercase;">TOTAL KESELURAHAN TERKUMPUL:</td>
-                                    <td style="padding: 8px; text-align: right; color: #059669;">${formatRupiah(totalPembayaran)}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-
-                        <!-- FOOTER KETERANGAN -->
-                        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px; font-size: 10px; color: #64748b;">
-                            <div>
-                                <p style="margin: 0; font-weight: 700;">Pengurus Mushola Wakaf An-Nur</p>
-                                <p style="margin: 2px 0 0 0;">Sistem Informasi Rekapitulasi Ziarah</p>
-                            </div>
-                            <div style="text-align: right; font-weight: 800; color: #059669;">
-                                POWERED BY : MBS ID
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // OPTION CONFIGURATION UNTUK ULTRA HD 300 DPI
+                // Konfigurasi html2pdf untuk ekspor seluruh tampilan web
                 const opt = {
-                    margin:       [10, 10, 10, 10],
-                    filename:     `Laporan_Ziarah_AnNur_${filterType}_${getTodayYYYYMMDD()}.pdf`,
+                    margin:       [5, 5, 5, 5],
+                    filename:     `Web_Ziarah_AnNur_${getTodayYYYYMMDD()}.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
-                        scale: 3.125, // Setara 300 DPI High Resolution Canvas
+                        scale: 3.125, // Presisi tinggi setara 300 DPI
                         useCORS: true, 
-                        logging: false 
+                        logging: false,
+                        scrollY: 0
                     },
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                html2pdf().set(opt).from(renderArea).save().then(() => {
+                html2pdf().set(opt).from(element).save().then(() => {
                     btn.innerHTML = originalBtnHtml;
                     btn.disabled = false;
-                    closeModal('modalPdf');
                 }).catch(err => {
                     alert("Gagal membuat PDF: " + err);
                     btn.innerHTML = originalBtnHtml;
