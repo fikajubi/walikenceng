@@ -241,7 +241,7 @@
                 </div>
             </div>
 
-            <!-- VIEW TAB 2: DAFTAR PESERTA -->
+            <!-- VIEW TAB 2: DAFTAR PESERTA (KOLOM HANYA: KURSI/BUS, TGL, NAMA, JK, TOTAL) -->
             <div id="view-tab-peserta" class="hidden space-y-3">
                 <div id="section-tabel-peserta-all" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
@@ -251,17 +251,15 @@
                         <table class="w-full text-left border-collapse table-fixed min-w-full">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-600 font-bold text-[9px] sm:text-[10px] uppercase border-b border-slate-200">
-                                    <th class="py-1 px-1 sm:px-2 w-[8%] text-center">Kursi</th>
-                                    <th class="py-1 px-1 sm:px-2 w-[8%] text-center">Bus</th>
-                                    <th class="py-1 px-1 sm:px-2 w-[16%] text-center">Tgl</th>
-                                    <th class="py-1 px-1 sm:px-2 w-[30%]">Nama</th>
-                                    <th class="py-1 px-1 sm:px-2 w-[6%] text-center">JK</th>
-                                    <th class="py-1 px-1 sm:px-2 w-[14%]">No. HP</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[18%] text-center">KURSI / BUS</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[18%] text-center">Tgl</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[38%]">Nama</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[8%] text-center">JK</th>
                                     <th class="py-1 px-1 sm:px-2 w-[18%] text-right">Total</th>
                                 </tr>
                             </thead>
                             <tbody id="table-peserta-all" class="divide-y divide-slate-200 text-[10px] sm:text-xs font-semibold">
-                                <tr><td colspan="7" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
+                                <tr><td colspan="5" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -273,7 +271,7 @@
                 </p>
             </div>
 
-            <!-- VIEW TAB 3: DAFTAR ABSENSI -->
+            <!-- VIEW TAB 3: DAFTAR ABSENSI (KOLOM HANYA: KURSI/BUS, NAMA, DESTINASI 1-7) -->
             <div id="view-tab-absensi" class="hidden space-y-3">
                 <div id="section-absensi-all" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-blue-600 flex justify-between items-center">
@@ -285,9 +283,8 @@
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
                                 <tr class="bg-blue-600 text-white font-black text-[7px] sm:text-[8.5px] uppercase border-b border-blue-700 leading-tight">
-                                    <th class="py-1.5 px-0.5 w-[6%] text-center">Krs</th>
-                                    <th class="py-1.5 px-[2px] w-[6%] text-center">Bus</th>
-                                    <th class="py-1.5 px-1 w-[20%]">Nama Peserta</th>
+                                    <th class="py-1.5 px-0.5 w-[11%] text-center">KURSI / BUS</th>
+                                    <th class="py-1.5 px-1 w-[22.5%]">Nama Peserta</th>
                                     <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500">Dest 1</th>
                                     <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500">Dest 2</th>
                                     <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500">Dest 3</th>
@@ -298,7 +295,7 @@
                                 </tr>
                             </thead>
                             <tbody id="table-absensi-all" class="divide-y divide-blue-100 text-[9px] sm:text-xs font-semibold">
-                                <tr><td colspan="10" class="p-2 text-center text-slate-400 italic">Memuat data absensi...</td></tr>
+                                <tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Memuat data absensi...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -540,8 +537,7 @@
         let currentAccessSession = { mode: null };
         let dataPeserta = [];
         let currentTab = 'kursi';
-        let isPesertaTabUnlocked = false;
-        let verifiedPinCache = null; // MEMORY SESSION UNTUK AKSES INSTAN TANPA DELAY
+        let verifiedPinCache = null; // SESSION CACHE PIN MEMORY FAST-LOADING
         let syncTimeoutTimer = null;
 
         const seatCoordinates = [
@@ -585,8 +581,9 @@
         }
         for (let i = 0; i < 12; i++) { createSnowflake(); }
 
+        /* --- PENYEMPURNAAN: KETIKA PENGGUNA MENGKLIK NAVIGASI PESERTA SELALU MINTA PIN --- */
         function switchTab(tabName) {
-            if (tabName === 'peserta' && !isPesertaTabUnlocked) {
+            if (tabName === 'peserta') {
                 requestAccess('view_peserta_tab');
                 return;
             }
@@ -653,7 +650,7 @@
             }
         }
 
-        /* --- OVERLAY TITIK KURSI CUKUP CENTANG HIJAU SAJA --- */
+        /* --- OVERLAY CENTANG HIJAU PADA KURSI TERISI --- */
         function renderInteractiveSeatOverlay() {
             const container = document.getElementById('bus-seat-overlay-container');
             if (!container) return;
@@ -869,7 +866,7 @@
             return "Rp. " + new Intl.NumberFormat('id-ID').format(num);
         }
 
-        /* --- RENDER TABEL PESERTA --- */
+        /* --- RENDER TABEL PESERTA (TANPA KOLOM NO HP, KURSI/BUS DIGABUNG) --- */
         function renderTables() {
             const tableAll = document.getElementById('table-peserta-all');
             tableAll.innerHTML = '';
@@ -879,7 +876,7 @@
             let totalGrand = 0;
 
             if (dataSorted.length === 0) {
-                tableAll.innerHTML = `<tr><td colspan="7" class="p-2 text-center text-slate-400 italic">Belum ada data peserta</td></tr>`;
+                tableAll.innerHTML = `<tr><td colspan="5" class="p-2 text-center text-slate-400 italic">Belum ada data peserta</td></tr>`;
             } else {
                 dataSorted.forEach((item) => {
                     const totalBayar = item.cicilan.reduce((sum, c) => sum + c.nominal, 0);
@@ -892,7 +889,6 @@
             initLongPressEvents();
         }
 
-        /* --- BARIS KET. BUS HANYA 'A' ATAU 'B' --- */
         function createRowElement(item, totalBayar) {
             const tr = document.createElement('tr');
             tr.className = "hover:bg-slate-50 transition cursor-pointer long-press-row";
@@ -902,18 +898,17 @@
                 ? '<span class="bg-blue-100 text-blue-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">L</span>'
                 : '<span class="bg-pink-100 text-pink-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">P</span>';
 
-            const busDisplay = `<span class="font-black text-slate-800 text-[10px]">${item.bus || 'A'}</span>`;
+            const kursiNum = item.noKursi ? item.noKursi : '-';
+            const busLetter = item.bus ? item.bus : 'A';
+            const kursiBusCombined = `<span class="font-black text-purple-700">${kursiNum}/${busLetter}</span>`;
 
             const tglDisplay = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
-            const seatDisplay = item.noKursi ? `#${item.noKursi}` : '-';
 
             tr.innerHTML = `
-                <td class="py-1 px-1 text-center font-black text-purple-700">${seatDisplay}</td>
-                <td class="py-1 px-1 text-center">${busDisplay}</td>
+                <td class="py-1 px-1 text-center font-black">${kursiBusCombined}</td>
                 <td class="py-1 px-1 text-center font-bold text-slate-600 truncate">${tglDisplay}</td>
                 <td class="py-1 px-1 font-bold text-slate-800 truncate uppercase">${item.nama}</td>
                 <td class="py-1 px-1 text-center">${badgeJk}</td>
-                <td class="py-1 px-1 text-slate-500 truncate">${item.hp}</td>
                 <td class="py-1 px-1 text-right">
                     <span class="font-black text-emerald-600 underline decoration-dashed underline-offset-2">${formatRupiah(totalBayar)}</span>
                 </td>
@@ -926,12 +921,12 @@
             const queryAbsensi = document.getElementById('search-absensi-input').value.toLowerCase();
 
             document.querySelectorAll('.long-press-row').forEach(row => {
-                const nama = row.children[3].innerText.toLowerCase();
+                const nama = row.children[2].innerText.toLowerCase();
                 row.style.display = nama.includes(queryPeserta) ? '' : 'none';
             });
 
             document.querySelectorAll('.absensi-row').forEach(row => {
-                const nama = row.children[2].innerText.toLowerCase();
+                const nama = row.children[1].innerText.toLowerCase();
                 row.style.display = nama.includes(queryAbsensi) ? '' : 'none';
             });
         }
@@ -999,7 +994,7 @@
             sendRequest({ action: "saveAbsensi", data: JSON.stringify(payload) });
         }
 
-        /* --- RENDER TABEL ABSENSI --- */
+        /* --- RENDER TABEL ABSENSI (KURSI/BUS DIGABUNG) --- */
         function renderTableAbsensi() {
             const tbodyAll = document.getElementById('table-absensi-all');
             if (!tbodyAll) return;
@@ -1009,7 +1004,7 @@
             const dataSorted = [...dataPeserta].sort((a,b) => (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999));
 
             if (dataSorted.length === 0) {
-                tbodyAll.innerHTML = `<tr><td colspan="10" class="p-2 text-center text-slate-400 italic">Belum ada data peserta.</td></tr>`;
+                tbodyAll.innerHTML = `<tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Belum ada data peserta.</td></tr>`;
             } else {
                 dataSorted.forEach((item) => {
                     tbodyAll.appendChild(createAbsensiRow(item));
@@ -1031,11 +1026,12 @@
                 `;
             }
 
-            const seatDisplay = item.noKursi ? `#${item.noKursi}` : '-';
+            const kursiNum = item.noKursi ? item.noKursi : '-';
+            const busLetter = item.bus ? item.bus : 'A';
+            const kursiBusCombined = `<span class="font-black text-purple-700">${kursiNum}/${busLetter}</span>`;
 
             tr.innerHTML = `
-                <td class="py-1 px-0.5 text-center font-black text-purple-700">${seatDisplay}</td>
-                <td class="py-1 px-[2px] text-center font-black text-slate-700">${item.bus || 'A'}</td>
+                <td class="py-1 px-0.5 text-center font-black">${kursiBusCombined}</td>
                 <td class="py-1 px-1 font-bold text-slate-800 uppercase truncate" title="${item.nama}">${item.nama}</td>
                 ${checkboxesHtml}
             `;
@@ -1067,20 +1063,17 @@
             pinInput.focus();
         }
 
-        /* --- VERIFIKASI PIN DENGAN FAST-LOADING CACHE & VISUAL LOADING INNER BUTTON --- */
         function submitPinVerification(e) {
             e.preventDefault();
             const typedPin = document.getElementById("input-security-pin").value;
             const btnSubmit = document.getElementById("btn-submit-pin");
             const originalBtnHtml = btnSubmit.innerHTML;
 
-            // Jika PIN sudah pernah diverifikasi sukses di memori session (Instan 0 Jeda)
             if (verifiedPinCache && verifiedPinCache === typedPin) {
                 processPinResult(true);
                 return;
             }
 
-            // Tampilkan loading lokal pada tombol verifikasi
             btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Cek...';
             btnSubmit.disabled = true;
 
@@ -1089,7 +1082,7 @@
                 btnSubmit.disabled = false;
 
                 if (isValid) {
-                    verifiedPinCache = typedPin; // Simpan ke Cache RAM
+                    verifiedPinCache = typedPin;
                 }
                 processPinResult(isValid);
             });
@@ -1105,7 +1098,6 @@
             if (isValid) {
                 closeModal('pin-modal');
                 if (currentAccessSession.mode === 'view_peserta_tab') {
-                    isPesertaTabUnlocked = true;
                     executeSwitchTab('peserta');
                 } else {
                     executeProtectedMode(currentAccessSession.mode);
