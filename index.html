@@ -135,7 +135,7 @@
             </div>
         </div>
 
-        <!-- TOMBOL SWITCH 3 MENU UTAMA -->
+        <!-- TOMBOL SWITCH 4 MENU UTAMA -->
         <div class="w-full flex gap-1 p-1 bg-white rounded-lg shadow-sm border border-slate-200">
             <button id="btn-tab-peserta" onclick="switchTab('peserta')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-700 text-white shadow-sm">
                 <i class="fa-solid fa-users"></i> Peserta
@@ -145,6 +145,9 @@
             </button>
             <button id="btn-tab-roadmaps" onclick="switchTab('roadmaps')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <i class="fa-solid fa-route"></i> Roadmaps
+            </button>
+            <button id="btn-tab-kursi" onclick="switchTab('kursi')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="fa-solid fa-chair"></i> Denah Kursi
             </button>
         </div>
 
@@ -340,6 +343,23 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="roadmap-list-container">
                         <!-- JS Render Buttons Status Kunjungan 1 - 7 -->
                     </div>
+                </div>
+            </div>
+
+            <!-- VIEW TAB 4: DENAH KURSI BUS -->
+            <div id="view-tab-kursi" class="hidden space-y-3">
+                <div class="border-b-2 border-emerald-700 pb-1 flex justify-between items-center">
+                    <h2 class="font-black text-xs sm:text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-chair text-emerald-600"></i> Denah Tempat Duduk / Kursi Bus
+                    </h2>
+                    <span class="bg-blue-100 text-blue-800 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                        Armada Bus Ziarah
+                    </span>
+                </div>
+
+                <!-- GAMBAR DENAH KURSI BUS -->
+                <div class="w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-300 shadow-md relative">
+                    <img src="https://lh3.googleusercontent.com/d/12U3DOwZUub9Qq8Uhdnqw0dVQHGG8RSOl" alt="Denah Kursi Bus" class="w-full object-contain max-h-[700px] mx-auto block">
                 </div>
             </div>
             
@@ -584,10 +604,12 @@
             const btnPeserta = document.getElementById('btn-tab-peserta');
             const btnAbsensi = document.getElementById('btn-tab-absensi');
             const btnRoadmaps = document.getElementById('btn-tab-roadmaps');
+            const btnKursi = document.getElementById('btn-tab-kursi');
 
             const viewPeserta = document.getElementById('view-tab-peserta');
             const viewAbsensi = document.getElementById('view-tab-absensi');
             const viewRoadmaps = document.getElementById('view-tab-roadmaps');
+            const viewKursi = document.getElementById('view-tab-kursi');
 
             const controlsPeserta = document.getElementById('controls-peserta');
             const controlsAbsensi = document.getElementById('controls-absensi');
@@ -597,10 +619,13 @@
             btnPeserta.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
             btnAbsensi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
             btnRoadmaps.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnKursi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
 
             viewPeserta.classList.add('hidden');
             viewAbsensi.classList.add('hidden');
             viewRoadmaps.classList.add('hidden');
+            viewKursi.classList.add('hidden');
+
             controlsPeserta.classList.add('hidden');
             controlsAbsensi.classList.add('hidden');
 
@@ -608,21 +633,26 @@
                 btnPeserta.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-700 text-white shadow-sm";
                 viewPeserta.classList.remove('hidden');
                 controlsPeserta.classList.remove('hidden');
-                cardTotalSaldo.classList.remove('hidden'); // Tampilkan Saldo Terkumpul di Tab Peserta
+                cardTotalSaldo.classList.remove('hidden');
                 subTitle.innerText = "DATA PESERTA ZIARAH WALI KENCENG";
             } else if (tabName === 'absensi') {
                 btnAbsensi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm";
                 viewAbsensi.classList.remove('hidden');
                 controlsAbsensi.classList.remove('hidden');
-                cardTotalSaldo.classList.add('hidden'); // Sembunyikan Saldo Terkumpul di Tab Absensi
+                cardTotalSaldo.classList.add('hidden');
                 subTitle.innerText = "ABSENSI KUNJUNGAN DESTINASI 1 - 7";
                 renderTableAbsensi();
             } else if (tabName === 'roadmaps') {
                 btnRoadmaps.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-800 text-white shadow-sm";
                 viewRoadmaps.classList.remove('hidden');
-                cardTotalSaldo.classList.add('hidden'); // Sembunyikan Saldo Terkumpul di Tab Roadmaps
+                cardTotalSaldo.classList.add('hidden');
                 subTitle.innerText = "ROADMAP & PETA RUTE PERJALANAN ZIARAH";
                 renderRoadmapChecklist();
+            } else if (tabName === 'kursi') {
+                btnKursi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-700 text-white shadow-sm";
+                viewKursi.classList.remove('hidden');
+                cardTotalSaldo.classList.add('hidden');
+                subTitle.innerText = "DENAH TEMPAT DUDUK / KURSI BUS";
             }
         }
 
@@ -1193,9 +1223,13 @@
                 title.innerText = "Download PDF Absensi Destinasi (UHD)";
                 desc.innerText = "Meng-capture tabel Absensi Kehadiran Destinasi 1 - 7 lengkap dengan centang dengan resolusi UHD 300 DPI.";
                 genderGroup.classList.add('hidden');
-            } else {
+            } else if (currentTab === 'roadmaps') {
                 title.innerText = "Download PDF Roadmap & Rute (UHD)";
                 desc.innerText = "Meng-capture peta roadmap & status kunjungan destinasi ziarah dengan resolusi UHD 300 DPI.";
+                genderGroup.classList.add('hidden');
+            } else {
+                title.innerText = "Download PDF Denah Kursi Bus (UHD)";
+                desc.innerText = "Meng-capture gambar denah posisi tempat duduk bus dengan resolusi UHD 300 DPI.";
                 genderGroup.classList.add('hidden');
             }
 
@@ -1228,7 +1262,8 @@
                 let fileNamePrefix = 'Data_Peserta';
                 if (currentTab === 'peserta') fileNamePrefix = `Data_Peserta_${filterValue}`;
                 else if (currentTab === 'absensi') fileNamePrefix = 'Absensi_Destinasi_1-7';
-                else fileNamePrefix = 'Roadmap_Peta_Ziarah';
+                else if (currentTab === 'roadmaps') fileNamePrefix = 'Roadmap_Peta_Ziarah';
+                else fileNamePrefix = 'Denah_Kursi_Bus';
 
                 const opt = {
                     margin:       [5, 5, 5, 5],
