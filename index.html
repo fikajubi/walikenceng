@@ -131,13 +131,14 @@
     <div id="main-web-content" class="w-full max-w-full mx-auto space-y-1.5 relative z-10 bg-slate-100 p-1">
         
         <!-- HEADER KARTU ATAS -->
-        <div class="w-full bg-[#115e37] text-white rounded-lg p-3 sm:p-4 text-center shadow-sm relative overflow-hidden">
+        <div class="w-full bg-[#115e37] text-white rounded-lg p-2.5 sm:p-4 text-center shadow-sm relative overflow-hidden">
             <i class="fa-solid fa-snowflake absolute top-2 right-1/3 text-white/10 text-xs"></i>
             <i class="fa-solid fa-asterisk absolute bottom-2 right-6 text-white/20 text-xs"></i>
             
             <h1 class="text-base sm:text-xl font-black uppercase tracking-wider">MUSHOLA WAKAF AN-NUR</h1>
-            <p class="text-slate-200 text-[8px] sm:text-[10px] font-semibold mt-0.5 italic tracking-wide">( Desa Bakalan Lor RT. 08 RW. 04 )</p>
-            <p id="sub-header-title" class="text-[#00FF66] font-bold text-[9px] sm:text-xs uppercase mt-1 tracking-widest" style="text-shadow: 0 0 6px rgba(0,255,102,0.3);">DENAH TEMPAT DUDUK / KURSI BUS</p>
+            <p class="text-slate-200 text-[8.5px] sm:text-[11px] font-bold mt-0.5 uppercase tracking-wide">( DESA BAKALAN LOR, RT 08 | RW 04 )</p>
+            <p class="text-[#00FF66] text-[8px] sm:text-[10px] font-extrabold mt-0.5 uppercase tracking-wider">RT 08 : BP. PURNOMO | RW 04 : BP. KATENO</p>
+            <p id="sub-header-title" class="text-amber-300 font-bold text-[9px] sm:text-xs uppercase mt-1 tracking-widest">DENAH TEMPAT DUDUK / KURSI BUS</p>
         </div>
 
         <!-- KARTU SALDO TERKUMPUL (TOTAL KESELURUHAN) -->
@@ -241,7 +242,7 @@
                 </div>
             </div>
 
-            <!-- VIEW TAB 2: DAFTAR PESERTA (FIXED LAYOUT TANPA SCROLL SAMPING & 1 BARIS) -->
+            <!-- VIEW TAB 2: DAFTAR PESERTA -->
             <div id="view-tab-peserta" class="hidden space-y-3">
                 <div id="section-tabel-peserta-all" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
@@ -266,8 +267,8 @@
                 </div>
 
                 <p id="info-keterangan-bawah" class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic">
-                    * Klik 1x untuk lihat detail angsuran.<br>
-                    * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
+                    * Klik 1x pada baris untuk melihat rincian angsuran.<br>
+                    * <b>Tekan & tahan baris selama 3 detik</b> di kolom mana saja untuk memunculkan menu Edit & Hapus.
                 </p>
             </div>
 
@@ -456,7 +457,7 @@
         </div>
     </div>
 
-    <!-- MODAL AKSI -->
+    <!-- MODAL AKSI (EDIT & HAPUS) -->
     <div id="modalAksi" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-xs overflow-hidden text-center p-3 sm:p-4">
             <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-1.5 text-sm">
@@ -533,7 +534,6 @@
         let activeRoadmapDestId = null;
         let activeSeatTargetNumber = null;
         let pendingAbsensiChange = null;
-        let pendingActionPayload = null;
         let currentAccessSession = { mode: null };
         let dataPeserta = [];
         let currentTab = 'kursi';
@@ -895,23 +895,22 @@
             tr.setAttribute('data-id', item.id);
 
             const badgeJk = item.jk === 'L' 
-                ? '<span class="bg-blue-100 text-blue-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">L</span>'
-                : '<span class="bg-pink-100 text-pink-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">P</span>';
+                ? '<span class="bg-blue-100 text-blue-800 font-black text-[9px] px-1.5 py-0.5 rounded-full pointer-events-none">L</span>'
+                : '<span class="bg-pink-100 text-pink-800 font-black text-[9px] px-1.5 py-0.5 rounded-full pointer-events-none">P</span>';
 
             const kursiNum = item.noKursi ? item.noKursi : '-';
             const busLetter = item.bus ? item.bus : 'A';
-            const kursiBusCombined = `<span class="font-black text-purple-700">${kursiNum}/${busLetter}</span>`;
+            const kursiBusCombined = `<span class="font-black text-purple-700 pointer-events-none">${kursiNum}/${busLetter}</span>`;
 
             const rawTgl = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
             const tglDisplay = formatToDDMMYYYY(rawTgl);
 
-            // KELAS whitespace-nowrap & text terpadu agar strict 1 baris penuh tanpa scroll menyamping
             tr.innerHTML = `
                 <td class="py-1.5 px-0.5 text-center font-black whitespace-nowrap text-[9px] sm:text-xs">${kursiBusCombined}</td>
-                <td class="py-1.5 px-0.5 text-center font-bold text-slate-600 whitespace-nowrap text-[8.5px] sm:text-xs">${tglDisplay}</td>
-                <td class="py-1.5 px-1 font-bold text-slate-800 uppercase truncate text-[9px] sm:text-xs" style="max-width: 0;">${item.nama}</td>
+                <td class="py-1.5 px-0.5 text-center font-bold text-slate-600 whitespace-nowrap text-[8.5px] sm:text-xs pointer-events-none">${tglDisplay}</td>
+                <td class="py-1.5 px-1 font-bold text-slate-800 uppercase truncate text-[9px] sm:text-xs pointer-events-none" style="max-width: 0;">${item.nama}</td>
                 <td class="py-1.5 px-0.5 text-center whitespace-nowrap">${badgeJk}</td>
-                <td class="py-1.5 px-0.5 text-right whitespace-nowrap text-[9px] sm:text-xs">
+                <td class="py-1.5 px-0.5 text-right whitespace-nowrap text-[9px] sm:text-xs pointer-events-none">
                     <span class="font-black text-emerald-600 underline decoration-dashed underline-offset-2">${formatRupiah(totalBayar)}</span>
                 </td>
             `;
@@ -935,7 +934,7 @@
 
         /* --- LOGIKA ABSENSI --- */
         function handleAbsensiCheckboxChange(checkboxElem, pesertaId, locIndex) {
-            const item = dataPeserta.find(x => x.id === pesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(pesertaId));
             if (!item) return;
 
             const isChecking = checkboxElem.checked;
@@ -957,7 +956,7 @@
             if (!pendingAbsensiChange) return;
 
             const { pesertaId, locIndex, targetState } = pendingAbsensiChange;
-            const item = dataPeserta.find(x => x.id === pesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(pesertaId));
 
             if (!item) {
                 pendingAbsensiChange = null;
@@ -980,7 +979,7 @@
         }
 
         function saveAbsensiStateToServer(pesertaId, locIndex, isChecked) {
-            const item = dataPeserta.find(x => x.id === pesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(pesertaId));
             if (!item) return;
 
             if (!item.absensi) {
@@ -1158,7 +1157,7 @@
         }
 
         function openEditPesertaModal() {
-            const item = dataPeserta.find(x => x.id === activePesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(activePesertaId));
             if (!item) return;
             document.getElementById('pesertaFormTitle').innerText = "Edit Data Peserta";
             document.getElementById('lbl-peserta-tgl').innerText = "Tanggal Pendaftaran (DD/MM/YYYY)";
@@ -1200,7 +1199,7 @@
         }
 
         function openBayarModal() {
-            const item = dataPeserta.find(x => x.id === activePesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(activePesertaId));
             if (!item) return;
             document.getElementById('bayarFormTitle').innerText = "Input Bayar Angsuran";
             document.getElementById('bayarTargetNama').innerText = "Peserta: " + item.nama;
@@ -1212,7 +1211,7 @@
         }
 
         function openEditCicilanModal(cIndex) {
-            const item = dataPeserta.find(x => x.id === activePesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(activePesertaId));
             if (!item || !item.cicilan[cIndex]) return;
 
             const cData = item.cicilan[cIndex];
@@ -1246,7 +1245,7 @@
         }
 
         function executeDeleteCicilan(cIndex) {
-            const item = dataPeserta.find(x => x.id === activePesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(activePesertaId));
             if (item && item.cicilan[cIndex]) {
                 const cData = item.cicilan[cIndex];
                 if (confirm(`Hapus transaksi "${cData.ket}" (${formatRupiah(cData.nominal)})?`)) {
@@ -1256,7 +1255,7 @@
         }
 
         function executeDeletePeserta() {
-            const item = dataPeserta.find(x => x.id === activePesertaId);
+            const item = dataPeserta.find(x => String(x.id) === String(activePesertaId));
             if (item && confirm(`Yakin ingin menghapus peserta "${item.nama}"?`)) {
                 sendRequest({ action: "deletePeserta", idPeserta: activePesertaId });
             }
@@ -1264,7 +1263,7 @@
 
         function openDetailModal(id) {
             activePesertaId = id;
-            const item = dataPeserta.find(x => x.id === id);
+            const item = dataPeserta.find(x => String(x.id) === String(id));
             if (!item) return;
 
             document.getElementById('modalNama').innerText = item.nama;
@@ -1305,7 +1304,7 @@
 
         function openActionModal(id) {
             activePesertaId = id;
-            const item = dataPeserta.find(x => x.id === id);
+            const item = dataPeserta.find(x => String(x.id) === String(id));
             if (!item) return;
             document.getElementById('actionNama').innerText = item.nama;
             document.getElementById('modalAksi').classList.remove('hidden');
@@ -1385,7 +1384,7 @@
             document.querySelectorAll('.long-press-row').forEach(row => {
                 const id = row.getAttribute('data-id');
 
-                const startPress = () => {
+                const startPress = (e) => {
                     isLongPress = false;
                     activeRow = row;
                     row.classList.add('holding');
@@ -1405,7 +1404,7 @@
                 row.addEventListener('pointerup', cancelPress);
                 row.addEventListener('pointerleave', cancelPress);
 
-                row.addEventListener('click', () => {
+                row.addEventListener('click', (e) => {
                     if (!isLongPress) openDetailModal(id);
                 });
             });
