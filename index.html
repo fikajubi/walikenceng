@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icon CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- html2pdf.js untuk Eksport PDF UHD -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
@@ -241,7 +241,7 @@
                 </div>
             </div>
 
-            <!-- VIEW TAB 2: DAFTAR PESERTA (KOLOM HANYA: KURSI/BUS, TGL, NAMA, JK, TOTAL) -->
+            <!-- VIEW TAB 2: DAFTAR PESERTA -->
             <div id="view-tab-peserta" class="hidden space-y-3">
                 <div id="section-tabel-peserta-all" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
@@ -252,7 +252,7 @@
                             <thead>
                                 <tr class="bg-slate-50 text-slate-600 font-bold text-[9px] sm:text-[10px] uppercase border-b border-slate-200">
                                     <th class="py-1 px-1 sm:px-2 w-[18%] text-center">KURSI / BUS</th>
-                                    <th class="py-1 px-1 sm:px-2 w-[18%] text-center">Tgl</th>
+                                    <th class="py-1 px-1 sm:px-2 w-[18%] text-center">TGL</th>
                                     <th class="py-1 px-1 sm:px-2 w-[38%]">Nama</th>
                                     <th class="py-1 px-1 sm:px-2 w-[8%] text-center">JK</th>
                                     <th class="py-1 px-1 sm:px-2 w-[18%] text-right">Total</th>
@@ -271,7 +271,7 @@
                 </p>
             </div>
 
-            <!-- VIEW TAB 3: DAFTAR ABSENSI (KOLOM HANYA: KURSI/BUS, NAMA, DESTINASI 1-7) -->
+            <!-- VIEW TAB 3: DAFTAR ABSENSI -->
             <div id="view-tab-absensi" class="hidden space-y-3">
                 <div id="section-absensi-all" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-blue-600 flex justify-between items-center">
@@ -360,7 +360,7 @@
                     <table class="w-full text-left text-[10px] sm:text-xs font-semibold">
                         <thead class="bg-slate-100 text-slate-600 sticky top-0 uppercase font-bold text-[9px]">
                             <tr>
-                                <th class="p-1">Tanggal</th>
+                                <th class="p-1">TGL</th>
                                 <th class="p-1">Keterangan</th>
                                 <th class="p-1 text-right">Nominal</th>
                                 <th class="p-1 text-center w-12">Aksi</th>
@@ -379,7 +379,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM TAMBAH / EDIT PESERTA DENGAN PILIHAN BUS & NOMOR KURSI -->
+    <!-- MODAL FORM TAMBAH / EDIT PESERTA -->
     <div id="modalPesertaForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-3 sm:p-4 relative">
             <h3 id="pesertaFormTitle" class="font-black text-emerald-800 text-[11px] uppercase mb-2 pb-1 border-b border-slate-100 tracking-wide">Tambah Peserta Baru</h3>
@@ -413,7 +413,7 @@
                 </div>
                 <div id="initialPaymentGroup" class="space-y-2">
                     <div>
-                        <label id="lbl-peserta-tgl" class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Pendaftaran</label>
+                        <label id="lbl-peserta-tgl" class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Pendaftaran (DD/MM/YYYY)</label>
                         <input type="date" id="form-peserta-tgl" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 cursor-pointer">
                     </div>
                     <div>
@@ -437,7 +437,7 @@
             <form onsubmit="handleBayarSubmit(event)" class="space-y-2">
                 <input type="hidden" id="form-cicilan-id" value="">
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi</label>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal Transaksi (DD/MM/YYYY)</label>
                     <input type="date" id="form-bayar-tgl" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 cursor-pointer" required>
                 </div>
                 <div>
@@ -537,7 +537,7 @@
         let currentAccessSession = { mode: null };
         let dataPeserta = [];
         let currentTab = 'kursi';
-        let verifiedPinCache = null; // SESSION CACHE PIN MEMORY FAST-LOADING
+        let verifiedPinCache = null;
         let syncTimeoutTimer = null;
 
         const seatCoordinates = [
@@ -581,7 +581,6 @@
         }
         for (let i = 0; i < 12; i++) { createSnowflake(); }
 
-        /* --- PENYEMPURNAAN: KETIKA PENGGUNA MENGKLIK NAVIGASI PESERTA SELALU MINTA PIN --- */
         function switchTab(tabName) {
             if (tabName === 'peserta') {
                 requestAccess('view_peserta_tab');
@@ -650,7 +649,6 @@
             }
         }
 
-        /* --- OVERLAY CENTANG HIJAU PADA KURSI TERISI --- */
         function renderInteractiveSeatOverlay() {
             const container = document.getElementById('bus-seat-overlay-container');
             if (!container) return;
@@ -850,6 +848,7 @@
 
         function formatToDDMMYYYY(yyyy_mm_dd) {
             if (!yyyy_mm_dd) return "";
+            if (yyyy_mm_dd.includes('/')) return yyyy_mm_dd; // Sudah format DD/MM/YYYY
             const parts = yyyy_mm_dd.split('-');
             if (parts.length !== 3) return yyyy_mm_dd;
             return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -857,6 +856,7 @@
 
         function formatToYYYYMMDD(dd_mm_yyyy) {
             if (!dd_mm_yyyy) return getTodayYYYYMMDD();
+            if (dd_mm_yyyy.includes('-')) return dd_mm_yyyy; // Sudah format YYYY-MM-DD
             const parts = dd_mm_yyyy.split('/');
             if (parts.length !== 3) return getTodayYYYYMMDD();
             return `${parts[2]}-${parts[1]}-${parts[0]}`;
@@ -866,7 +866,7 @@
             return "Rp. " + new Intl.NumberFormat('id-ID').format(num);
         }
 
-        /* --- RENDER TABEL PESERTA (TANPA KOLOM NO HP, KURSI/BUS DIGABUNG) --- */
+        /* --- RENDER TABEL PESERTA --- */
         function renderTables() {
             const tableAll = document.getElementById('table-peserta-all');
             tableAll.innerHTML = '';
@@ -902,7 +902,9 @@
             const busLetter = item.bus ? item.bus : 'A';
             const kursiBusCombined = `<span class="font-black text-purple-700">${kursiNum}/${busLetter}</span>`;
 
-            const tglDisplay = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
+            // MEMASTIKAN TANGGAL TAMPIL SEBAGAI DD/MM/YYYY
+            const rawTgl = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
+            const tglDisplay = formatToDDMMYYYY(rawTgl);
 
             tr.innerHTML = `
                 <td class="py-1 px-1 text-center font-black">${kursiBusCombined}</td>
@@ -994,7 +996,6 @@
             sendRequest({ action: "saveAbsensi", data: JSON.stringify(payload) });
         }
 
-        /* --- RENDER TABEL ABSENSI (KURSI/BUS DIGABUNG) --- */
         function renderTableAbsensi() {
             const tbodyAll = document.getElementById('table-absensi-all');
             if (!tbodyAll) return;
@@ -1142,7 +1143,7 @@
 
         function openAddPesertaModal() {
             document.getElementById('pesertaFormTitle').innerText = "Tambah Peserta Baru";
-            document.getElementById('lbl-peserta-tgl').innerText = "Tanggal Pendaftaran";
+            document.getElementById('lbl-peserta-tgl').innerText = "Tanggal Pendaftaran (DD/MM/YYYY)";
             document.getElementById('lbl-peserta-dp').innerText = "Pembayaran Awal / DP (Rp)";
             document.getElementById('form-peserta-id').value = "";
             document.getElementById('form-peserta-bus').value = "A";
@@ -1160,7 +1161,7 @@
             const item = dataPeserta.find(x => x.id === activePesertaId);
             if (!item) return;
             document.getElementById('pesertaFormTitle').innerText = "Edit Data Peserta";
-            document.getElementById('lbl-peserta-tgl').innerText = "Tanggal Pendaftaran";
+            document.getElementById('lbl-peserta-tgl').innerText = "Tanggal Pendaftaran (DD/MM/YYYY)";
             document.getElementById('lbl-peserta-dp').innerText = "Pembayaran Awal / DP (Rp)";
             document.getElementById('form-peserta-id').value = item.id;
             document.getElementById('form-peserta-bus').value = item.bus || "A";
@@ -1278,9 +1279,10 @@
                 tbody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400 italic">Belum ada riwayat pembayaran.</td></tr>`;
             } else {
                 item.cicilan.forEach((c, idx) => {
+                    const cTgl = formatToDDMMYYYY(c.tgl);
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50">
-                            <td class="p-1 text-slate-500">${c.tgl}</td>
+                            <td class="p-1 text-slate-500">${cTgl}</td>
                             <td class="p-1 font-bold text-slate-700 uppercase">${c.ket}</td>
                             <td class="p-1 text-right font-black text-slate-800">${formatRupiah(c.nominal)}</td>
                             <td class="p-1 text-center">
