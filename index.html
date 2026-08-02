@@ -493,7 +493,7 @@
                 </div>
                 <div class="flex gap-1.5">
                     <button type="button" onclick="closeModal('pin-modal')" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Batal</button>
-                    <button type="submit" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Verifikasi</button>
+                    <button type="submit" id="btn-submit-pin" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Verifikasi</button>
                 </div>
             </form>
         </div>
@@ -540,7 +540,8 @@
         let currentAccessSession = { mode: null };
         let dataPeserta = [];
         let currentTab = 'kursi';
-        let isPesertaTabUnlocked = false; // STATUS MEMBUKA AKSES TAB PESERTA
+        let isPesertaTabUnlocked = false;
+        let verifiedPinCache = null; // MEMORY SESSION UNTUK AKSES INSTAN TANPA DELAY
         let syncTimeoutTimer = null;
 
         const seatCoordinates = [
@@ -585,12 +586,10 @@
         for (let i = 0; i < 12; i++) { createSnowflake(); }
 
         function switchTab(tabName) {
-            // JIKA MENGKLIK TAB PESERTA & BELUM TERVERIFIKASI PIN
             if (tabName === 'peserta' && !isPesertaTabUnlocked) {
                 requestAccess('view_peserta_tab');
                 return;
             }
-
             executeSwitchTab(tabName);
         }
 
@@ -654,7 +653,7 @@
             }
         }
 
-        /* --- RENDER OVERLAY CENTANG TIAP KURSI PRESISI DI BAWAH ANGKA NOMOR --- */
+        /* --- OVERLAY TITIK KURSI CUKUP CENTANG HIJAU SAJA --- */
         function renderInteractiveSeatOverlay() {
             const container = document.getElementById('bus-seat-overlay-container');
             if (!container) return;
@@ -675,14 +674,10 @@
                 pin.style.top = `${seat.y}%`;
 
                 if (peserta) {
-                    const shortName = peserta.nama.split(' ')[0].substring(0,6);
                     pin.innerHTML = `
-                        <div class="bg-emerald-500 text-white rounded-full w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 flex items-center justify-center text-[8px] sm:text-[10px] shadow border border-white">
+                        <div class="bg-emerald-500 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[9px] sm:text-[11px] shadow-md border border-white">
                             <i class="fa-solid fa-check"></i>
                         </div>
-                        <span class="bg-slate-900/85 text-emerald-300 font-extrabold text-[5.5px] sm:text-[7px] px-0.5 rounded leading-none mt-0.5 whitespace-nowrap shadow uppercase">
-                            ${shortName}
-                        </span>
                     `;
                     pin.onclick = () => requestAccess('seat_click', { seatId: seat.id, peserta: peserta });
                 } else {
@@ -690,9 +685,6 @@
                         <div class="bg-slate-400/40 text-white rounded-full w-3 h-3 sm:w-3.5 sm:h-3.5 flex items-center justify-center text-[6px] sm:text-[7px] border border-white/50">
                             <i class="fa-solid fa-minus"></i>
                         </div>
-                        <span class="bg-slate-800/50 text-slate-300 font-bold text-[5px] sm:text-[6px] px-0.5 rounded leading-none mt-0.5 uppercase">
-                            Kosong
-                        </span>
                     `;
                     pin.onclick = () => requestAccess('seat_click_add', { seatId: seat.id });
                 }
@@ -701,7 +693,6 @@
             });
         }
 
-        /* --- RENDER LEGEND LIST NAMA PESERTA SETIAP NOMOR KURSI (1-59) --- */
         function renderBusSeatsLegend() {
             const gridLegend = document.getElementById('kursi-legend-grid');
             if (!gridLegend) return;
@@ -878,7 +869,7 @@
             return "Rp. " + new Intl.NumberFormat('id-ID').format(num);
         }
 
-        /* --- RENDER TABEL PESERTA DIGABUNG (TOTAL KESELURUHAN) --- */
+        /* --- RENDER TABEL PESERTA --- */
         function renderTables() {
             const tableAll = document.getElementById('table-peserta-all');
             tableAll.innerHTML = '';
@@ -901,6 +892,7 @@
             initLongPressEvents();
         }
 
+        /* --- BARIS KET. BUS HANYA 'A' ATAU 'B' --- */
         function createRowElement(item, totalBayar) {
             const tr = document.createElement('tr');
             tr.className = "hover:bg-slate-50 transition cursor-pointer long-press-row";
@@ -910,14 +902,14 @@
                 ? '<span class="bg-blue-100 text-blue-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">L</span>'
                 : '<span class="bg-pink-100 text-pink-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">P</span>';
 
-            const badgeBus = `<span class="bg-slate-800 text-white font-black text-[8px] px-1.5 py-0.5 rounded uppercase">BUS ${item.bus || 'A'}</span>`;
+            const busDisplay = `<span class="font-black text-slate-800 text-[10px]">${item.bus || 'A'}</span>`;
 
             const tglDisplay = item.tglDaftar || (item.cicilan.length > 0 ? item.cicilan[0].tgl : '-');
             const seatDisplay = item.noKursi ? `#${item.noKursi}` : '-';
 
             tr.innerHTML = `
                 <td class="py-1 px-1 text-center font-black text-purple-700">${seatDisplay}</td>
-                <td class="py-1 px-1 text-center">${badgeBus}</td>
+                <td class="py-1 px-1 text-center">${busDisplay}</td>
                 <td class="py-1 px-1 text-center font-bold text-slate-600 truncate">${tglDisplay}</td>
                 <td class="py-1 px-1 font-bold text-slate-800 truncate uppercase">${item.nama}</td>
                 <td class="py-1 px-1 text-center">${badgeJk}</td>
@@ -1007,7 +999,7 @@
             sendRequest({ action: "saveAbsensi", data: JSON.stringify(payload) });
         }
 
-        /* --- RENDER TABEL ABSENSI DIGABUNG --- */
+        /* --- RENDER TABEL ABSENSI --- */
         function renderTableAbsensi() {
             const tbodyAll = document.getElementById('table-absensi-all');
             if (!tbodyAll) return;
@@ -1075,37 +1067,57 @@
             pinInput.focus();
         }
 
+        /* --- VERIFIKASI PIN DENGAN FAST-LOADING CACHE & VISUAL LOADING INNER BUTTON --- */
         function submitPinVerification(e) {
             e.preventDefault();
             const typedPin = document.getElementById("input-security-pin").value;
+            const btnSubmit = document.getElementById("btn-submit-pin");
+            const originalBtnHtml = btnSubmit.innerHTML;
 
-            if (currentAccessSession.mode === 'absensi_verify') {
-                verifyPinWithBackend(typedPin, (isValid) => {
-                    closeModal('pin-modal');
-                    executeAbsensiWithPin(isValid);
-                });
+            // Jika PIN sudah pernah diverifikasi sukses di memori session (Instan 0 Jeda)
+            if (verifiedPinCache && verifiedPinCache === typedPin) {
+                processPinResult(true);
                 return;
             }
 
+            // Tampilkan loading lokal pada tombol verifikasi
+            btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Cek...';
+            btnSubmit.disabled = true;
+
             verifyPinWithBackend(typedPin, (isValid) => {
+                btnSubmit.innerHTML = originalBtnHtml;
+                btnSubmit.disabled = false;
+
                 if (isValid) {
-                    closeModal('pin-modal');
-                    if (currentAccessSession.mode === 'view_peserta_tab') {
-                        isPesertaTabUnlocked = true;
-                        executeSwitchTab('peserta');
-                    } else {
-                        executeProtectedMode(currentAccessSession.mode);
-                    }
-                } else {
-                    alert("⚠️ PIN Salah! Akses ditolak.");
-                    document.getElementById("input-security-pin").value = "";
-                    document.getElementById("input-security-pin").focus();
+                    verifiedPinCache = typedPin; // Simpan ke Cache RAM
                 }
+                processPinResult(isValid);
             });
         }
 
+        function processPinResult(isValid) {
+            if (currentAccessSession.mode === 'absensi_verify') {
+                closeModal('pin-modal');
+                executeAbsensiWithPin(isValid);
+                return;
+            }
+
+            if (isValid) {
+                closeModal('pin-modal');
+                if (currentAccessSession.mode === 'view_peserta_tab') {
+                    isPesertaTabUnlocked = true;
+                    executeSwitchTab('peserta');
+                } else {
+                    executeProtectedMode(currentAccessSession.mode);
+                }
+            } else {
+                alert("⚠️ PIN Salah! Akses ditolak.");
+                document.getElementById("input-security-pin").value = "";
+                document.getElementById("input-security-pin").focus();
+            }
+        }
+
         function verifyPinWithBackend(pin, callback) {
-            setSyncing(true);
             const query = new URLSearchParams({ action: "verifyPin", pin: pin }).toString();
             fetch(`${SCRIPT_URL}?${query}`)
                 .then(res => res.json())
@@ -1115,9 +1127,6 @@
                 .catch(err => {
                     console.log("Error verifikasi PIN:", err);
                     callback(false);
-                })
-                .finally(() => {
-                    setSyncing(false);
                 });
         }
 
