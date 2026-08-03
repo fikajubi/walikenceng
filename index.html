@@ -246,7 +246,7 @@
                 <!-- BINGKAI DENAH BUS INTERAKTIF -->
                 <div class="bus-body-wrapper">
                     <div class="relative w-full">
-                        <img src="https://lh3.googleusercontent.com/d/17GLr1iXxRrQ6AdVyOdNREPnOEtpjjdfV" alt="Denah Body Bus 59 Kursi">
+                        <img src="https://lh3.googleusercontent.com/d/1Gt7VGMjA6CLkBoyDwWT-vR0mqqj6C4nW" alt="Denah Body Bus 59 Kursi">
                         <div id="bus-seat-overlay-container" class="absolute inset-0 pointer-events-auto"></div>
                     </div>
                 </div>
@@ -1277,7 +1277,7 @@
             const item = dataPeserta.find(x => String(x.id) === String(activePesertaId));
             const cicilanArr = (item && Array.isArray(item.cicilan)) ? item.cicilan : [];
             if (item && cicilanArr[cIndex]) {
-                const cData = cicilanArr[cIndex];
+                const cData = item.cicilan[cIndex];
                 if (confirm(`Hapus transaksi "${cData.ket}" (${formatRupiah(cData.nominal)})?`)) {
                     sendRequest({ action: "deleteCicilan", idCicilan: cData.idCicilan }, () => openDetailModal(activePesertaId));
                 }
