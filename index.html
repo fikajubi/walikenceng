@@ -23,6 +23,24 @@
         .long-press-row.holding::after { width: 100%; }
         .uppercase-input { text-transform: uppercase; }
 
+        /* --- KHUSUS KODE WARNA PER BARIS TEXT HEADER --- */
+        .header-baris-1 {
+            color: #FFFFFF;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.65), 0 0 10px rgba(0, 0, 0, 0.4);
+            -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.2);
+        }
+        .header-baris-2 {
+            color: #000000;
+        }
+        .header-baris-3 {
+            color: #4B0082;
+            text-shadow: 0 0 8px rgba(75, 0, 130, 0.3);
+        }
+        .header-baris-4 {
+            color: #008000;
+            text-shadow: 0 0 8px rgba(0, 128, 0, 0.3);
+        }
+
         /* --- EFEK RADAR SONAR SYSTEM ONLINE --- */
         .radar-pulse {
             position: relative;
@@ -130,17 +148,22 @@
     <!-- CONTAINER UTAMA HALAMAN WEB -->
     <div id="main-web-content" class="w-full max-w-full mx-auto space-y-1.5 relative z-10 bg-slate-100 p-1">
         
-        <!-- HEADER KARTU ATAS -->
-        <div class="w-full bg-[#115e37] text-white rounded-lg p-3 sm:p-4 text-center shadow-sm relative overflow-hidden">
-            <i class="fa-solid fa-snowflake absolute top-2 right-1/3 text-white/10 text-xs"></i>
-            <i class="fa-solid fa-asterisk absolute bottom-2 right-6 text-white/20 text-xs"></i>
-            
-            <h1 class="text-base sm:text-xl font-black uppercase tracking-wider">MUSHOLA WAKAF AN-NUR</h1>
-            <p class="text-slate-200 text-[8px] sm:text-[10px] font-bold mt-0.5 tracking-wide">( DESA BAKALAN LOR, RT 08 | RW 04 )</p>
-            <p class="text-[#C084FC] font-black text-[8.5px] sm:text-[11px] uppercase mt-0.5 tracking-wider" style="text-shadow: 0 0 8px #A855F7, 0 0 12px rgba(168,85,247,0.6);">
-                RT 08 : BP. PURNOMO | RW 04 : BP. KATENO
-            </p>
-            <p id="sub-header-title" class="text-[#00FF66] font-extrabold text-[9px] sm:text-xs uppercase mt-1 tracking-widest" style="text-shadow: 0 0 6px rgba(0,255,102,0.4);">DENAH TEMPAT DUDUK / KURSI BUS</p>
+        <!-- HEADER KARTU ATAS DENGAN KODE WARNA SPESIFIK -->
+        <div class="w-full rounded-lg p-3 sm:p-4 md:py-10 lg:py-14 text-center shadow-sm relative overflow-hidden bg-cover bg-center bg-no-repeat" style="background-image: url('https://lh3.googleusercontent.com/d/1rfppl0Roxa-m3F8FImsJ0_lhxf4Y7Wvs');">
+            <!-- Overlay gelap tipis agar teks tetap terbaca dengan jelas -->
+            <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <i class="fa-solid fa-snowflake absolute top-0 right-1/3 text-white/20 text-xs md:text-base"></i>
+                <i class="fa-solid fa-asterisk absolute bottom-0 right-6 text-white/30 text-xs md:text-base"></i>
+                
+                <h1 class="text-base sm:text-xl md:text-3xl lg:text-4xl font-black uppercase tracking-wider header-baris-1">MUSHOLA WAKAF AN-NUR</h1>
+                <p class="text-[8px] sm:text-[10px] md:text-sm font-extrabold mt-0.5 md:mt-2 tracking-wide header-baris-2">( DESA BAKALAN LOR, RT 08 | RW 04 )</p>
+                <p class="font-black text-[8.5px] sm:text-[11px] md:text-base uppercase mt-0.5 md:mt-2 tracking-wider header-baris-3">
+                    RT 08 : BP. PURNOMO | RW 04 : BP. KATENO
+                </p>
+                <p id="sub-header-title" class="font-black text-[9px] sm:text-xs md:text-base uppercase mt-1 md:mt-3 tracking-widest header-baris-4">DENAH TEMPAT DUDUK / KURSI BUS</p>
+            </div>
         </div>
 
         <!-- KARTU SALDO TERKUMPUL (TOTAL KESELURUHAN) -->
