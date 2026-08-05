@@ -264,15 +264,16 @@
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-600 font-bold text-[8.5px] sm:text-[10px] uppercase border-b border-slate-200">
+                                    <th class="py-1 px-0.5 w-[8%] text-center whitespace-nowrap">NO</th>
                                     <th class="py-1 px-0.5 w-[15%] text-center whitespace-nowrap">KURSI/BUS</th>
-                                    <th class="py-1 px-0.5 w-[19%] text-center whitespace-nowrap">TGL</th>
-                                    <th class="py-1 px-1 w-[40%] truncate">NAMA</th>
+                                    <th class="py-1 px-0.5 w-[17%] text-center whitespace-nowrap">TGL</th>
+                                    <th class="py-1 px-1 w-[38%] truncate">NAMA</th>
                                     <th class="py-1 px-0.5 w-[7%] text-center whitespace-nowrap">JK</th>
-                                    <th class="py-1 px-0.5 w-[19%] text-right whitespace-nowrap">TOTAL</th>
+                                    <th class="py-1 px-0.5 w-[15%] text-right whitespace-nowrap">TOTAL</th>
                                 </tr>
                             </thead>
                             <tbody id="table-peserta-all" class="divide-y divide-slate-200 text-[9px] sm:text-xs font-semibold">
-                                <tr><td colspan="5" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
+                                <tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -295,19 +296,20 @@
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
                                 <tr class="bg-blue-600 text-white font-black text-[7px] sm:text-[8.5px] uppercase border-b border-blue-700 leading-tight">
-                                    <th class="py-1.5 px-0.5 w-[13%] text-center whitespace-nowrap">KURSI/BUS</th>
-                                    <th class="py-1.5 px-1 w-[21.5%] truncate">NAMA</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500 whitespace-nowrap">Dest 1</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500 whitespace-nowrap">Dest 2</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500 whitespace-nowrap">Dest 3</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500 whitespace-nowrap">Dest 4</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500 whitespace-nowrap">Dest 5</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500 whitespace-nowrap">Dest 6</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.5%] border-l border-blue-500 bg-blue-700 whitespace-nowrap">Dest 7</th>
+                                    <th class="py-1.5 px-0.5 w-[6%] text-center whitespace-nowrap">NO</th>
+                                    <th class="py-1.5 px-0.5 w-[12%] text-center whitespace-nowrap">KURSI/BUS</th>
+                                    <th class="py-1.5 px-1 w-[20%] truncate">NAMA</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 1</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 2</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 3</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 4</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 5</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 6</th>
+                                    <th class="py-1.5 px-0.5 text-center w-[9.2%] border-l border-blue-500 bg-blue-700 whitespace-nowrap">Dest 7</th>
                                 </tr>
                             </thead>
                             <tbody id="table-absensi-all" class="divide-y divide-blue-100 text-[9px] sm:text-xs font-semibold">
-                                <tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Memuat data absensi...</td></tr>
+                                <tr><td colspan="10" class="p-2 text-center text-slate-400 italic">Memuat data absensi...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -403,8 +405,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nomor Kursi Bus (1-59)</label>
-                    <input type="number" id="form-peserta-no-kursi" min="1" max="59" placeholder="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nomor Kursi Bus (1-59) <span class="text-slate-400 font-normal lowercase">(kosongkan = -)</span></label>
+                    <input type="number" id="form-peserta-no-kursi" min="1" max="59" placeholder="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nama Lengkap</label>
@@ -418,8 +420,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">No. HP / WhatsApp</label>
-                    <input type="tel" id="form-peserta-hp" placeholder="08123456789" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">No. HP / WhatsApp <span class="text-slate-400 font-normal lowercase">(kosongkan = -)</span></label>
+                    <input type="tel" id="form-peserta-hp" placeholder="08123456789" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
                 </div>
                 <div id="initialPaymentGroup" class="space-y-2">
                     <div>
@@ -681,7 +683,7 @@
 
             const mapSeatToPeserta = {};
             dataPeserta.forEach(p => {
-                if (p.noKursi) mapSeatToPeserta[p.noKursi] = p;
+                if (p.noKursi && p.noKursi !== '-') mapSeatToPeserta[p.noKursi] = p;
             });
 
             seatCoordinates.forEach(seat => {
@@ -718,7 +720,7 @@
 
             const mapSeatToPeserta = {};
             dataPeserta.forEach(p => {
-                if (p.noKursi) mapSeatToPeserta[p.noKursi] = p;
+                if (p.noKursi && p.noKursi !== '-') mapSeatToPeserta[p.noKursi] = p;
             });
 
             for (let i = 1; i <= 59; i++) {
@@ -734,6 +736,7 @@
                 gridLegend.innerHTML += `
                     <div class="bg-slate-50 border border-slate-200 rounded p-1.5 flex items-center justify-between">
                         <div class="flex items-center gap-1.5 truncate">
+                            <span class="text-slate-400 font-bold text-[8px] w-4 text-right shrink-0">${i}.</span>
                             <span class="bg-purple-700 text-white font-black px-1.5 py-0.5 rounded text-[8px] shrink-0">#${i}</span>
                             ${namaPeserta}
                         </div>
@@ -915,13 +918,13 @@
             let totalGrand = 0;
 
             if (dataSorted.length === 0) {
-                tableAll.innerHTML = `<tr><td colspan="5" class="p-2 text-center text-slate-400 italic">Belum ada data peserta</td></tr>`;
+                tableAll.innerHTML = `<tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Belum ada data peserta</td></tr>`;
             } else {
-                dataSorted.forEach((item) => {
+                dataSorted.forEach((item, index) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
                     const totalBayar = cicilanArr.reduce((sum, c) => sum + (Number(c.nominal) || 0), 0);
                     totalGrand += totalBayar;
-                    tableAll.appendChild(createRowElement(item, totalBayar));
+                    tableAll.appendChild(createRowElement(item, totalBayar, index + 1));
                 });
             }
 
@@ -929,7 +932,7 @@
             initLongPressEvents();
         }
 
-        function createRowElement(item, totalBayar) {
+        function createRowElement(item, totalBayar, noRow) {
             const tr = document.createElement('tr');
             tr.className = "hover:bg-slate-50 transition cursor-pointer long-press-row";
             tr.setAttribute('data-id', item.id);
@@ -938,7 +941,7 @@
                 ? '<span class="bg-blue-100 text-blue-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">L</span>'
                 : '<span class="bg-pink-100 text-pink-800 font-black text-[9px] px-1.5 py-0.5 rounded-full">P</span>';
 
-            const kursiNum = item.noKursi ? item.noKursi : '-';
+            const kursiNum = (item.noKursi && item.noKursi !== '-') ? item.noKursi : '-';
             const busLetter = item.bus ? item.bus : 'A';
             const kursiBusCombined = `<span class="font-black text-purple-700">${kursiNum}/${busLetter}</span>`;
 
@@ -947,6 +950,7 @@
             const tglDisplay = formatToDDMMYYYY(rawTgl);
 
             tr.innerHTML = `
+                <td class="py-1.5 px-0.5 text-center font-bold text-slate-500 whitespace-nowrap text-[9px] sm:text-xs">${noRow}</td>
                 <td class="py-1.5 px-0.5 text-center font-black whitespace-nowrap text-[9px] sm:text-xs">${kursiBusCombined}</td>
                 <td class="py-1.5 px-0.5 text-center font-bold text-slate-600 whitespace-nowrap text-[8.5px] sm:text-xs">${tglDisplay}</td>
                 <td class="py-1.5 px-1 font-bold text-slate-800 uppercase truncate text-[9px] sm:text-xs" style="max-width: 0;">${item.nama}</td>
@@ -963,12 +967,12 @@
             const queryAbsensi = document.getElementById('search-absensi-input').value.toLowerCase();
 
             document.querySelectorAll('.long-press-row').forEach(row => {
-                const nama = row.children[2].innerText.toLowerCase();
+                const nama = row.children[3].innerText.toLowerCase();
                 row.style.display = nama.includes(queryPeserta) ? '' : 'none';
             });
 
             document.querySelectorAll('.absensi-row').forEach(row => {
-                const nama = row.children[1].innerText.toLowerCase();
+                const nama = row.children[2].innerText.toLowerCase();
                 row.style.display = nama.includes(queryAbsensi) ? '' : 'none';
             });
         }
@@ -1044,15 +1048,15 @@
             const dataSorted = [...dataPeserta].sort((a,b) => (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999));
 
             if (dataSorted.length === 0) {
-                tbodyAll.innerHTML = `<tr><td colspan="9" class="p-2 text-center text-slate-400 italic">Belum ada data peserta.</td></tr>`;
+                tbodyAll.innerHTML = `<tr><td colspan="10" class="p-2 text-center text-slate-400 italic">Belum ada data peserta.</td></tr>`;
             } else {
-                dataSorted.forEach((item) => {
-                    tbodyAll.appendChild(createAbsensiRow(item));
+                dataSorted.forEach((item, index) => {
+                    tbodyAll.appendChild(createAbsensiRow(item, index + 1));
                 });
             }
         }
 
-        function createAbsensiRow(item) {
+        function createAbsensiRow(item, noRow) {
             const tr = document.createElement('tr');
             tr.className = `transition border-b absensi-row hover:bg-blue-50/50 border-blue-50`;
 
@@ -1066,11 +1070,12 @@
                 `;
             }
 
-            const kursiNum = item.noKursi ? item.noKursi : '-';
+            const kursiNum = (item.noKursi && item.noKursi !== '-') ? item.noKursi : '-';
             const busLetter = item.bus ? item.bus : 'A';
             const kursiBusCombined = `<span class="font-black text-purple-700">${kursiNum}/${busLetter}</span>`;
 
             tr.innerHTML = `
+                <td class="py-1.5 px-0.5 text-center font-bold text-slate-500 whitespace-nowrap text-[9px] sm:text-xs">${noRow}</td>
                 <td class="py-1.5 px-0.5 text-center font-black whitespace-nowrap text-[9px] sm:text-xs">${kursiBusCombined}</td>
                 <td class="py-1.5 px-1 font-bold text-slate-800 uppercase truncate text-[9px] sm:text-xs" style="max-width: 0;" title="${item.nama}">${item.nama}</td>
                 ${checkboxesHtml}
@@ -1177,10 +1182,10 @@
             document.getElementById('pesertaFormTitle').innerText = "Edit Data Peserta";
             document.getElementById('form-peserta-id').value = item.id;
             document.getElementById('form-peserta-bus').value = item.bus || "A";
-            document.getElementById('form-peserta-no-kursi').value = item.noKursi || "";
+            document.getElementById('form-peserta-no-kursi').value = (item.noKursi && item.noKursi !== '-') ? item.noKursi : "";
             document.getElementById('form-peserta-nama').value = item.nama || "";
             document.getElementById('form-peserta-jk').value = item.jk || "L";
-            document.getElementById('form-peserta-hp').value = item.hp || "";
+            document.getElementById('form-peserta-hp').value = (item.hp && item.hp !== '-') ? item.hp : "";
             
             const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
             const firstCicilan = cicilanArr.length > 0 ? cicilanArr[0] : null;
@@ -1200,10 +1205,16 @@
             e.preventDefault();
             const id = document.getElementById('form-peserta-id').value;
             const bus = document.getElementById('form-peserta-bus').value;
-            const noKursi = document.getElementById('form-peserta-no-kursi').value;
+            
+            let noKursiVal = document.getElementById('form-peserta-no-kursi').value.trim();
+            const noKursi = noKursiVal !== "" ? noKursiVal : "-";
+            
             const nama = document.getElementById('form-peserta-nama').value.trim().toUpperCase();
             const jk = document.getElementById('form-peserta-jk').value;
-            const hp = document.getElementById('form-peserta-hp').value.trim();
+            
+            let hpVal = document.getElementById('form-peserta-hp').value.trim();
+            const hp = hpVal !== "" ? hpVal : "-";
+            
             const rawTgl = document.getElementById('form-peserta-tgl').value;
             const tglFormatted = formatToDDMMYYYY(rawTgl);
             const dp = parseInt(document.getElementById('form-peserta-dp').value) || 0;
@@ -1327,7 +1338,7 @@
             if (!item) return;
             document.getElementById('infoNama').innerText = item.nama;
             
-            const kursiNum = item.noKursi ? item.noKursi : '-';
+            const kursiNum = (item.noKursi && item.noKursi !== '-') ? item.noKursi : '-';
             const busLetter = item.bus ? item.bus : 'A';
             document.getElementById('infoKursi').innerText = `NOMOR KURSI: ${kursiNum} / BUS ${busLetter}`;
             
