@@ -209,7 +209,7 @@
                         <i class="fa-solid fa-chair text-emerald-600"></i> Visual Denah Tempat Duduk Bus
                     </h2>
                     <span class="bg-purple-100 text-purple-800 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
-                        Kapasitas 59 Kursi
+                        Kapasitas 60 Kursi
                     </span>
                 </div>
 
@@ -242,14 +242,14 @@
 
                 <div class="bus-body-wrapper">
                     <div class="relative w-full">
-                        <img src="https://lh3.googleusercontent.com/d/1Gt7VGMjA6CLkBoyDwWT-vR0mqqj6C4nW" alt="Denah Body Bus 59 Kursi">
+                        <img src="https://lh3.googleusercontent.com/d/1Gt7VGMjA6CLkBoyDwWT-vR0mqqj6C4nW" alt="Denah Body Bus 60 Kursi">
                         <div id="bus-seat-overlay-container" class="absolute inset-0 pointer-events-auto"></div>
                     </div>
                 </div>
 
                 <div class="mt-4 border-t border-slate-200 pt-3">
                     <h3 class="font-black text-xs text-slate-700 uppercase mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-list-ol text-purple-600"></i> Daftar Peserta Berdasarkan Nomor Kursi (1–59)
+                        <i class="fa-solid fa-list-ol text-purple-600"></i> Daftar Peserta Berdasarkan Nomor Kursi (1–60)
                     </h3>
                     <div id="kursi-legend-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 text-[10px]"></div>
                 </div>
@@ -264,16 +264,17 @@
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-600 font-bold text-[8.5px] sm:text-[10px] uppercase border-b border-slate-200">
-                                    <th class="py-1 px-0.5 w-[8%] text-center whitespace-nowrap">NO</th>
-                                    <th class="py-1 px-0.5 w-[15%] text-center whitespace-nowrap">KURSI/BUS</th>
-                                    <th class="py-1 px-0.5 w-[17%] text-center whitespace-nowrap">TGL</th>
-                                    <th class="py-1 px-1 w-[38%] truncate">NAMA</th>
-                                    <th class="py-1 px-0.5 w-[7%] text-center whitespace-nowrap">JK</th>
-                                    <th class="py-1 px-0.5 w-[15%] text-right whitespace-nowrap">TOTAL</th>
+                                    <th class="py-1 px-0.5 w-[6%] text-center whitespace-nowrap">NO</th>
+                                    <th class="py-1 px-0.5 w-[12%] text-center whitespace-nowrap">KURSI/BUS</th>
+                                    <th class="py-1 px-0.5 w-[14%] text-center whitespace-nowrap">TGL</th>
+                                    <th class="py-1 px-1 w-[30%] truncate">NAMA</th>
+                                    <th class="py-1 px-0.5 w-[6%] text-center whitespace-nowrap">JK</th>
+                                    <th class="py-1 px-0.5 w-[16%] text-center whitespace-nowrap">NO. HP</th>
+                                    <th class="py-1 px-0.5 w-[16%] text-right whitespace-nowrap">TOTAL</th>
                                 </tr>
                             </thead>
                             <tbody id="table-peserta-all" class="divide-y divide-slate-200 text-[9px] sm:text-xs font-semibold">
-                                <tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
+                                <tr><td colspan="7" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -405,8 +406,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nomor Kursi Bus (1-59) <span class="text-slate-400 font-normal lowercase">(kosongkan = -)</span></label>
-                    <input type="number" id="form-peserta-no-kursi" min="1" max="59" placeholder="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nomor Kursi Bus (1-60)</label>
+                    <input type="text" id="form-peserta-no-kursi" value="-" placeholder="-" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nama Lengkap</label>
@@ -420,8 +421,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">No. HP / WhatsApp <span class="text-slate-400 font-normal lowercase">(kosongkan = -)</span></label>
-                    <input type="tel" id="form-peserta-hp" placeholder="08123456789" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">No. HP / WhatsApp</label>
+                    <input type="tel" id="form-peserta-hp" value="-" placeholder="-" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600">
                 </div>
                 <div id="initialPaymentGroup" class="space-y-2">
                     <div>
@@ -568,6 +569,7 @@
         let syncTimeoutTimer = null;
 
         const seatCoordinates = [
+            { id: 60, x: 18.5, y: 19.8 }, // Kursi No 60 (Sebelah Kiri Depan)
             { id: 1, x: 23, y: 30.6 },  { id: 2, x: 35, y: 30.6 },  { id: 3, x: 55, y: 30.6 },  { id: 4, x: 67, y: 30.6 },  { id: 5, x: 79, y: 30.6 },
             { id: 6, x: 23, y: 36.4 },  { id: 7, x: 35, y: 36.4 },  { id: 8, x: 55, y: 36.4 },  { id: 9, x: 67, y: 36.4 },  { id: 10, x: 79, y: 36.4 },
             { id: 11, x: 23, y: 42.2 }, { id: 12, x: 35, y: 42.2 }, { id: 13, x: 55, y: 42.2 }, { id: 14, x: 67, y: 42.2 }, { id: 15, x: 79, y: 42.2 },
@@ -723,7 +725,7 @@
                 if (p.noKursi && p.noKursi !== '-') mapSeatToPeserta[p.noKursi] = p;
             });
 
-            for (let i = 1; i <= 59; i++) {
+            for (let i = 1; i <= 60; i++) {
                 const peserta = mapSeatToPeserta[i];
                 const namaPeserta = peserta 
                     ? `<span class="font-bold text-slate-800 uppercase truncate">${peserta.nama} <span class="text-[8px] text-blue-600 font-black">(BUS ${peserta.bus || 'A'})</span></span>` 
@@ -918,7 +920,7 @@
             let totalGrand = 0;
 
             if (dataSorted.length === 0) {
-                tableAll.innerHTML = `<tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Belum ada data peserta</td></tr>`;
+                tableAll.innerHTML = `<tr><td colspan="7" class="p-2 text-center text-slate-400 italic">Belum ada data peserta</td></tr>`;
             } else {
                 dataSorted.forEach((item, index) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
@@ -949,12 +951,15 @@
             const rawTgl = item.tglDaftar || (cicilanArr.length > 0 ? cicilanArr[0].tgl : '-');
             const tglDisplay = formatToDDMMYYYY(rawTgl);
 
+            const hpDisplay = (item.hp && item.hp !== '') ? item.hp : '-';
+
             tr.innerHTML = `
                 <td class="py-1.5 px-0.5 text-center font-bold text-slate-500 whitespace-nowrap text-[9px] sm:text-xs">${noRow}</td>
                 <td class="py-1.5 px-0.5 text-center font-black whitespace-nowrap text-[9px] sm:text-xs">${kursiBusCombined}</td>
                 <td class="py-1.5 px-0.5 text-center font-bold text-slate-600 whitespace-nowrap text-[8.5px] sm:text-xs">${tglDisplay}</td>
                 <td class="py-1.5 px-1 font-bold text-slate-800 uppercase truncate text-[9px] sm:text-xs" style="max-width: 0;">${item.nama}</td>
                 <td class="py-1.5 px-0.5 text-center whitespace-nowrap">${badgeJk}</td>
+                <td class="py-1.5 px-0.5 text-center font-bold text-slate-600 whitespace-nowrap text-[8.5px] sm:text-xs">${hpDisplay}</td>
                 <td class="py-1.5 px-0.5 text-right whitespace-nowrap text-[9px] sm:text-xs">
                     <span class="font-black text-emerald-600 underline decoration-dashed underline-offset-2">${formatRupiah(totalBayar)}</span>
                 </td>
@@ -1162,10 +1167,10 @@
             document.getElementById('lbl-peserta-dp').innerText = "Pembayaran Awal / DP (Rp)";
             document.getElementById('form-peserta-id').value = "";
             document.getElementById('form-peserta-bus').value = "A";
-            document.getElementById('form-peserta-no-kursi').value = "";
+            document.getElementById('form-peserta-no-kursi').value = "-";
             document.getElementById('form-peserta-nama').value = "";
             document.getElementById('form-peserta-jk').value = "L";
-            document.getElementById('form-peserta-hp').value = "";
+            document.getElementById('form-peserta-hp').value = "-";
             document.getElementById('form-peserta-tgl').value = getTodayYYYYMMDD();
             document.getElementById('form-peserta-dp').value = "0";
             document.getElementById('initialPaymentGroup').classList.remove('hidden');
@@ -1182,10 +1187,10 @@
             document.getElementById('pesertaFormTitle').innerText = "Edit Data Peserta";
             document.getElementById('form-peserta-id').value = item.id;
             document.getElementById('form-peserta-bus').value = item.bus || "A";
-            document.getElementById('form-peserta-no-kursi').value = (item.noKursi && item.noKursi !== '-') ? item.noKursi : "";
+            document.getElementById('form-peserta-no-kursi').value = (item.noKursi && item.noKursi !== '') ? item.noKursi : "-";
             document.getElementById('form-peserta-nama').value = item.nama || "";
             document.getElementById('form-peserta-jk').value = item.jk || "L";
-            document.getElementById('form-peserta-hp').value = (item.hp && item.hp !== '-') ? item.hp : "";
+            document.getElementById('form-peserta-hp').value = (item.hp && item.hp !== '') ? item.hp : "-";
             
             const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
             const firstCicilan = cicilanArr.length > 0 ? cicilanArr[0] : null;
@@ -1207,13 +1212,13 @@
             const bus = document.getElementById('form-peserta-bus').value;
             
             let noKursiVal = document.getElementById('form-peserta-no-kursi').value.trim();
-            const noKursi = noKursiVal !== "" ? noKursiVal : "-";
+            const noKursi = (noKursiVal !== "" && noKursiVal !== "-") ? noKursiVal : "-";
             
             const nama = document.getElementById('form-peserta-nama').value.trim().toUpperCase();
             const jk = document.getElementById('form-peserta-jk').value;
             
             let hpVal = document.getElementById('form-peserta-hp').value.trim();
-            const hp = hpVal !== "" ? hpVal : "-";
+            const hp = (hpVal !== "" && hpVal !== "-") ? hpVal : "-";
             
             const rawTgl = document.getElementById('form-peserta-tgl').value;
             const tglFormatted = formatToDDMMYYYY(rawTgl);
