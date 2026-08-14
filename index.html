@@ -15,12 +15,15 @@
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         
-        .long-press-row { position: relative; user-select: none; -webkit-user-select: none; }
-        .long-press-row::after {
+        .long-press-row, .long-press-keuangan { position: relative; user-select: none; -webkit-user-select: none; }
+        .long-press-row::after, .long-press-keuangan::after {
             content: ''; position: absolute; bottom: 0; left: 0; height: 3px;
-            background-color: #059669; width: 0%; transition: width 3s linear;
+            width: 0%; transition: width 3s linear;
         }
-        .long-press-row.holding::after { width: 100%; }
+        .long-press-row::after { background-color: #059669; }
+        .long-press-keuangan::after { background-color: #d97706; }
+        .long-press-row.holding::after, .long-press-keuangan.holding::after { width: 100%; }
+        
         .uppercase-input { text-transform: uppercase; }
 
         .header-baris-1 {
@@ -112,7 +115,7 @@
 
         .seat-overlay-pin {
             position: absolute;
-            transform: translate(-50%, 0%);
+            transform: translate(-50%, -50%);
             cursor: pointer;
             z-index: 20;
             display: flex;
@@ -122,8 +125,19 @@
             transition: transform 0.15s ease;
         }
         .seat-overlay-pin:hover, .seat-overlay-pin.active-tooltip {
-            transform: translate(-50%, 0%) scale(1.15);
+            transform: translate(-50%, -50%) scale(1.15);
             z-index: 40;
+        }
+
+        /* --- FIX PAGE BREAK PDF --- */
+        tr {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            -webkit-column-break-inside: avoid;
+        }
+
+        table {
+            page-break-inside: auto;
         }
     </style>
 </head>
@@ -133,9 +147,9 @@
 
     <div id="main-web-content" class="w-full max-w-full mx-auto space-y-1.5 relative z-10 bg-slate-100 p-1">
         
+        <!-- HEADER -->
         <div class="w-full rounded-lg p-3 sm:p-4 md:py-10 lg:py-14 text-center shadow-sm relative overflow-hidden bg-cover bg-center bg-no-repeat" style="background-image: url('https://lh3.googleusercontent.com/d/1rfppl0Roxa-m3F8FImsJ0_lhxf4Y7Wvs');">
-            <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
-
+            
             <div class="relative z-10">
                 <i class="fa-solid fa-snowflake absolute top-0 right-1/3 text-white/20 text-xs md:text-base"></i>
                 <i class="fa-solid fa-asterisk absolute bottom-0 right-6 text-white/30 text-xs md:text-base"></i>
@@ -170,18 +184,24 @@
             </div>
         </div>
 
-        <div class="w-full flex gap-1 p-1 bg-white rounded-lg shadow-sm border border-slate-200">
-            <button id="btn-tab-kursi" onclick="switchTab('kursi')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-700 text-white shadow-sm">
+        <div class="w-full flex flex-wrap gap-1 p-1 bg-white rounded-lg shadow-sm border border-slate-200">
+            <button id="btn-tab-kursi" onclick="switchTab('kursi')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-700 text-white shadow-sm">
                 <i class="fa-solid fa-chair"></i> Denah Kursi
             </button>
-            <button id="btn-tab-peserta" onclick="switchTab('peserta')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <button id="btn-tab-peserta" onclick="switchTab('peserta')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <i class="fa-solid fa-users"></i> Peserta
             </button>
-            <button id="btn-tab-absensi" onclick="switchTab('absensi')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <button id="btn-tab-absensi" onclick="switchTab('absensi')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <i class="fa-solid fa-clipboard-check"></i> Absensi
             </button>
-            <button id="btn-tab-roadmaps" onclick="switchTab('roadmaps')" class="flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <button id="btn-tab-roadmaps" onclick="switchTab('roadmaps')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <i class="fa-solid fa-route"></i> Roadmaps
+            </button>
+            <button id="btn-tab-keuangan" onclick="switchTab('keuangan')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="fa-solid fa-wallet"></i> Keuangan
+            </button>
+            <button id="btn-tab-lpj" onclick="switchTab('lpj')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="fa-solid fa-file-invoice-dollar"></i> LPJ
             </button>
         </div>
 
@@ -204,17 +224,27 @@
                 </div>
             </div>
 
+            <!-- VIEW TAB KURSI -->
             <div id="view-tab-kursi" class="space-y-3">
-                <div class="border-b-2 border-emerald-700 pb-1 flex justify-between items-center">
-                    <h2 class="font-black text-xs sm:text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-chair text-emerald-600"></i> Visual Denah Tempat Duduk Bus
+                <div class="border-b-2 border-slate-200 pb-1 flex justify-between items-center">
+                    <h2 class="font-black text-xs sm:text-sm text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-chair text-slate-500"></i> Visual Denah Tempat Duduk Bus
                     </h2>
-                    <span class="bg-purple-100 text-purple-800 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                    <span class="bg-slate-100 text-slate-600 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
                         Kapasitas 60 Kursi
                     </span>
                 </div>
 
-                <div class="bg-amber-50 border-l-4 border-amber-500 p-2.5 rounded-r-lg shadow-sm space-y-2">
+                <div class="flex gap-1.5 pt-1">
+                    <button id="btn-bus-a" onclick="switchBusView('A')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700">
+                        <i class="fa-solid fa-bus"></i> BUS 1 (A)
+                    </button>
+                    <button id="btn-bus-b" onclick="switchBusView('B')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200">
+                        <i class="fa-solid fa-bus"></i> BUS 2 (B)
+                    </button>
+                </div>
+
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-2.5 rounded-r-lg shadow-sm space-y-2 mt-2">
                     <p class="text-[10px] sm:text-xs text-amber-900 leading-relaxed font-medium">
                         <span class="font-black text-amber-800 uppercase flex items-center gap-1 mb-0.5">
                             <i class="fa-solid fa-circle-info text-amber-600"></i> NB / PERHATIAN:
@@ -250,31 +280,33 @@
 
                 <div class="mt-4 border-t border-slate-200 pt-3">
                     <h3 class="font-black text-xs text-slate-700 uppercase mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-list-ol text-purple-600"></i> Daftar Peserta Berdasarkan Nomor Kursi (1–60)
+                        <i class="fa-solid fa-list-ol text-slate-500"></i> Daftar Peserta Berdasarkan Nomor Kursi (1–60)
                     </h3>
                     <div id="kursi-legend-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 text-[10px]"></div>
                 </div>
             </div>
 
+            <!-- VIEW TAB PESERTA -->
             <div id="view-tab-peserta" class="hidden space-y-3">
                 <div id="section-tabel-peserta-all" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Semua Peserta Ziarah - Urut Nomor Kursi</h2>
                     </div>
-                    <div class="w-full border border-slate-200 rounded-lg overflow-hidden bg-white">
+                    <!-- FIXED WIDTH NO SCROLL -->
+                    <div class="w-full border border-slate-200 rounded-lg bg-white overflow-hidden">
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
-                                <tr class="bg-slate-50 text-slate-600 font-bold text-[8.5px] sm:text-[10px] uppercase border-b border-slate-200">
-                                    <th class="py-1 px-0.5 w-[6%] text-center whitespace-nowrap">NO</th>
-                                    <th class="py-1 px-0.5 w-[12%] text-center whitespace-nowrap">KURSI/BUS</th>
-                                    <th class="py-1 px-0.5 w-[14%] text-center whitespace-nowrap">TGL</th>
-                                    <th class="py-1 px-1 w-[30%] truncate">NAMA</th>
-                                    <th class="py-1 px-0.5 w-[6%] text-center whitespace-nowrap">JK</th>
-                                    <th class="py-1 px-0.5 w-[16%] text-center whitespace-nowrap">NO. HP</th>
-                                    <th class="py-1 px-0.5 w-[16%] text-right whitespace-nowrap">TOTAL</th>
+                                <tr class="bg-slate-50 text-slate-600 font-black text-[7.5px] sm:text-[10px] uppercase border-b border-slate-200">
+                                    <th class="py-2 px-0.5 w-[6%] text-center">NO</th>
+                                    <th class="py-2 px-0.5 w-[13%] text-center">KURSI</th>
+                                    <th class="py-2 px-0.5 w-[14%] text-center">TGL</th>
+                                    <th class="py-2 px-1 w-[28%] truncate">NAMA</th>
+                                    <th class="py-2 px-0.5 w-[6%] text-center">JK</th>
+                                    <th class="py-2 px-0.5 w-[15%] text-center">NO. HP</th>
+                                    <th class="py-2 px-0.5 w-[18%] text-right pr-1 sm:pr-2">TOTAL</th>
                                 </tr>
                             </thead>
-                            <tbody id="table-peserta-all" class="divide-y divide-slate-200 text-[9px] sm:text-xs font-semibold">
+                            <tbody id="table-peserta-all" class="divide-y divide-slate-200 text-[8px] sm:text-xs font-semibold">
                                 <tr><td colspan="7" class="p-2 text-center text-slate-400 italic">Memuat data...</td></tr>
                             </tbody>
                         </table>
@@ -287,6 +319,7 @@
                 </p>
             </div>
 
+            <!-- VIEW TAB ABSENSI -->
             <div id="view-tab-absensi" class="hidden space-y-3">
                 <div id="section-absensi-all" class="w-full">
                     <div class="mb-0.5 pb-0 border-b-2 border-blue-600 flex justify-between items-center">
@@ -294,20 +327,21 @@
                             <i class="fa-solid fa-clipboard-check text-blue-600"></i> Rekap Absensi Peserta - Urut Nomor Kursi
                         </h2>
                     </div>
+                    <!-- FIXED WIDTH NO SCROLL -->
                     <div class="w-full border border-blue-200 rounded-lg overflow-hidden bg-white">
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
-                                <tr class="bg-blue-600 text-white font-black text-[7px] sm:text-[8.5px] uppercase border-b border-blue-700 leading-tight">
-                                    <th class="py-1.5 px-0.5 w-[6%] text-center whitespace-nowrap">NO</th>
-                                    <th class="py-1.5 px-0.5 w-[12%] text-center whitespace-nowrap">KURSI/BUS</th>
-                                    <th class="py-1.5 px-1 w-[20%] truncate">NAMA</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 1</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 2</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 3</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 4</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 5</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[8.8%] border-l border-blue-500 whitespace-nowrap">Dest 6</th>
-                                    <th class="py-1.5 px-0.5 text-center w-[9.2%] border-l border-blue-500 bg-blue-700 whitespace-nowrap">Dest 7</th>
+                                <tr class="bg-blue-600 text-white font-black text-[8px] sm:text-[10px] uppercase border-b border-blue-700 leading-tight">
+                                    <th class="py-2 px-0.5 w-[6%] text-center">NO</th>
+                                    <th class="py-2 px-0.5 w-[14%] text-center">KURSI</th>
+                                    <th class="py-2 px-1 w-[24%] truncate">NAMA</th>
+                                    <th class="py-2 px-0.5 text-center w-[8%] border-l border-blue-500">1</th>
+                                    <th class="py-2 px-0.5 text-center w-[8%] border-l border-blue-500">2</th>
+                                    <th class="py-2 px-0.5 text-center w-[8%] border-l border-blue-500">3</th>
+                                    <th class="py-2 px-0.5 text-center w-[8%] border-l border-blue-500">4</th>
+                                    <th class="py-2 px-0.5 text-center w-[8%] border-l border-blue-500">5</th>
+                                    <th class="py-2 px-0.5 text-center w-[8%] border-l border-blue-500">6</th>
+                                    <th class="py-2 px-0.5 text-center w-[8%] border-l border-blue-500 bg-blue-700">7</th>
                                 </tr>
                             </thead>
                             <tbody id="table-absensi-all" class="divide-y divide-blue-100 text-[9px] sm:text-xs font-semibold">
@@ -318,6 +352,7 @@
                 </div>
             </div>
 
+            <!-- VIEW TAB ROADMAPS -->
             <div id="view-tab-roadmaps" class="hidden space-y-3">
                 <div class="border-b-2 border-emerald-700 pb-1 flex justify-between items-center">
                     <h2 class="font-black text-xs sm:text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -329,7 +364,7 @@
                 </div>
 
                 <div class="w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-300 shadow-md relative group">
-                    <img src="https://lh3.googleusercontent.com/d/1PeZuwV8F9vO2-H81O3WYluR3qg9FyCLP" alt="Peta Roadmap Ziarah" class="w-full object-contain max-h-[600px] mx-auto block">
+                    <img src="https://lh3.googleusercontent.com/d/1Oe776X2WPDdDFxpOZg7noq7U5PghtTGO" alt="Peta Roadmap Ziarah" class="w-full object-contain max-h-[600px] mx-auto block">
                     <div id="roadmap-map-pins-overlay" class="absolute inset-0 pointer-events-none"></div>
                 </div>
 
@@ -342,6 +377,152 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="roadmap-list-container"></div>
                 </div>
             </div>
+
+            <!-- VIEW TAB KEUANGAN -->
+            <div id="view-tab-keuangan" class="hidden space-y-3">
+                
+                <div class="bg-[#2563eb] text-white text-center py-6 md:py-8 rounded-xl shadow-md relative overflow-hidden mb-3">
+                    <div class="absolute inset-0 flex justify-between items-center px-6 md:px-12 pointer-events-none opacity-20">
+                        <i class="fa-solid fa-wallet text-6xl md:text-8xl"></i>
+                        <i class="fa-solid fa-sack-dollar text-6xl md:text-8xl"></i>
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center justify-center">
+                        <div class="flex items-center justify-center gap-2 mb-1.5">
+                            <div class="radar-pulse"></div>
+                            <p class="text-[9px] md:text-[10px] text-[#00FF66] font-black tracking-widest uppercase" style="text-shadow: 0 0 6px #00FF66;">
+                                SYSTEM ONLINE
+                            </p>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-blue-100 font-bold mb-1 tracking-wider uppercase">SALDO KEUANGAN SAAT INI</p>
+                        <h2 id="keu-saldo-utama" class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white whitespace-nowrap" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.4);">
+                            Rp 0
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="bg-white border border-emerald-200 p-3 sm:p-4 rounded-xl shadow-sm border-l-4 border-l-emerald-500">
+                        <p class="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">TOTAL PEMASUKAN</p>
+                        <h3 id="keu-total-masuk" class="text-sm sm:text-lg font-black text-emerald-500 truncate">Rp 0</h3>
+                    </div>
+                    <div class="bg-white border border-rose-200 p-3 sm:p-4 rounded-xl shadow-sm border-l-4 border-l-rose-500">
+                        <p class="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">TOTAL PENGELUARAN</p>
+                        <h3 id="keu-total-keluar" class="text-sm sm:text-lg font-black text-rose-500 truncate">Rp 0</h3>
+                    </div>
+                </div>
+
+                <button onclick="requestAccess('add_keuangan')" class="w-full py-2.5 sm:py-3 mb-3 bg-[#10b981] hover:bg-emerald-600 text-white font-black rounded-lg text-[10px] sm:text-xs uppercase tracking-wider shadow-sm transition flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> INPUT DATA BARU
+                </button>
+
+                <div class="border-b-2 border-emerald-600 pb-1 flex justify-between items-center mb-1">
+                    <h2 class="font-black text-[11px] sm:text-sm text-emerald-800 uppercase tracking-wider">
+                        LAPORAN MUTASI KEUANGAN
+                    </h2>
+                    <span class="bg-emerald-100 text-emerald-700 text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                        Terupdate
+                    </span>
+                </div>
+                
+                <!-- TABEL KEUANGAN (PRESISI UNTUK LAYAR HP, FONT TGL RESPONSIF MENGECIL) -->
+                <div class="w-full border border-slate-300 rounded-lg bg-white overflow-hidden">
+                    <table class="w-full text-left border-collapse table-fixed">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-800 font-black text-[7.5px] sm:text-[10px] uppercase border-b border-slate-300">
+                                <th class="py-2.5 px-0.5 w-[5%] text-center font-black">NO</th>
+                                <th class="py-2.5 px-0.5 w-[11%] text-center font-black text-[6.5px] sm:text-[9px]">TGL</th>
+                                <th class="py-2.5 px-0.5 w-[26%] truncate font-black">KETERANGAN</th>
+                                <th class="py-2.5 px-0.5 w-[19%] text-right font-black">MASUK</th>
+                                <th class="py-2.5 px-0.5 w-[19%] text-right font-black">KELUAR</th>
+                                <th class="py-2.5 px-0.5 w-[20%] text-right pr-1 sm:pr-3 font-black">SALDO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-keuangan-all" class="divide-y divide-slate-100 text-[7px] sm:text-xs font-semibold">
+                            <tr><td colspan="6" class="p-2 text-center text-slate-400 italic">Memuat data keuangan...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic">
+                    * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus transaksi.
+                </p>
+            </div>
+
+            <!-- VIEW TAB LPJ -->
+            <div id="view-tab-lpj" class="hidden space-y-3">
+                <div class="border-b-2 border-slate-200 pb-2 flex justify-between items-center">
+                    <h2 class="font-black text-[10px] sm:text-xs text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-invoice-dollar text-indigo-600"></i> LAPORAN PERTANGGUNGJAWABAN (LPJ) ZIARAH
+                    </h2>
+                    <button onclick="openPdfModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black text-[8px] sm:text-[9px] px-2.5 py-1.5 rounded flex items-center gap-1 shadow-sm uppercase">
+                        <i class="fa-solid fa-print"></i> Cetak / Download LPJ
+                    </button>
+                </div>
+                
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+                    <div class="text-center mb-6">
+                        <h3 class="font-black text-xs sm:text-sm text-slate-800 uppercase">LAPORAN PERTANGGUNGJAWABAN (LPJ)</h3>
+                        <p class="font-bold text-[9px] sm:text-[10px] text-slate-600 uppercase mt-0.5">KEGIATAN ZIARAH WALI KENCENG - MUSHOLA WAKAF AN-NUR</p>
+                        <p class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5">Desa Bakalan Lor, RT 08 / RW 04</p>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-1.5 sm:gap-3 mb-6">
+                        <div class="bg-slate-50 border border-slate-100 p-2 rounded-lg text-center flex flex-col justify-center">
+                            <p class="text-[7px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest mb-0.5 whitespace-nowrap">TOTAL PESERTA</p>
+                            <h4 id="lpj-tot-peserta" class="text-[10px] sm:text-xs font-black text-slate-800 whitespace-nowrap">0 Orang</h4>
+                        </div>
+                        <div class="bg-blue-50/50 border border-blue-100 p-2 rounded-lg text-center flex flex-col justify-center">
+                            <p class="text-[7px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest mb-0.5 whitespace-nowrap">PESERTA BUS A</p>
+                            <h4 id="lpj-tot-bus-a" class="text-[10px] sm:text-xs font-black text-blue-600 whitespace-nowrap">0 Orang</h4>
+                        </div>
+                        <div class="bg-purple-50/50 border border-purple-100 p-2 rounded-lg text-center flex flex-col justify-center">
+                            <p class="text-[7px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest mb-0.5 whitespace-nowrap">PESERTA BUS B</p>
+                            <h4 id="lpj-tot-bus-b" class="text-[10px] sm:text-xs font-black text-purple-600 whitespace-nowrap">0 Orang</h4>
+                        </div>
+                        <div class="bg-emerald-50/50 border border-emerald-100 p-2 rounded-lg text-center flex flex-col justify-center">
+                            <p class="text-[7px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest mb-0.5 whitespace-nowrap">STATUS KAS</p>
+                            <h4 id="lpj-status-kas" class="text-[10px] sm:text-xs font-black text-emerald-600 whitespace-nowrap">SURPLUS</h4>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden mb-8">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200">
+                                    <th class="py-2 px-2 text-[8px] sm:text-[10px] font-black text-slate-700 uppercase w-3/4 whitespace-nowrap">URAIAN TRANSAKSI KAS</th>
+                                    <th class="py-2 px-2 text-[8px] sm:text-[10px] font-black text-slate-700 uppercase text-right w-1/4 whitespace-nowrap">NOMINAL</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-[9px] sm:text-xs font-black text-slate-800">
+                                <tr>
+                                    <td class="py-3 px-2 whitespace-nowrap">Total Pemasukan (Peserta Ziarah & Lainnya)</td>
+                                    <td id="lpj-tbl-masuk" class="py-3 px-2 text-right text-emerald-600 font-black whitespace-nowrap">Rp 0</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2 whitespace-nowrap">Total Pengeluaran (Sewa Bus & Operasional)</td>
+                                    <td id="lpj-tbl-keluar" class="py-3 px-2 text-right text-rose-600 font-black whitespace-nowrap">Rp 0</td>
+                                </tr>
+                                <tr class="bg-blue-50/30">
+                                    <td class="py-3 px-2 font-black text-slate-800 uppercase tracking-wider whitespace-nowrap">SISA KAS / SALDO AKHIR KEGIATAN</td>
+                                    <td id="lpj-tbl-saldo" class="py-3 px-2 text-right text-blue-700 font-black text-[10px] sm:text-sm whitespace-nowrap">Rp 0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="flex justify-between items-start mt-8 px-2 sm:px-8 text-[9px] sm:text-[10px] font-bold text-slate-700 text-center">
+                        <div class="flex flex-col items-center">
+                            <p class="mb-14 uppercase font-black">KETUA RT 08 / KETUA TAKMIR</p>
+                            <p class="uppercase underline font-black whitespace-nowrap">BP. PURNOMO</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <p class="mb-14 uppercase font-black">BENDAHARA</p>
+                            <p class="uppercase underline font-black whitespace-nowrap">BP. BUDI SANTOSO</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             
         </div>
 
@@ -352,7 +533,7 @@
         </div>
     </div>
 
-    <!-- MODAL RINCIAN ANGSURAN -->
+    <!-- MODAL RINCIAN ANGSURAN PESERTA -->
     <div id="modalRincian" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm sm:max-w-md overflow-hidden">
             <div class="bg-slate-800 text-white px-2.5 py-1.5 flex justify-between items-center">
@@ -443,7 +624,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM BAYAR / EDIT ANGSURAN -->
+    <!-- MODAL FORM BAYAR / EDIT ANGSURAN (PESERTA) -->
     <div id="modalBayarForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-3 sm:p-4 relative">
             <h3 id="bayarFormTitle" class="font-black text-emerald-800 text-[11px] uppercase mb-0.5 tracking-wide">Input Bayar Angsuran</h3>
@@ -470,7 +651,49 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP AKSI EDIT & HAPUS -->
+    <!-- MODAL FORM INPUT DATA KEUANGAN MANUAL (MASUK/KELUAR) -->
+    <div id="modalKeuanganForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-3 sm:p-4 relative">
+            <h3 id="keuanganFormTitle" class="font-black text-emerald-800 text-[11px] uppercase mb-2 tracking-wide border-b border-slate-100 pb-1.5">Input Data Keuangan</h3>
+            <form onsubmit="handleKeuanganSubmit(event)" class="space-y-2.5">
+                <input type="hidden" id="form-keu-id" value="">
+                <div>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Tanggal (DD/MM/YYYY)</label>
+                    <input type="date" id="form-keu-tgl" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 cursor-pointer" required>
+                </div>
+                <div>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Jenis Transaksi</label>
+                    <select id="form-keu-jenis" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                        <option value="MASUK">PEMASUKAN (MASUK)</option>
+                        <option value="KELUAR">PENGELUARAN (KELUAR)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Keterangan / Tujuan</label>
+                    <input type="text" id="form-keu-ket" placeholder="Contoh: Beli Air Mineral" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 uppercase-input" required>
+                </div>
+                <div>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nominal (Rp)</label>
+                    <input type="number" id="form-keu-nominal" min="1000" placeholder="100000" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600" required>
+                </div>
+                <div class="bg-blue-50/50 p-2 rounded-lg border border-blue-100">
+                    <label class="text-[9px] font-bold text-blue-700 uppercase block mb-0.5">Link Bukti Nota (Google Drive) - <span class="text-slate-400">Opsional</span></label>
+                    <input type="url" id="form-keu-link" placeholder="https://drive.google.com/..." class="w-full bg-white border border-blue-200 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500">
+                    <p class="text-[7.5px] text-blue-500 mt-1 font-bold">
+                        <a href="https://drive.google.com/" target="_blank" class="hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Buka Google Drive untuk Upload Nota
+                        </a>
+                    </p>
+                </div>
+                <div class="flex justify-end gap-1.5 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modalKeuanganForm')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-md text-[10px] font-bold uppercase">Batal</button>
+                    <button type="submit" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP AKSI EDIT & HAPUS PESERTA -->
     <div id="modalAksi" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-xs overflow-hidden text-center p-3 sm:p-4">
             <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-1.5 text-sm">
@@ -486,6 +709,26 @@
                     <i class="fa-solid fa-trash text-red-600"></i> Hapus Peserta
                 </button>
                 <button onclick="closeModal('modalAksi')" class="w-full py-1 text-slate-400 hover:text-slate-600 text-[10px] font-bold uppercase">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP AKSI EDIT & HAPUS TRANSAKSI KEUANGAN -->
+    <div id="modalAksiKeuangan" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-xs overflow-hidden text-center p-3 sm:p-4">
+            <div class="w-8 h-8 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-1.5 text-sm">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <h3 class="font-black text-slate-800 text-xs uppercase truncate px-2" id="actionNamaKeuangan">Nama Transaksi</h3>
+            <p class="text-[9px] font-bold text-slate-500 mb-2.5 mt-1">Pilih tindakan untuk transaksi ini:</p>
+            <div class="flex flex-col gap-1.5">
+                <button onclick="executeKeuanganAction('edit')" class="w-full py-1.5 bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-600 font-bold text-[10px] rounded-lg border border-slate-200 transition uppercase">
+                    <i class="fa-solid fa-pen text-amber-600"></i> Edit Transaksi
+                </button>
+                <button onclick="executeKeuanganAction('delete')" class="w-full py-1.5 bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 font-bold text-[10px] rounded-lg border border-slate-200 transition uppercase">
+                    <i class="fa-solid fa-trash text-red-600"></i> Hapus Transaksi
+                </button>
+                <button onclick="closeModal('modalAksiKeuangan')" class="w-full py-1 text-slate-400 hover:text-slate-600 text-[10px] font-bold uppercase">Batal</button>
             </div>
         </div>
     </div>
@@ -544,6 +787,8 @@
 
         let activePesertaId = null;
         let activeCicilanIndex = null;
+        let activeKeuanganId = null;
+        let activeKeuanganType = null;
         let activeRoadmapDestId = null;
         let activeSeatTargetNumber = null;
         let pendingAbsensiChange = null;
@@ -552,8 +797,10 @@
         // LOCAL CACHING & FAST INSTANT PIN
         let backendPin = localStorage.getItem('cached_backend_pin') || "9"; 
         let dataPeserta = JSON.parse(localStorage.getItem('cached_data_peserta') || '[]');
+        let dataKeuangan = JSON.parse(localStorage.getItem('cached_data_keuangan') || '[]'); 
 
         let currentTab = 'kursi';
+        let currentBusView = 'A'; 
         let syncTimeoutTimer = null;
 
         const seatCoordinates = [
@@ -563,7 +810,7 @@
             { id: 11, x: 23, y: 42.2 }, { id: 12, x: 35, y: 42.2 }, { id: 13, x: 55, y: 42.2 }, { id: 14, x: 67, y: 42.2 }, { id: 15, x: 79, y: 42.2 },
             { id: 16, x: 23, y: 48.0 }, { id: 17, x: 35, y: 48.0 }, { id: 18, x: 55, y: 48.0 }, { id: 19, x: 67, y: 48.0 }, { id: 20, x: 79, y: 48.0 },
             { id: 21, x: 23, y: 53.8 }, { id: 22, x: 35, y: 53.8 }, { id: 23, x: 55, y: 53.8 }, { id: 24, x: 67, y: 53.8 }, { id: 25, x: 79, y: 53.8 },
-            { id: 26, x: 23, y: 59.6 }, { id: 27, x: 35, y: 59.6 }, { id: 28, x: 55, y: 59.6 }, { id: 29, x: 67, y: 59.6 }, { id: 30, x: 79, y: 59.6 },
+            { id: 26, x: 23, y: 59.6 }, { id: 27, x: 35, y: 59.6 }, { id: 28, x: 55, y: 59.6 }, { id: 29, x: 59.6, y: 59.6 }, { id: 30, x: 79, y: 59.6 },
             { id: 31, x: 23, y: 65.4 }, { id: 32, x: 35, y: 65.4 }, { id: 33, x: 55, y: 65.4 }, { id: 34, x: 67, y: 65.4 }, { id: 35, x: 79, y: 65.4 },
             { id: 36, x: 23, y: 71.2 }, { id: 37, x: 35, y: 71.2 }, { id: 38, x: 55, y: 71.2 }, { id: 39, x: 67, y: 71.2 }, { id: 40, x: 79, y: 71.2 },
             { id: 41, x: 23, y: 77.0 }, { id: 42, x: 35, y: 77.0 }, { id: 43, x: 55, y: 77.0 }, { id: 44, x: 67, y: 77.0 }, { id: 45, x: 79, y: 77.0 },
@@ -599,8 +846,9 @@
         for (let i = 0; i < 12; i++) { createSnowflake(); }
 
         function switchTab(tabName) {
-            if (tabName === 'peserta') {
-                requestAccess('view_peserta_tab');
+            // Wajib input PIN untuk menu-menu ini
+            if (tabName === 'peserta' || tabName === 'keuangan' || tabName === 'lpj') {
+                requestAccess('view_' + tabName + '_tab');
                 return;
             }
             executeSwitchTab(tabName);
@@ -612,58 +860,95 @@
             const btnPeserta = document.getElementById('btn-tab-peserta');
             const btnAbsensi = document.getElementById('btn-tab-absensi');
             const btnRoadmaps = document.getElementById('btn-tab-roadmaps');
+            const btnKeuangan = document.getElementById('btn-tab-keuangan');
+            const btnLpj = document.getElementById('btn-tab-lpj');
 
             const viewKursi = document.getElementById('view-tab-kursi');
             const viewPeserta = document.getElementById('view-tab-peserta');
             const viewAbsensi = document.getElementById('view-tab-absensi');
             const viewRoadmaps = document.getElementById('view-tab-roadmaps');
+            const viewKeuangan = document.getElementById('view-tab-keuangan');
+            const viewLpj = document.getElementById('view-tab-lpj');
 
             const controlsPeserta = document.getElementById('controls-peserta');
             const controlsAbsensi = document.getElementById('controls-absensi');
             const cardTotalSaldo = document.getElementById('card-total-saldo');
             const subTitle = document.getElementById('sub-header-title');
 
-            btnKursi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnPeserta.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnAbsensi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnRoadmaps.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnKursi.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnPeserta.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnAbsensi.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnRoadmaps.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnKeuangan.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnLpj.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
 
             viewKursi.classList.add('hidden');
             viewPeserta.classList.add('hidden');
             viewAbsensi.classList.add('hidden');
             viewRoadmaps.classList.add('hidden');
+            viewKeuangan.classList.add('hidden');
+            viewLpj.classList.add('hidden');
 
             controlsPeserta.classList.add('hidden');
             controlsAbsensi.classList.add('hidden');
 
             if (tabName === 'kursi') {
-                btnKursi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-700 text-white shadow-sm";
+                btnKursi.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-700 text-white shadow-sm";
                 viewKursi.classList.remove('hidden');
                 cardTotalSaldo.classList.add('hidden');
                 subTitle.innerText = "DENAH TEMPAT DUDUK / KURSI BUS";
-                renderBusSeatsLegend();
-                renderInteractiveSeatOverlay();
+                switchBusView(currentBusView); 
             } else if (tabName === 'peserta') {
-                btnPeserta.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-700 text-white shadow-sm";
+                btnPeserta.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-700 text-white shadow-sm";
                 viewPeserta.classList.remove('hidden');
                 controlsPeserta.classList.remove('hidden');
                 cardTotalSaldo.classList.remove('hidden');
                 subTitle.innerText = "DATA PESERTA ZIARAH WALI KENCENG";
                 renderTables();
             } else if (tabName === 'absensi') {
-                btnAbsensi.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm";
+                btnAbsensi.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm";
                 viewAbsensi.classList.remove('hidden');
                 controlsAbsensi.classList.remove('hidden');
                 cardTotalSaldo.classList.add('hidden');
                 subTitle.innerText = "ABSENSI KUNJUNGAN DESTINASI 1 - 7";
                 renderTableAbsensi();
             } else if (tabName === 'roadmaps') {
-                btnRoadmaps.className = "flex-1 py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-800 text-white shadow-sm";
+                btnRoadmaps.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-800 text-white shadow-sm";
                 viewRoadmaps.classList.remove('hidden');
                 cardTotalSaldo.classList.add('hidden');
                 subTitle.innerText = "ROADMAP & PETA RUTE PERJALANAN ZIARAH";
                 renderRoadmapChecklist();
+            } else if (tabName === 'keuangan') {
+                btnKeuangan.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm";
+                viewKeuangan.classList.remove('hidden');
+                cardTotalSaldo.classList.add('hidden'); 
+                subTitle.innerText = "LAPORAN KEUANGAN ZIARAH";
+                renderTableKeuangan();
+            } else if (tabName === 'lpj') {
+                btnLpj.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-indigo-600 text-white shadow-sm";
+                viewLpj.classList.remove('hidden');
+                cardTotalSaldo.classList.add('hidden');
+                subTitle.innerText = "LAPORAN PERTANGGUNGJAWABAN (LPJ)";
+                renderTableLPJ();
             }
+        }
+
+        // FUNGSI SWITCH BUS VIEW (A & B)
+        function switchBusView(bus) {
+            currentBusView = bus;
+            const btnA = document.getElementById('btn-bus-a');
+            const btnB = document.getElementById('btn-bus-b');
+
+            if (bus === 'A') {
+                btnA.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700";
+                btnB.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200";
+            } else {
+                btnA.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200";
+                btnB.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-600 text-white shadow-sm border border-purple-700";
+            }
+
+            renderBusSeatsLegend();
+            renderInteractiveSeatOverlay();
         }
 
         // FEATURE UPDATE: FLOATING NAME TOOLTIP DI ATAS PIN KURSI
@@ -674,7 +959,10 @@
 
             const mapSeatToPeserta = {};
             dataPeserta.forEach(p => {
-                if (p.noKursi && p.noKursi !== '-') mapSeatToPeserta[p.noKursi] = p;
+                // Filter Peserta Berdasarkan Bus Yang Aktif
+                if (p.noKursi && p.noKursi !== '-' && (p.bus || 'A') === currentBusView) {
+                    mapSeatToPeserta[p.noKursi] = p;
+                }
             });
 
             seatCoordinates.forEach(seat => {
@@ -686,16 +974,20 @@
 
                 if (peserta) {
                     const busLetter = peserta.bus ? peserta.bus : 'A';
+                    
+                    // WARNA CENTANG BIRU UNTUK BUS A, UNGU UNTUK BUS B
+                    const pinColorClass = currentBusView === 'A' ? 'bg-blue-600' : 'bg-purple-600';
+                    const textColorClass = currentBusView === 'A' ? 'text-blue-500' : 'text-purple-500';
+
                     pin.innerHTML = `
-                        <div class="bg-emerald-500 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[9px] sm:text-[11px] shadow-md border border-white">
+                        <div class="${pinColorClass} text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[9px] sm:text-[11px] shadow-md border border-white">
                             <i class="fa-solid fa-check"></i>
                         </div>
                         <!-- Floating Tooltip Tag / Bayangan Nama -->
                         <div class="seat-name-tag pointer-events-none absolute bottom-full mb-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 z-30 flex flex-col items-center">
                             <div class="bg-slate-900/90 text-white text-[8px] sm:text-[10px] font-black px-2 py-0.5 rounded-full whitespace-nowrap shadow-lg border border-slate-700/80 tracking-tight flex items-center gap-1 backdrop-blur-xs">
-                                <span class="text-emerald-400">#${seat.id}</span>
+                                <span class="${textColorClass}">#${seat.id}</span>
                                 <span class="truncate max-w-[110px] uppercase">${peserta.nama}</span>
-                                <span class="text-[7px] text-purple-300 font-bold">(BUS ${busLetter})</span>
                             </div>
                             <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-slate-900/90 -mt-[1px]"></div>
                         </div>
@@ -763,24 +1055,30 @@
 
             const mapSeatToPeserta = {};
             dataPeserta.forEach(p => {
-                if (p.noKursi && p.noKursi !== '-') mapSeatToPeserta[p.noKursi] = p;
+                // Filter Peserta Berdasarkan Bus Yang Aktif
+                if (p.noKursi && p.noKursi !== '-' && (p.bus || 'A') === currentBusView) {
+                    mapSeatToPeserta[p.noKursi] = p;
+                }
             });
+
+            const badgeBgColor = currentBusView === 'A' ? 'bg-blue-600' : 'bg-purple-600';
+            const iconColor = currentBusView === 'A' ? 'text-blue-600' : 'text-purple-600';
 
             for (let i = 1; i <= 60; i++) {
                 const peserta = mapSeatToPeserta[i];
                 const namaPeserta = peserta 
-                    ? `<span class="font-bold text-slate-800 uppercase truncate">${peserta.nama} <span class="text-[8px] text-blue-600 font-black">(BUS ${peserta.bus || 'A'})</span></span>` 
+                    ? `<span class="font-bold text-slate-800 uppercase truncate">${peserta.nama}</span>` 
                     : `<span class="text-slate-400 font-normal italic">Kosong / Belum Diisi</span>`;
             
                 const badgeStatus = peserta 
-                    ? '<span class="text-emerald-600 font-extrabold text-[8px] flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Terisi</span>' 
+                    ? `<span class="${iconColor} font-extrabold text-[8px] flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Terisi</span>` 
                     : '<span class="text-slate-400 text-[8px]">(Kosong)</span>';
 
                 gridLegend.innerHTML += `
                     <div class="bg-slate-50 border border-slate-200 rounded p-1.5 flex items-center justify-between">
                         <div class="flex items-center gap-1.5 truncate">
                             <span class="text-slate-400 font-bold text-[8px] w-4 text-right shrink-0">${i}.</span>
-                            <span class="bg-purple-700 text-white font-black px-1.5 py-0.5 rounded text-[8px] shrink-0">#${i}</span>
+                            <span class="${badgeBgColor} text-white font-black px-1.5 py-0.5 rounded text-[8px] shrink-0">#${i}</span>
                             ${namaPeserta}
                         </div>
                         <span class="shrink-0 ml-1">${badgeStatus}</span>
@@ -882,8 +1180,12 @@
         function updateAllViews() {
             renderTables();
             renderTableAbsensi();
-            renderBusSeatsLegend();
-            renderInteractiveSeatOverlay();
+            renderTableKeuangan();
+            renderTableLPJ();
+            
+            if(currentTab === 'kursi') {
+                switchBusView(currentBusView);
+            }
         }
 
         function sendRequest(params, callbackSuccess) {
@@ -896,6 +1198,10 @@
                         if (res.peserta) {
                             dataPeserta = res.peserta;
                             localStorage.setItem('cached_data_peserta', JSON.stringify(res.peserta));
+                        }
+                        if (res.keuangan) {
+                            dataKeuangan = res.keuangan;
+                            localStorage.setItem('cached_data_keuangan', JSON.stringify(res.keuangan));
                         }
                         if (res.pin) {
                             backendPin = String(res.pin).trim();
@@ -947,6 +1253,18 @@
             return getTodayYYYYMMDD();
         }
 
+        function parseDateToTime(str) {
+            if (!str || str === '-') return 0;
+            if (str.includes('/')) {
+                const p = str.split('/');
+                if(p.length === 3) return new Date(`${p[2]}-${p[1]}-${p[0]}T00:00:00`).getTime();
+            }
+            if (str.includes('-')) {
+                return new Date(str.split('T')[0] + 'T00:00:00').getTime();
+            }
+            return 0;
+        }
+
         function formatRupiah(num) {
             return "Rp. " + new Intl.NumberFormat('id-ID').format(num);
         }
@@ -961,7 +1279,7 @@
             let totalGrand = 0;
 
             if (dataSorted.length === 0) {
-                tableAll.innerHTML = `<tr><td colspan="7" class="p-2 text-center text-slate-400 italic">Belum ada data peserta</td></tr>`;
+                tableAll.innerHTML = `<tr><td colspan="7" class="p-2 text-center text-slate-400 italic font-bold">Belum ada data peserta</td></tr>`;
             } else {
                 dataSorted.forEach((item, index) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
@@ -975,9 +1293,10 @@
             initLongPressEvents();
         }
 
+        // TABEL PESERTA FIXED (NO SCROLL, FULL BOLD)
         function createRowElement(item, totalBayar, noRow) {
             const tr = document.createElement('tr');
-            tr.className = "hover:bg-slate-50 transition cursor-pointer long-press-row";
+            tr.className = "hover:bg-slate-50 transition cursor-pointer long-press-row border-b border-slate-100";
             tr.setAttribute('data-id', item.id);
 
             const badgeJk = item.jk === 'L' 
@@ -995,17 +1314,205 @@
             const hpDisplay = (item.hp && item.hp !== '') ? item.hp : '-';
 
             tr.innerHTML = `
-                <td class="py-1.5 px-0.5 text-center font-bold text-slate-500 whitespace-nowrap text-[9px] sm:text-xs">${noRow}</td>
-                <td class="py-1.5 px-0.5 text-center font-black whitespace-nowrap text-[9px] sm:text-xs">${kursiBusCombined}</td>
-                <td class="py-1.5 px-0.5 text-center font-bold text-slate-600 truncate text-[8px] sm:text-xs tracking-tighter w-[14%] shrink-0" title="${tglDisplay}">${tglDisplay}</td>
-                <td class="py-1.5 px-1 font-bold text-slate-800 uppercase truncate text-[9px] sm:text-xs" style="max-width: 0;">${item.nama}</td>
-                <td class="py-1.5 px-0.5 text-center whitespace-nowrap">${badgeJk}</td>
-                <td class="py-1.5 px-0.5 text-center font-bold text-slate-600 whitespace-nowrap text-[8.5px] sm:text-xs">${hpDisplay}</td>
-                <td class="py-1.5 px-0.5 text-right whitespace-nowrap text-[9px] sm:text-xs">
-                    <span class="font-black text-emerald-600 underline decoration-dashed underline-offset-2">${formatRupiah(totalBayar)}</span>
-                </td>
+                <td class="py-2 px-0.5 text-center font-black text-slate-500 truncate text-[7.5px] sm:text-xs">${noRow}</td>
+                <td class="py-2 px-0.5 text-center font-black text-slate-700 truncate text-[7.5px] sm:text-xs">${kursiBusCombined}</td>
+                <td class="py-2 px-0.5 text-center font-black text-slate-600 truncate text-[7.5px] sm:text-xs tracking-tighter" title="${tglDisplay}">${tglDisplay}</td>
+                <td class="py-2 px-1 font-black text-slate-800 uppercase truncate text-[7.5px] sm:text-xs" title="${item.nama}">${item.nama}</td>
+                <td class="py-2 px-0.5 text-center whitespace-nowrap">${badgeJk}</td>
+                <td class="py-2 px-0.5 text-center font-black text-slate-600 truncate text-[7.5px] sm:text-xs tracking-tighter">${hpDisplay}</td>
+                <td class="py-2 px-0.5 text-right font-black text-emerald-600 truncate text-[7.5px] sm:text-xs pr-1 sm:pr-2 tracking-tighter">${formatRupiah(totalBayar)}</td>
             `;
             return tr;
+        }
+
+        // FUNGSI RENDER TABEL KEUANGAN MUTASI (3 BARIS AKUMULASI DI BAWAH)
+        function renderTableKeuangan() {
+            const tbody = document.getElementById('table-keuangan-all');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            let transactions = [];
+            let totalPemasukan = 0;
+            let totalPengeluaran = 0;
+
+            // 1. Integrasi data Cicilan (Pembayaran) dari Peserta
+            dataPeserta.forEach(p => {
+                if (p.cicilan && p.cicilan.length > 0) {
+                    p.cicilan.forEach((c, idx) => {
+                        let nom = Number(c.nominal) || 0;
+                        totalPemasukan += nom;
+                        transactions.push({
+                            type: 'peserta',
+                            pesertaId: p.id,
+                            cIdx: idx,
+                            tgl: c.tgl,
+                            ket: p.nama, // Untuk data cicilan, keterangannya HANYA NAMA
+                            link: '',
+                            masuk: nom,
+                            keluar: 0,
+                            timestamp: parseDateToTime(c.tgl)
+                        });
+                    });
+                }
+            });
+
+            // 2. Integrasi data Kas Manual (Masuk / Keluar) 
+            dataKeuangan.forEach((k, idx) => {
+                let nom = Number(k.nominal) || 0;
+                if (k.jenis === 'MASUK') totalPemasukan += nom;
+                else totalPengeluaran += nom;
+                
+                transactions.push({
+                    type: 'manual',
+                    kId: k.id,
+                    tgl: k.tgl,
+                    ket: k.ket, 
+                    link: k.link || '',
+                    masuk: k.jenis === 'MASUK' ? nom : 0,
+                    keluar: k.jenis === 'KELUAR' ? nom : 0,
+                    timestamp: parseDateToTime(k.tgl)
+                });
+            });
+
+            // Urutkan berdasarkan waktu transaksi
+            transactions.sort((a, b) => a.timestamp - b.timestamp);
+
+            let saldo = 0;
+            if (transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-2 text-center text-slate-400 font-bold italic">Belum ada transaksi keuangan.</td></tr>`;
+            } else {
+                transactions.forEach((trx, index) => {
+                    saldo += trx.masuk;
+                    saldo -= trx.keluar;
+
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-amber-50 transition cursor-pointer long-press-keuangan border-b border-slate-100";
+                    tr.setAttribute('data-type', trx.type);
+                    if(trx.type === 'peserta') {
+                        tr.setAttribute('data-pid', trx.pesertaId);
+                        tr.setAttribute('data-cidx', trx.cIdx);
+                    } else {
+                        tr.setAttribute('data-kid', trx.kId);
+                    }
+
+                    const masukHtml = trx.masuk > 0 ? `<span class="text-emerald-500 font-black">${formatRupiah(trx.masuk)}</span>` : `<span class="text-slate-400 font-black">-</span>`;
+                    const keluarHtml = trx.keluar > 0 ? `<span class="text-rose-500 font-black">- ${formatRupiah(trx.keluar)}</span>` : `<span class="text-slate-400 font-black">-</span>`;
+                    
+                    let ketHtml = trx.ket;
+                    if (trx.link && trx.link !== "") {
+                        ketHtml += `<br><a href="${trx.link}" target="_blank" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline"><i class="fa-solid fa-link"></i> LIHAT FOTO NOTA</a>`;
+                    }
+
+                    tr.innerHTML = `
+                        <td class="py-2.5 px-0.5 text-center font-black text-slate-700 truncate text-[7px] sm:text-xs">${index + 1}</td>
+                        <td class="py-2.5 px-0.5 text-center font-black text-slate-600 truncate text-[5.5px] sm:text-[9px] tracking-tighter leading-tight">${formatToDDMMYYYY(trx.tgl)}</td>
+                        <td class="py-2.5 px-0.5 font-black text-slate-800 uppercase truncate text-[8px] sm:text-xs" title="${trx.ket}">${ketHtml}</td>
+                        <td class="py-2.5 px-0.5 text-right font-black whitespace-nowrap text-[6.5px] sm:text-xs tracking-tighter">${masukHtml}</td>
+                        <td class="py-2.5 px-0.5 text-right font-black whitespace-nowrap text-[6.5px] sm:text-xs tracking-tighter">${keluarHtml}</td>
+                        <td class="py-2.5 px-0.5 text-right font-black text-blue-700 whitespace-nowrap text-[7px] sm:text-xs tracking-tighter pr-0.5 sm:pr-2">${formatRupiah(saldo)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // 1. BARIS AKUMULASI TOTAL PEMASUKAN
+                const trMasuk = document.createElement('tr');
+                trMasuk.className = "bg-emerald-600 text-white font-black tracking-wider uppercase";
+                trMasuk.innerHTML = `
+                    <td colspan="5" class="py-2 pl-3 sm:pl-6 text-left border-r border-emerald-500 font-black text-[8px] sm:text-xs">TOTAL AKUMULASI PEMASUKAN</td>
+                    <td class="py-2 px-1 text-right whitespace-nowrap font-black text-[8px] sm:text-xs tracking-tighter pr-2 sm:pr-4">${formatRupiah(totalPemasukan)}</td>
+                `;
+                tbody.appendChild(trMasuk);
+
+                // 2. BARIS AKUMULASI TOTAL PENGELUARAN
+                const trKeluar = document.createElement('tr');
+                trKeluar.className = "bg-rose-600 text-white font-black tracking-wider uppercase";
+                trKeluar.innerHTML = `
+                    <td colspan="5" class="py-2 pl-3 sm:pl-6 text-left border-r border-rose-500 font-black text-[8px] sm:text-xs">TOTAL AKUMULASI PENGELUARAN</td>
+                    <td class="py-2 px-1 text-right whitespace-nowrap font-black text-[8px] sm:text-xs tracking-tighter pr-2 sm:pr-4">${formatRupiah(totalPengeluaran)}</td>
+                `;
+                tbody.appendChild(trKeluar);
+
+                // 3. BARIS AKUMULASI SALDO KEUANGAN (SALDO AKHIR)
+                const trSaldo = document.createElement('tr');
+                trSaldo.className = "bg-[#2563eb] text-white font-black tracking-wider uppercase rounded-b-lg";
+                trSaldo.innerHTML = `
+                    <td colspan="5" class="py-2.5 pl-3 sm:pl-6 text-left border-r border-blue-500 font-black rounded-bl-lg text-[9px] sm:text-sm">AKUMULASI SALDO KEUANGAN</td>
+                    <td class="py-2.5 px-1 text-right whitespace-nowrap font-black text-[9px] sm:text-sm tracking-tighter pr-2 sm:pr-4 rounded-br-lg">${formatRupiah(saldo)}</td>
+                `;
+                tbody.appendChild(trSaldo);
+            }
+
+            const elSaldoUtama = document.getElementById('keu-saldo-utama');
+            const elTotalMasuk = document.getElementById('keu-total-masuk');
+            const elTotalKeluar = document.getElementById('keu-total-keluar');
+            if (elSaldoUtama) elSaldoUtama.innerText = formatRupiah(totalPemasukan - totalPengeluaran);
+            if (elTotalMasuk) elTotalMasuk.innerText = formatRupiah(totalPemasukan);
+            if (elTotalKeluar) elTotalKeluar.innerText = formatRupiah(totalPengeluaran);
+
+            initLongPressKeuanganEvents();
+        }
+
+        // FUNGSI RENDER LPJ
+        function renderTableLPJ() {
+            let totalPeserta = dataPeserta.length;
+            let countBusA = 0;
+            let countBusB = 0;
+            let totalPemasukan = 0;
+            let totalPengeluaran = 0;
+
+            // Hitung dari peserta
+            dataPeserta.forEach(p => {
+                if(p.bus === 'B') countBusB++;
+                else countBusA++;
+
+                let sumCicilan = 0;
+                if (p.cicilan && p.cicilan.length > 0) {
+                    sumCicilan = p.cicilan.reduce((sum, c) => sum + (Number(c.nominal) || 0), 0);
+                }
+                totalPemasukan += sumCicilan;
+            });
+
+            // Hitung dari Keuangan Kas (Masuk Lainnya & Keluar)
+            dataKeuangan.forEach(k => {
+                let nom = Number(k.nominal) || 0;
+                if (k.jenis === 'MASUK') {
+                    totalPemasukan += nom;
+                } else {
+                    totalPengeluaran += nom;
+                }
+            });
+
+            let saldoAkhir = totalPemasukan - totalPengeluaran;
+
+            const elTotPeserta = document.getElementById('lpj-tot-peserta');
+            const elTotBusA = document.getElementById('lpj-tot-bus-a');
+            const elTotBusB = document.getElementById('lpj-tot-bus-b');
+            const elStatusKas = document.getElementById('lpj-status-kas');
+
+            const elTblMasuk = document.getElementById('lpj-tbl-masuk');
+            const elTblKeluar = document.getElementById('lpj-tbl-keluar');
+            const elTblSaldo = document.getElementById('lpj-tbl-saldo');
+            
+            if(elTotPeserta) elTotPeserta.innerText = `${totalPeserta} Orang`;
+            if(elTotBusA) elTotBusA.innerText = `${countBusA} Orang`;
+            if(elTotBusB) elTotBusB.innerText = `${countBusB} Orang`;
+
+            if(elStatusKas) {
+                if(saldoAkhir > 0) {
+                    elStatusKas.innerText = "SURPLUS";
+                    elStatusKas.className = "text-[10px] sm:text-xs font-black text-emerald-600 uppercase whitespace-nowrap";
+                } else if (saldoAkhir < 0) {
+                    elStatusKas.innerText = "DEFISIT";
+                    elStatusKas.className = "text-[10px] sm:text-xs font-black text-rose-600 uppercase whitespace-nowrap";
+                } else {
+                    elStatusKas.innerText = "SEIMBANG";
+                    elStatusKas.className = "text-[10px] sm:text-xs font-black text-slate-600 uppercase whitespace-nowrap";
+                }
+            }
+
+            if(elTblMasuk) elTblMasuk.innerText = formatRupiah(totalPemasukan);
+            if(elTblKeluar) elTblKeluar.innerText = formatRupiah(totalPengeluaran);
+            if(elTblSaldo) elTblSaldo.innerText = formatRupiah(saldoAkhir);
         }
 
         function filterPeserta() {
@@ -1094,7 +1601,7 @@
             const dataSorted = [...dataPeserta].sort((a,b) => (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999));
 
             if (dataSorted.length === 0) {
-                tbodyAll.innerHTML = `<tr><td colspan="10" class="p-2 text-center text-slate-400 italic">Belum ada data peserta.</td></tr>`;
+                tbodyAll.innerHTML = `<tr><td colspan="10" class="p-2 text-center text-slate-400 italic font-bold">Belum ada data absensi.</td></tr>`;
             } else {
                 dataSorted.forEach((item, index) => {
                     tbodyAll.appendChild(createAbsensiRow(item, index + 1));
@@ -1110,8 +1617,8 @@
             for (let i = 1; i <= 7; i++) {
                 const isChecked = (item.absensi && item.absensi[i]) ? 'checked' : '';
                 checkboxesHtml += `
-                    <td class="py-1.5 px-0.5 text-center border-l border-blue-100 whitespace-nowrap">
-                        <input type="checkbox" ${isChecked} onchange="handleAbsensiCheckboxChange(this, '${item.id}', ${i})" class="w-3.5 h-3.5 rounded cursor-pointer text-blue-600 focus:ring-blue-500 accent-blue-600">
+                    <td class="py-2 px-0.5 text-center border-l border-blue-100 whitespace-nowrap">
+                        <input type="checkbox" ${isChecked} onchange="handleAbsensiCheckboxChange(this, '${item.id}', ${i})" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded cursor-pointer text-blue-600 focus:ring-blue-500 accent-blue-600">
                     </td>
                 `;
             }
@@ -1121,9 +1628,9 @@
             const kursiBusCombined = `<span class="font-black text-purple-700">${kursiNum}/${busLetter}</span>`;
 
             tr.innerHTML = `
-                <td class="py-1.5 px-0.5 text-center font-bold text-slate-500 whitespace-nowrap text-[9px] sm:text-xs">${noRow}</td>
-                <td class="py-1.5 px-0.5 text-center font-black whitespace-nowrap text-[9px] sm:text-xs">${kursiBusCombined}</td>
-                <td class="py-1.5 px-1 font-bold text-slate-800 uppercase truncate text-[9px] sm:text-xs" style="max-width: 0;" title="${item.nama}">${item.nama}</td>
+                <td class="py-2 px-0.5 text-center font-black text-slate-500 whitespace-nowrap text-[8px] sm:text-xs">${noRow}</td>
+                <td class="py-2 px-0.5 text-center font-black whitespace-nowrap text-[8px] sm:text-xs">${kursiBusCombined}</td>
+                <td class="py-2 px-1 font-black text-slate-800 uppercase truncate text-[8px] sm:text-xs" style="max-width: 0;" title="${item.nama}">${item.nama}</td>
                 ${checkboxesHtml}
             `;
             return tr;
@@ -1138,20 +1645,21 @@
             }
 
             closeModal('modalAksi');
+            closeModal('modalAksiKeuangan');
             
             const pinInput = document.getElementById("input-security-pin");
             pinInput.value = "";
             pinInput.maxLength = 6;
             pinInput.placeholder = "••••••";
-            document.getElementById("pin-modal-subtitle").innerText = mode === 'view_peserta_tab' 
-                ? "Masukkan PIN untuk melihat Data Peserta" 
+            
+            document.getElementById("pin-modal-subtitle").innerText = (mode.startsWith('view_')) 
+                ? "Masukkan PIN untuk melihat Data" 
                 : "Masukkan PIN Keamanan Admin";
 
             document.getElementById("pin-modal").classList.remove("hidden");
             pinInput.focus();
         }
 
-        // VERIFIKASI PIN INSTAN DARI MEMORI LOKAL
         function submitPinVerification(e) {
             e.preventDefault();
             const typedPin = document.getElementById("input-security-pin").value.trim();
@@ -1174,6 +1682,10 @@
                 closeModal('pin-modal');
                 if (currentAccessSession.mode === 'view_peserta_tab') {
                     executeSwitchTab('peserta');
+                } else if (currentAccessSession.mode === 'view_keuangan_tab') {
+                    executeSwitchTab('keuangan');
+                } else if (currentAccessSession.mode === 'view_lpj_tab') {
+                    executeSwitchTab('lpj');
                 } else {
                     executeProtectedMode(currentAccessSession.mode);
                 }
@@ -1194,11 +1706,16 @@
             else if (mode === 'download_pdf') openPdfModal();
             else if (mode === 'toggle_roadmap') toggleRoadmapVisited(activeRoadmapDestId);
             else if (mode === 'seat_click_add') openAddPesertaModalWithSeat(activeSeatTargetNumber);
+            else if (mode === 'add_keuangan') openAddKeuanganModal();
+            else if (mode === 'edit_keuangan') openEditKeuanganModal(activeKeuanganId);
+            else if (mode === 'delete_keuangan') executeDeleteKeuangan(activeKeuanganId);
         }
 
         function openAddPesertaModalWithSeat(seatNum) {
             openAddPesertaModal();
             document.getElementById('form-peserta-no-kursi').value = seatNum;
+            // Otomatis memilih bus sesuai tab yg sedang dibuka
+            document.getElementById('form-peserta-bus').value = currentBusView;
         }
 
         function openAddPesertaModal() {
@@ -1314,7 +1831,81 @@
             };
 
             closeModal('modalBayarForm');
-            sendRequest({ action: "saveCicilan", data: JSON.stringify(payload) }, () => openDetailModal(activePesertaId));
+            sendRequest({ action: "saveCicilan", data: JSON.stringify(payload) }, () => {
+                if(!document.getElementById('modalRincian').classList.contains('hidden')) {
+                    openDetailModal(activePesertaId);
+                }
+            });
+        }
+
+        function openAddKeuanganModal() {
+            document.getElementById('keuanganFormTitle').innerText = "Input Data Keuangan";
+            document.getElementById('form-keu-id').value = "";
+            document.getElementById('form-keu-tgl').value = getTodayYYYYMMDD();
+            document.getElementById('form-keu-jenis').value = "KELUAR";
+            document.getElementById('form-keu-ket').value = "";
+            document.getElementById('form-keu-nominal').value = "";
+            document.getElementById('form-keu-link').value = "";
+            document.getElementById('modalKeuanganForm').classList.remove('hidden');
+        }
+
+        function openEditKeuanganModal(kId) {
+            const item = dataKeuangan.find(x => String(x.id) === String(kId));
+            if (!item) return;
+            document.getElementById('keuanganFormTitle').innerText = "Edit Data Keuangan";
+            document.getElementById('form-keu-id').value = item.id;
+            document.getElementById('form-keu-tgl').value = formatToYYYYMMDD(item.tgl);
+            document.getElementById('form-keu-jenis').value = item.jenis;
+            document.getElementById('form-keu-ket').value = item.ket;
+            document.getElementById('form-keu-nominal').value = item.nominal;
+            document.getElementById('form-keu-link').value = item.link || "";
+            document.getElementById('modalKeuanganForm').classList.remove('hidden');
+        }
+
+        function handleKeuanganSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-keu-id').value || "K" + Date.now().toString();
+            const tgl = document.getElementById('form-keu-tgl').value;
+            const jenis = document.getElementById('form-keu-jenis').value;
+            const ket = document.getElementById('form-keu-ket').value.trim().toUpperCase();
+            const nominal = parseInt(document.getElementById('form-keu-nominal').value) || 0;
+            const link = document.getElementById('form-keu-link').value.trim();
+
+            const payload = { id, tgl: formatToDDMMYYYY(tgl), jenis, ket, nominal, link };
+
+            const existingIdx = dataKeuangan.findIndex(k => String(k.id) === String(id));
+            if(existingIdx >= 0) {
+                dataKeuangan[existingIdx] = payload;
+            } else {
+                dataKeuangan.push(payload);
+            }
+            
+            localStorage.setItem('cached_data_keuangan', JSON.stringify(dataKeuangan));
+            closeModal('modalKeuanganForm');
+            
+            sendRequest({ action: "saveKeuangan", data: JSON.stringify(payload) });
+            updateAllViews();
+        }
+
+        function executeDeleteKeuangan(kId) {
+            const item = dataKeuangan.find(x => String(x.id) === String(kId));
+            if (item && confirm(`Hapus transaksi manual "${item.ket}" (${formatRupiah(item.nominal)})?`)) {
+                dataKeuangan = dataKeuangan.filter(k => String(k.id) !== String(kId));
+                localStorage.setItem('cached_data_keuangan', JSON.stringify(dataKeuangan));
+                sendRequest({ action: "deleteKeuangan", id: kId });
+                updateAllViews();
+            }
+        }
+
+        function executeKeuanganAction(action) {
+            closeModal('modalAksiKeuangan');
+            if (activeKeuanganType === 'peserta') {
+                if(action === 'edit') requestAccess('edit_cicilan', activeCicilanIndex);
+                else if (action === 'delete') requestAccess('delete_cicilan', activeCicilanIndex);
+            } else {
+                if(action === 'edit') requestAccess('edit_keuangan', activeKeuanganId);
+                else if (action === 'delete') requestAccess('delete_keuangan', activeKeuanganId);
+            }
         }
 
         function executeDeleteCicilan(cIndex) {
@@ -1322,8 +1913,12 @@
             const cicilanArr = (item && Array.isArray(item.cicilan)) ? item.cicilan : [];
             if (item && cicilanArr[cIndex]) {
                 const cData = item.cicilan[cIndex];
-                if (confirm(`Hapus transaksi "${cData.ket}" (${formatRupiah(cData.nominal)})?`)) {
-                    sendRequest({ action: "deleteCicilan", idCicilan: cData.idCicilan }, () => openDetailModal(activePesertaId));
+                if (confirm(`Hapus transaksi angsuran peserta "${cData.ket}" (${formatRupiah(cData.nominal)})?`)) {
+                    sendRequest({ action: "deleteCicilan", idCicilan: cData.idCicilan }, () => {
+                        if(!document.getElementById('modalRincian').classList.contains('hidden')) {
+                            openDetailModal(activePesertaId);
+                        }
+                    });
                 }
             }
         }
@@ -1351,14 +1946,14 @@
             const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
 
             if (cicilanArr.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400 italic">Belum ada riwayat pembayaran.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400 font-bold italic">Belum ada riwayat pembayaran.</td></tr>`;
             } else {
                 cicilanArr.forEach((c, idx) => {
                     const cTgl = formatToDDMMYYYY(c.tgl);
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50">
-                            <td class="p-1 text-slate-500 whitespace-nowrap">${cTgl}</td>
-                            <td class="p-1 font-bold text-slate-700 uppercase">${c.ket}</td>
+                            <td class="p-1 text-slate-500 font-black whitespace-nowrap">${cTgl}</td>
+                            <td class="p-1 font-black text-slate-700 uppercase">${c.ket}</td>
                             <td class="p-1 text-right font-black text-slate-800 whitespace-nowrap">${formatRupiah(c.nominal)}</td>
                             <td class="p-1 text-center">
                                 <div class="flex items-center justify-center gap-1">
@@ -1386,6 +1981,23 @@
             document.getElementById('modalAksi').classList.remove('hidden');
         }
 
+        function openActionModalKeuangan(type, pId, cIdx, kId) {
+            activeKeuanganType = type;
+            if (type === 'peserta') {
+                activePesertaId = pId; 
+                activeCicilanIndex = cIdx; 
+                const item = dataPeserta.find(x => String(x.id) === String(pId));
+                if (!item || !item.cicilan[cIdx]) return;
+                document.getElementById('actionNamaKeuangan').innerText = item.nama + " (ANGSURAN)";
+            } else {
+                activeKeuanganId = kId;
+                const item = dataKeuangan.find(x => String(x.id) === String(kId));
+                if (!item) return;
+                document.getElementById('actionNamaKeuangan').innerText = item.ket;
+            }
+            document.getElementById('modalAksiKeuangan').classList.remove('hidden');
+        }
+
         function closeModal(idModal) {
             document.getElementById(idModal).classList.add('hidden');
         }
@@ -1403,6 +2015,12 @@
             } else if (currentTab === 'roadmaps') {
                 title.innerText = "Download PDF Roadmap & Rute (UHD)";
                 desc.innerText = "Meng-capture peta roadmap & status kunjungan destinasi ziarah dengan resolusi UHD 300 DPI.";
+            } else if (currentTab === 'keuangan') {
+                title.innerText = "Download PDF Keuangan (UHD)";
+                desc.innerText = "Meng-capture laporan data keuangan dengan resolusi UHD 300 DPI.";
+            } else if (currentTab === 'lpj') {
+                title.innerText = "Download PDF LPJ (UHD)";
+                desc.innerText = "Meng-capture laporan pertanggungjawaban (LPJ) dengan resolusi UHD 300 DPI.";
             } else {
                 title.innerText = "Download PDF Denah Kursi Bus (UHD)";
                 desc.innerText = "Meng-capture data pemetaan nomor kursi beserta keterangan nama dengan resolusi UHD 300 DPI.";
@@ -1411,6 +2029,7 @@
             document.getElementById('modalPdf').classList.remove('hidden');
         }
 
+        /* --- FIX JS PAGE BREAK PDF UHD --- */
         function generatePdfUHD() {
             const btn = document.getElementById('btnDownloadPdfProcess');
             const originalBtnHtml = btn.innerHTML;
@@ -1423,16 +2042,20 @@
             setTimeout(() => {
                 const element = document.getElementById('main-web-content');
                 let fileNamePrefix = 'Denah_Kursi_Bus';
+                
                 if (currentTab === 'peserta') fileNamePrefix = 'Data_Peserta_Ziarah';
                 else if (currentTab === 'absensi') fileNamePrefix = 'Absensi_Destinasi_1-7';
                 else if (currentTab === 'roadmaps') fileNamePrefix = 'Roadmap_Peta_Ziarah';
+                else if (currentTab === 'keuangan') fileNamePrefix = 'Laporan_Mutasi_Keuangan';
+                else if (currentTab === 'lpj') fileNamePrefix = 'Laporan_LPJ';
 
                 const opt = {
-                    margin:       [5, 5, 5, 5],
+                    margin:       [10, 5, 10, 5], 
                     filename:     `${fileNamePrefix}_${getTodayYYYYMMDD()}.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
+                    image:        { type: 'jpeg', quality: 1.0 }, 
+                    pagebreak:    { mode: ['css', 'legacy'], avoid: 'tr' }, 
                     html2canvas:  { 
-                        scale: 3.125,
+                        scale: 4, 
                         useCORS: true, 
                         logging: false,
                         scrollY: 0
@@ -1449,7 +2072,7 @@
                     btn.disabled = false;
                 });
 
-            }, 300);
+            }, 350);
         }
 
         function initLongPressEvents() {
@@ -1482,6 +2105,45 @@
 
                 row.addEventListener('click', () => {
                     if (!isLongPress) openDetailModal(id);
+                });
+            });
+        }
+
+        function initLongPressKeuanganEvents() {
+            let timer = null;
+            let isLongPress = false;
+            let activeRow = null;
+
+            document.querySelectorAll('.long-press-keuangan').forEach(row => {
+                const type = row.getAttribute('data-type');
+                const pId = row.getAttribute('data-pid');
+                const cIdx = row.getAttribute('data-cidx');
+                const kId = row.getAttribute('data-kid');
+
+                const startPress = () => {
+                    isLongPress = false;
+                    activeRow = row;
+                    row.classList.add('holding');
+                    timer = setTimeout(() => {
+                        isLongPress = true;
+                        row.classList.remove('holding');
+                        openActionModalKeuangan(type, pId, cIdx, kId);
+                    }, 3000);
+                };
+
+                const cancelPress = () => {
+                    clearTimeout(timer);
+                    if (activeRow) activeRow.classList.remove('holding');
+                };
+
+                row.addEventListener('pointerdown', startPress);
+                row.addEventListener('pointerup', cancelPress);
+                row.addEventListener('pointerleave', cancelPress);
+
+                row.addEventListener('click', () => {
+                    if (!isLongPress && type === 'peserta') {
+                        openDetailModal(pId);
+                    }
                 });
             });
         }
