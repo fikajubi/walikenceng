@@ -160,7 +160,6 @@
                     RT 08 : BP. PURNOMO | RW 04 : BP. KATENO
                 </p>
                 <p id="sub-header-title" class="font-black text-[9px] sm:text-xs md:text-base uppercase mt-1 md:mt-3 tracking-widest header-baris-4">DENAH TEMPAT DUDUK / KURSI BUS</p>
-                <p class="text-[7.5px] sm:text-[9px] md:text-xs font-bold text-slate-700/80 mt-0.5 md:mt-1 tracking-wider">[ walikenceng.vercel.app ]</p>
             </div>
         </div>
 
@@ -1326,7 +1325,7 @@
             return tr;
         }
 
-        // FUNGSI RENDER TABEL KEUANGAN MUTASI (3 BARIS AKUMULASI DI BAWAH)
+        // FUNGSI RENDER TABEL KEUANGAN MUTASI (FONT TGL DIBUAT LEBIH KECIL DARI NAMA & OTOMATIS MENGECIL DI MOBILE)
         function renderTableKeuangan() {
             const tbody = document.getElementById('table-keuangan-all');
             if (!tbody) return;
@@ -1404,6 +1403,7 @@
                         ketHtml += `<br><a href="${trx.link}" target="_blank" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline"><i class="fa-solid fa-link"></i> LIHAT FOTO NOTA</a>`;
                     }
 
+                    // TGL: font-size dibuat text-[5.5px] sm:text-[9px] (lebih kecil dari KETERANGAN text-[8px] sm:text-xs)
                     tr.innerHTML = `
                         <td class="py-2.5 px-0.5 text-center font-black text-slate-700 truncate text-[7px] sm:text-xs">${index + 1}</td>
                         <td class="py-2.5 px-0.5 text-center font-black text-slate-600 truncate text-[5.5px] sm:text-[9px] tracking-tighter leading-tight">${formatToDDMMYYYY(trx.tgl)}</td>
@@ -1415,32 +1415,14 @@
                     tbody.appendChild(tr);
                 });
 
-                // 1. BARIS AKUMULASI TOTAL PEMASUKAN
-                const trMasuk = document.createElement('tr');
-                trMasuk.className = "bg-emerald-600 text-white font-black tracking-wider uppercase";
-                trMasuk.innerHTML = `
-                    <td colspan="5" class="py-2 pl-3 sm:pl-6 text-left border-r border-emerald-500 font-black text-[8px] sm:text-xs">TOTAL AKUMULASI PEMASUKAN</td>
-                    <td class="py-2 px-1 text-right whitespace-nowrap font-black text-[8px] sm:text-xs tracking-tighter pr-2 sm:pr-4">${formatRupiah(totalPemasukan)}</td>
+                // Baris Tambahan Akumulasi Saldo Keuangan di Bawah Sendiri
+                const trAkumulasi = document.createElement('tr');
+                trAkumulasi.className = "bg-[#2563eb] text-white font-black tracking-widest uppercase rounded-b-lg";
+                trAkumulasi.innerHTML = `
+                    <td colspan="5" class="py-3 pl-3 sm:pl-8 text-left border-r border-blue-500 font-black rounded-bl-lg text-[10px] sm:text-sm">AKUMULASI SALDO KEUANGAN</td>
+                    <td class="py-3 px-1 text-right whitespace-nowrap font-black text-[9px] sm:text-sm tracking-tighter pr-3 sm:pr-4 rounded-br-lg">${formatRupiah(saldo)}</td>
                 `;
-                tbody.appendChild(trMasuk);
-
-                // 2. BARIS AKUMULASI TOTAL PENGELUARAN
-                const trKeluar = document.createElement('tr');
-                trKeluar.className = "bg-rose-600 text-white font-black tracking-wider uppercase";
-                trKeluar.innerHTML = `
-                    <td colspan="5" class="py-2 pl-3 sm:pl-6 text-left border-r border-rose-500 font-black text-[8px] sm:text-xs">TOTAL AKUMULASI PENGELUARAN</td>
-                    <td class="py-2 px-1 text-right whitespace-nowrap font-black text-[8px] sm:text-xs tracking-tighter pr-2 sm:pr-4">${formatRupiah(totalPengeluaran)}</td>
-                `;
-                tbody.appendChild(trKeluar);
-
-                // 3. BARIS AKUMULASI SALDO KEUANGAN (SALDO AKHIR)
-                const trSaldo = document.createElement('tr');
-                trSaldo.className = "bg-[#2563eb] text-white font-black tracking-wider uppercase rounded-b-lg";
-                trSaldo.innerHTML = `
-                    <td colspan="5" class="py-2.5 pl-3 sm:pl-6 text-left border-r border-blue-500 font-black rounded-bl-lg text-[9px] sm:text-sm">AKUMULASI SALDO KEUANGAN</td>
-                    <td class="py-2.5 px-1 text-right whitespace-nowrap font-black text-[9px] sm:text-sm tracking-tighter pr-2 sm:pr-4 rounded-br-lg">${formatRupiah(saldo)}</td>
-                `;
-                tbody.appendChild(trSaldo);
+                tbody.appendChild(trAkumulasi);
             }
 
             const elSaldoUtama = document.getElementById('keu-saldo-utama');
