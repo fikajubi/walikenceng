@@ -129,7 +129,6 @@
             z-index: 40;
         }
 
-        /* --- FIX PAGE BREAK PDF --- */
         tr {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -147,9 +146,8 @@
 
     <div id="main-web-content" class="w-full max-w-full mx-auto space-y-1.5 relative z-10 bg-slate-100 p-1">
         
-        <!-- HEADER (BACKGROUND SCALE 100% FIT NO CROP) -->
+        <!-- HEADER -->
         <div class="w-full rounded-lg p-3 sm:p-4 md:py-10 lg:py-14 text-center shadow-sm relative overflow-hidden bg-[length:100%_100%] bg-center bg-no-repeat" style="background-image: url('https://lh3.googleusercontent.com/d/1rfppl0Roxa-m3F8FImsJ0_lhxf4Y7Wvs');">
-            
             <div class="relative z-10">
                 <i class="fa-solid fa-snowflake absolute top-0 right-1/3 text-white/20 text-xs md:text-base"></i>
                 <i class="fa-solid fa-asterisk absolute bottom-0 right-6 text-white/30 text-xs md:text-base"></i>
@@ -185,6 +183,7 @@
             </div>
         </div>
 
+        <!-- TABS NAVIGASI -->
         <div class="w-full flex flex-wrap gap-1 p-1 bg-white rounded-lg shadow-sm border border-slate-200">
             <button id="btn-tab-kursi" onclick="switchTab('kursi')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-700 text-white shadow-sm">
                 <i class="fa-solid fa-chair"></i> Denah Kursi
@@ -227,7 +226,7 @@
 
             <!-- VIEW TAB KURSI -->
             <div id="view-tab-kursi" class="space-y-3">
-                <div border-b-2 border-slate-200 pb-1 flex justify-between items-center>
+                <div class="border-b-2 border-slate-200 pb-1 flex justify-between items-center">
                     <h2 class="font-black text-xs sm:text-sm text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-chair text-slate-500"></i> Visual Denah Tempat Duduk Bus
                     </h2>
@@ -293,7 +292,6 @@
                     <div class="mb-0.5 pb-0 border-b-2 border-emerald-600 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-xs text-slate-700 uppercase tracking-wide">Semua Peserta Ziarah - Urut Nomor Kursi</h2>
                     </div>
-                    <!-- FIXED WIDTH NO SCROLL -->
                     <div class="w-full border border-slate-200 rounded-lg bg-white overflow-hidden">
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
@@ -328,7 +326,6 @@
                             <i class="fa-solid fa-clipboard-check text-blue-600"></i> Rekap Absensi Peserta - Urut Nomor Kursi
                         </h2>
                     </div>
-                    <!-- FIXED WIDTH NO SCROLL -->
                     <div class="w-full border border-blue-200 rounded-lg overflow-hidden bg-white">
                         <table class="w-full text-left border-collapse table-fixed">
                             <thead>
@@ -379,10 +376,9 @@
                 </div>
             </div>
 
-            <!-- VIEW TAB KEUANGAN (TERPISAH TABEL PEMASUKAN & PENGELUARAN) -->
+            <!-- VIEW TAB KEUANGAN -->
             <div id="view-tab-keuangan" class="hidden space-y-4">
                 
-                <!-- TOP SALDO CARD -->
                 <div class="bg-[#2563eb] text-white text-center py-6 md:py-8 rounded-xl shadow-md relative overflow-hidden">
                     <div class="absolute inset-0 flex justify-between items-center px-6 md:px-12 pointer-events-none opacity-20">
                         <i class="fa-solid fa-wallet text-6xl md:text-8xl"></i>
@@ -417,7 +413,7 @@
                     <i class="fa-solid fa-plus"></i> INPUT DATA KEUANGAN
                 </button>
 
-                <!-- TABEL 1: PEMASUKAN (PESERTA & KAS MASUK) -->
+                <!-- TABEL PEMASUKAN -->
                 <div class="space-y-1.5 pt-1">
                     <div class="border-b-2 border-emerald-600 pb-1 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -445,7 +441,7 @@
                     </div>
                 </div>
 
-                <!-- TABEL 2: PENGELUARAN (KAS KELUAR & OPERASIONAL) -->
+                <!-- TABEL PENGELUARAN -->
                 <div class="space-y-1.5 pt-2">
                     <div class="border-b-2 border-rose-600 pb-1 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-sm text-rose-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -569,14 +565,12 @@
                         </div>
                     </div>
 
-                    <!-- AREA PARAF TAKMIR MUSHOLA WAKAF AN-NUR -->
+                    <!-- PARAF TAKMIR -->
                     <div class="mt-8 pt-4 border-t border-slate-200 text-center">
                         <p class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest">Mengetahui:</p>
                         <p class="text-[10px] sm:text-xs font-black text-slate-800 uppercase tracking-wider mt-0.5 mb-3">
                             TAKMIR MUSHOLA WAKAF AN-NUR
                         </p>
-
-                        <!-- Lembar Putih Tempat Paraf Takmir (Polos Tanpa Titik/Kurung) -->
                         <div class="w-full min-h-[140px] sm:min-h-[170px] bg-white border-2 border-dashed border-slate-300 rounded-xl p-3 sm:p-4 text-left shadow-xs">
                             <p class="text-[8px] sm:text-[9px] text-slate-400 font-semibold italic">
                                 * Kolom paraf & persetujuan pengurus takmir.
@@ -656,7 +650,7 @@
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Nama Lengkap</label>
-                    <input type="text" id="form-peserta-nama" placeholder="Contoh: BUDI SANTOSO 01" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 uppercase-input" required>
+                    <input type="text" id="form-peserta-nama" placeholder="Contoh: BUDI SANTOSO" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-600 uppercase-input" required>
                 </div>
                 <div>
                     <label class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Jenis Kelamin</label>
@@ -687,7 +681,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM BAYAR / EDIT ANGSURAN (PESERTA) -->
+    <!-- MODAL FORM BAYAR / EDIT ANGSURAN -->
     <div id="modalBayarForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-3 sm:p-4 relative">
             <h3 id="bayarFormTitle" class="font-black text-emerald-800 text-[11px] uppercase mb-0.5 tracking-wide">Input Bayar Angsuran</h3>
@@ -714,7 +708,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM INPUT DATA KEUANGAN MANUAL (MASUK/KELUAR) -->
+    <!-- MODAL FORM INPUT DATA KEUANGAN MANUAL -->
     <div id="modalKeuanganForm" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-3 sm:p-4 relative">
             <h3 id="keuanganFormTitle" class="font-black text-emerald-800 text-[11px] uppercase mb-2 tracking-wide border-b border-slate-100 pb-1.5">Input Data Keuangan</h3>
@@ -822,7 +816,7 @@
         </div>
     </div>
 
-    <!-- MODAL VIEW FULL NOTA POPUP (TANPA DIRECT LINK) -->
+    <!-- MODAL VIEW FULL NOTA POPUP -->
     <div id="modalNotaViewer" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2 sm:p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col overflow-hidden border border-slate-200">
             <div class="bg-slate-900 text-white px-3 py-2.5 flex justify-between items-center shrink-0">
@@ -878,6 +872,7 @@
     </div>
 
     <script>
+        // GANTI DENGAN URL WEB APP HASIL DEPLOY APPS SCRIPT ANDA
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw53A3VXnTgjEd-Ri4Rt47r42A6Mj3S7fBEUuv2JQyrYGWyZ-3ZTJjeQ5y1EQqFyrrkHQ/exec";
 
         let activePesertaId = null;
@@ -889,10 +884,10 @@
         let pendingAbsensiChange = null;
         let currentAccessSession = { mode: null };
 
-        // LOCAL CACHING & FAST INSTANT PIN
         let backendPin = localStorage.getItem('cached_backend_pin') || "9"; 
         let dataPeserta = JSON.parse(localStorage.getItem('cached_data_peserta') || '[]');
         let dataKeuangan = JSON.parse(localStorage.getItem('cached_data_keuangan') || '[]'); 
+        let roadmapVisited = JSON.parse(localStorage.getItem('roadmap_visited_status') || '{}');
 
         let currentTab = 'kursi';
         let currentBusView = 'A'; 
@@ -923,8 +918,6 @@
             { id: 6, name: "Destinasi 6: Syekh Khona Kholil", x: 63.6, y: 82.5 },
             { id: 7, name: "Destinasi 7: Syekh Abdullah Mursyad (Kembali)", x: 77.2, y: 30.1 }
         ];
-
-        let roadmapVisited = JSON.parse(localStorage.getItem('roadmap_visited_status') || '{}');
 
         function createSnowflake() {
             const snowChars = ['❄','❅','❆','✻'];
@@ -969,12 +962,13 @@
             const cardTotalSaldo = document.getElementById('card-total-saldo');
             const subTitle = document.getElementById('sub-header-title');
 
-            btnKursi.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnPeserta.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnAbsensi.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnRoadmaps.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnKeuangan.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
-            btnLpj.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            const inactiveBtn = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200";
+            btnKursi.className = inactiveBtn;
+            btnPeserta.className = inactiveBtn;
+            btnAbsensi.className = inactiveBtn;
+            btnRoadmaps.className = inactiveBtn;
+            btnKeuangan.className = inactiveBtn;
+            btnLpj.className = inactiveBtn;
 
             viewKursi.classList.add('hidden');
             viewPeserta.classList.add('hidden');
@@ -1101,7 +1095,6 @@
 
         function toggleSeatTooltip(pinElement) {
             const isAlreadyActive = pinElement.classList.contains('active-tooltip');
-            
             document.querySelectorAll('.seat-overlay-pin').forEach(p => {
                 p.classList.remove('active-tooltip');
                 const tag = p.querySelector('.seat-name-tag');
@@ -1180,7 +1173,7 @@
             let visitedCount = 0;
 
             destinasiRoadmap.forEach((dest) => {
-                const isVisited = !!roadmapVisited[dest.id];
+                const isVisited = Boolean(roadmapVisited[dest.id]);
                 if (isVisited) visitedCount++;
 
                 const btn = document.createElement('button');
@@ -1244,10 +1237,12 @@
             roadmapVisited[id] = !roadmapVisited[id];
             localStorage.setItem('roadmap_visited_status', JSON.stringify(roadmapVisited));
             renderRoadmapChecklist();
+            sendRequest({ action: "saveRoadmap", data: JSON.stringify(roadmapVisited) });
         }
 
         function setSyncing(isSyncing) {
             const txt = document.getElementById('statusText');
+            if (!txt) return;
             if (syncTimeoutTimer) clearTimeout(syncTimeoutTimer);
 
             if (isSyncing) {
@@ -1263,6 +1258,7 @@
         function updateAllViews() {
             renderTables();
             renderTableAbsensi();
+            renderRoadmapChecklist();
             renderTableKeuangan();
             renderTableLPJ();
             
@@ -1285,6 +1281,10 @@
                         if (res.keuangan) {
                             dataKeuangan = res.keuangan;
                             localStorage.setItem('cached_data_keuangan', JSON.stringify(res.keuangan));
+                        }
+                        if (res.roadmap) {
+                            roadmapVisited = res.roadmap;
+                            localStorage.setItem('roadmap_visited_status', JSON.stringify(res.roadmap));
                         }
                         if (res.pin) {
                             backendPin = String(res.pin).trim();
@@ -1348,6 +1348,13 @@
             return 0;
         }
 
+        function parseNominalClean(val) {
+            if (typeof val === 'number') return val;
+            if (!val) return 0;
+            const digits = String(val).replace(/[^0-9]/g, "");
+            return parseInt(digits, 10) || 0;
+        }
+
         function formatRupiah(num) {
             return "Rp. " + new Intl.NumberFormat('id-ID').format(num);
         }
@@ -1358,7 +1365,6 @@
             tableAll.innerHTML = '';
 
             const dataSorted = [...dataPeserta].sort((a,b) => (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999));
-
             let totalGrand = 0;
 
             if (dataSorted.length === 0) {
@@ -1366,13 +1372,14 @@
             } else {
                 dataSorted.forEach((item, index) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
-                    const totalBayar = cicilanArr.reduce((sum, c) => sum + (Number(c.nominal) || 0), 0);
+                    const totalBayar = cicilanArr.reduce((sum, c) => sum + (parseNominalClean(c.nominal) || 0), 0);
                     totalGrand += totalBayar;
                     tableAll.appendChild(createRowElement(item, totalBayar, index + 1));
                 });
             }
 
-            document.getElementById('total-pembayaran-header').innerText = formatRupiah(totalGrand);
+            const elTotal = document.getElementById('total-pembayaran-header');
+            if (elTotal) elTotal.innerText = formatRupiah(totalGrand);
             initLongPressEvents();
         }
 
@@ -1392,7 +1399,6 @@
             const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
             const rawTgl = item.tglDaftar || (cicilanArr.length > 0 ? cicilanArr[0].tgl : '-');
             const tglDisplay = formatToDDMMYYYY(rawTgl);
-
             const hpDisplay = (item.hp && item.hp !== '') ? item.hp : '-';
 
             tr.innerHTML = `
@@ -1407,9 +1413,6 @@
             return tr;
         }
 
-        // =========================================================
-        // HELPER PREVIEW NOTA POP-UP (TANPA REDIRECT LINK)
-        // =========================================================
         function getDriveDirectUrl(url) {
             if (!url) return '';
             let fileId = '';
@@ -1451,9 +1454,6 @@
             if (errorBox) errorBox.classList.remove('hidden');
         }
 
-        // ==========================================
-        // FITUR TERPISAH: TABEL PEMASUKAN & PENGELUARAN
-        // ==========================================
         function renderTableKeuangan() {
             const tbodyMasuk = document.getElementById('table-keuangan-masuk');
             const tbodyKeluar = document.getElementById('table-keuangan-keluar');
@@ -1467,14 +1467,6 @@
             let totalPemasukan = 0;
             let totalPengeluaran = 0;
 
-            const parseNominalClean = (val) => {
-                if (typeof val === 'number') return val;
-                if (!val) return 0;
-                const str = String(val).replace(/[^0-9.-]+/g, "");
-                return parseFloat(str) || 0;
-            };
-
-            // 1. Data Cicilan Pembayaran dari Peserta (HANYA YANG SUDAH BAYAR / NOMINAL > 0)
             dataPeserta.forEach(p => {
                 if (p.cicilan && Array.isArray(p.cicilan)) {
                     p.cicilan.forEach((c, idx) => {
@@ -1497,7 +1489,6 @@
                 }
             });
 
-            // 2. Data Keuangan Manual (Masuk / Keluar)
             dataKeuangan.forEach((k) => {
                 let nom = parseNominalClean(k.nominal);
                 if (nom > 0) {
@@ -1529,11 +1520,9 @@
                 }
             });
 
-            // Urutkan berdasarkan waktu transaksi
             listMasuk.sort((a, b) => a.timestamp - b.timestamp);
             listKeluar.sort((a, b) => a.timestamp - b.timestamp);
 
-            // --- A. RENDER TABEL PEMASUKAN ---
             if (listMasuk.length === 0) {
                 tbodyMasuk.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400 font-bold italic">Belum ada transaksi pemasukan.</td></tr>`;
             } else {
@@ -1571,7 +1560,6 @@
                     tbodyMasuk.appendChild(tr);
                 });
 
-                // Baris Akumulasi Pemasukan
                 const trTotMasuk = document.createElement('tr');
                 trTotMasuk.className = "bg-emerald-600 text-white font-black tracking-wider uppercase";
                 trTotMasuk.innerHTML = `
@@ -1581,7 +1569,6 @@
                 tbodyMasuk.appendChild(trTotMasuk);
             }
 
-            // --- B. RENDER TABEL PENGELUARAN ---
             if (listKeluar.length === 0) {
                 tbodyKeluar.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400 font-bold italic">Belum ada transaksi pengeluaran.</td></tr>`;
             } else {
@@ -1614,7 +1601,6 @@
                     tbodyKeluar.appendChild(tr);
                 });
 
-                // Baris Akumulasi Pengeluaran
                 const trTotKeluar = document.createElement('tr');
                 trTotKeluar.className = "bg-rose-600 text-white font-black tracking-wider uppercase";
                 trTotKeluar.innerHTML = `
@@ -1624,7 +1610,6 @@
                 tbodyKeluar.appendChild(trTotKeluar);
             }
 
-            // --- C. UPDATE REKAP SALDO KEUANGAN ---
             const totalSaldoAkhir = totalPemasukan - totalPengeluaran;
             const elSaldoUtama = document.getElementById('keu-saldo-utama');
             const elTotalMasuk = document.getElementById('keu-total-masuk');
@@ -1647,13 +1632,6 @@
             let totalPemasukan = 0;
             let totalPengeluaran = 0;
 
-            const parseNominalClean = (val) => {
-                if (typeof val === 'number') return val;
-                if (!val) return 0;
-                const str = String(val).replace(/[^0-9.-]+/g, "");
-                return parseFloat(str) || 0;
-            };
-
             dataPeserta.forEach(p => {
                 if(p.bus === 'B') countBusB++;
                 else countBusA++;
@@ -1663,21 +1641,14 @@
                     sumCicilan = p.cicilan.reduce((sum, c) => sum + (parseNominalClean(c.nominal) || 0), 0);
                 }
                 totalPemasukan += sumCicilan;
-
-                // Total lunas diambil dari data pemasukan kas peserta di keuangan (> 0)
-                if (sumCicilan > 0) {
-                    countLunas++;
-                }
+                if (sumCicilan > 0) countLunas++;
             });
 
             dataKeuangan.forEach(k => {
                 let nom = parseNominalClean(k.nominal);
                 if (nom > 0) {
-                    if (k.jenis === 'MASUK') {
-                        totalPemasukan += nom;
-                    } else {
-                        totalPengeluaran += nom;
-                    }
+                    if (k.jenis === 'MASUK') totalPemasukan += nom;
+                    else totalPengeluaran += nom;
                 }
             });
 
@@ -1746,7 +1717,6 @@
 
             const subtitle = document.getElementById("pin-modal-subtitle");
             subtitle.innerText = "🔒 Masukkan PIN Otorisasi Admin";
-            
             requestAccess('absensi_verify');
         }
 
@@ -1761,13 +1731,13 @@
                 return;
             }
 
-            if (!item.absensi) {
-                item.absensi = {1:false, 2:false, 3:false, 4:false, 5:false, 6:false, 7:false};
-            }
-
             if (isPinValid) {
+                if (!item.absensi) {
+                    item.absensi = {1:false, 2:false, 3:false, 4:false, 5:false, 6:false, 7:false};
+                }
                 item.absensi[locIndex] = targetState;
-                saveAbsensiStateToServer(pesertaId, locIndex, targetState);
+                renderTableAbsensi();
+                saveAbsensiStateToServer(pesertaId, item.absensi);
             } else {
                 alert("⚠️ PIN Absensi Salah!");
                 renderTableAbsensi();
@@ -1776,27 +1746,17 @@
             pendingAbsensiChange = null;
         }
 
-        function saveAbsensiStateToServer(pesertaId, locIndex, isChecked) {
-            const item = dataPeserta.find(x => String(x.id) === String(pesertaId));
-            if (!item) return;
-
-            if (!item.absensi) {
-                item.absensi = {1:false, 2:false, 3:false, 4:false, 5:false, 6:false, 7:false};
-            }
-            item.absensi[locIndex] = isChecked;
-
+        function saveAbsensiStateToServer(pesertaId, absensiObj) {
             const payload = {
                 idPeserta: pesertaId,
-                absensi: item.absensi
+                absensi: absensiObj
             };
-
             sendRequest({ action: "saveAbsensi", data: JSON.stringify(payload) });
         }
 
         function renderTableAbsensi() {
             const tbodyAll = document.getElementById('table-absensi-all');
             if (!tbodyAll) return;
-
             tbodyAll.innerHTML = '';
 
             const dataSorted = [...dataPeserta].sort((a,b) => (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999));
@@ -1816,7 +1776,7 @@
 
             let checkboxesHtml = '';
             for (let i = 1; i <= 7; i++) {
-                const isChecked = (item.absensi && item.absensi[i]) ? 'checked' : '';
+                const isChecked = Boolean(item.absensi && item.absensi[i]) ? 'checked' : '';
                 checkboxesHtml += `
                     <td class="py-2 px-0.5 text-center border-l border-blue-100 whitespace-nowrap">
                         <input type="checkbox" ${isChecked} onchange="handleAbsensiCheckboxChange(this, '${item.id}', ${i})" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded cursor-pointer text-blue-600 focus:ring-blue-500 accent-blue-600">
@@ -1923,7 +1883,7 @@
             document.getElementById('lbl-peserta-tgl').innerText = "Tanggal Pendaftaran (DD/MM/YYYY)";
             document.getElementById('lbl-peserta-dp').innerText = "Pembayaran Awal / DP (Rp)";
             document.getElementById('form-peserta-id').value = "";
-            document.getElementById('form-peserta-bus').value = "A";
+            document.getElementById('form-peserta-bus').value = currentBusView || "A";
             document.getElementById('form-peserta-no-kursi').value = "-";
             document.getElementById('form-peserta-nama').value = "";
             document.getElementById('form-peserta-jk').value = "L";
@@ -1979,7 +1939,7 @@
             
             const rawTgl = document.getElementById('form-peserta-tgl').value;
             const tglFormatted = formatToDDMMYYYY(rawTgl);
-            const dp = parseInt(document.getElementById('form-peserta-dp').value) || 0;
+            const dp = parseInt(document.getElementById('form-peserta-dp').value, 10) || 0;
 
             const payload = { id, bus, noKursi, nama, jk, hp, tglDaftar: tglFormatted, dp };
 
@@ -2020,7 +1980,7 @@
             const rawTgl = document.getElementById('form-bayar-tgl').value;
             const tglFormatted = formatToDDMMYYYY(rawTgl);
             const ket = document.getElementById('form-bayar-ket').value.trim().toUpperCase();
-            const nominal = parseInt(document.getElementById('form-bayar-nominal').value) || 0;
+            const nominal = parseInt(document.getElementById('form-bayar-nominal').value, 10) || 0;
 
             const payload = {
                 idCicilan: idCicilan,
@@ -2066,37 +2026,24 @@
 
         function handleKeuanganSubmit(e) {
             e.preventDefault();
-            const id = document.getElementById('form-keu-id').value || "K" + Date.now().toString();
+            const id = document.getElementById('form-keu-id').value;
             const tgl = document.getElementById('form-keu-tgl').value;
             const jenis = document.getElementById('form-keu-jenis').value;
             const ket = document.getElementById('form-keu-ket').value.trim().toUpperCase();
-            const nominal = parseInt(document.getElementById('form-keu-nominal').value) || 0;
+            const nominal = parseInt(document.getElementById('form-keu-nominal').value, 10) || 0;
             const link = document.getElementById('form-keu-link').value.trim();
             const link2 = document.getElementById('form-keu-link2').value.trim();
 
             const payload = { id, tgl: formatToDDMMYYYY(tgl), jenis, ket, nominal, link, link2 };
 
-            const existingIdx = dataKeuangan.findIndex(k => String(k.id) === String(id));
-            if(existingIdx >= 0) {
-                dataKeuangan[existingIdx] = payload;
-            } else {
-                dataKeuangan.push(payload);
-            }
-            
-            localStorage.setItem('cached_data_keuangan', JSON.stringify(dataKeuangan));
             closeModal('modalKeuanganForm');
-            
             sendRequest({ action: "saveKeuangan", data: JSON.stringify(payload) });
-            updateAllViews();
         }
 
         function executeDeleteKeuangan(kId) {
             const item = dataKeuangan.find(x => String(x.id) === String(kId));
             if (item && confirm(`Hapus transaksi manual "${item.ket}" (${formatRupiah(item.nominal)})?`)) {
-                dataKeuangan = dataKeuangan.filter(k => String(k.id) !== String(kId));
-                localStorage.setItem('cached_data_keuangan', JSON.stringify(dataKeuangan));
                 sendRequest({ action: "deleteKeuangan", id: kId });
-                updateAllViews();
             }
         }
 
