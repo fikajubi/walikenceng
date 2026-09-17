@@ -1457,31 +1457,38 @@
             tableA.innerHTML = '';
             tableB.innerHTML = '';
 
-            const dataSorted = [...dataPeserta].sort((a,b) => (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999));
+            const dataSorted = [...dataPeserta].sort((a,b) => {
+                const busA = a.bus || 'A';
+                const busB = b.bus || 'A';
+                if (busA !== busB) return busA.localeCompare(busB);
+                return (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999);
+            });
+
             const dataBusA = dataSorted.filter(p => (p.bus || 'A') === 'A');
             const dataBusB = dataSorted.filter(p => (p.bus || 'A') === 'B');
 
             let totalGrand = 0;
+            let globalNo = 1;
 
             if (dataBusA.length === 0) {
                 tableA.innerHTML = `<tr><td colspan="7" class="p-2 text-center text-slate-400 italic font-bold">Belum ada data peserta Bus 1 (A)</td></tr>`;
             } else {
-                dataBusA.forEach((item, index) => {
+                dataBusA.forEach((item) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
                     const totalBayar = cicilanArr.reduce((sum, c) => sum + (parseNominalClean(c.nominal) || 0), 0);
                     totalGrand += totalBayar;
-                    tableA.appendChild(createRowElement(item, totalBayar, index + 1));
+                    tableA.appendChild(createRowElement(item, totalBayar, globalNo++));
                 });
             }
 
             if (dataBusB.length === 0) {
                 tableB.innerHTML = `<tr><td colspan="7" class="p-2 text-center text-slate-400 italic font-bold">Belum ada data peserta Bus 2 (B)</td></tr>`;
             } else {
-                dataBusB.forEach((item, index) => {
+                dataBusB.forEach((item) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
                     const totalBayar = cicilanArr.reduce((sum, c) => sum + (parseNominalClean(c.nominal) || 0), 0);
                     totalGrand += totalBayar;
-                    tableB.appendChild(createRowElement(item, totalBayar, index + 1));
+                    tableB.appendChild(createRowElement(item, totalBayar, globalNo++));
                 });
             }
 
@@ -1868,7 +1875,13 @@
             tbodyA.innerHTML = '';
             tbodyB.innerHTML = '';
 
-            const dataSorted = [...dataPeserta].sort((a,b) => (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999));
+            const dataSorted = [...dataPeserta].sort((a,b) => {
+                const busA = a.bus || 'A';
+                const busB = b.bus || 'A';
+                if (busA !== busB) return busA.localeCompare(busB);
+                return (parseInt(a.noKursi)||999) - (parseInt(b.noKursi)||999);
+            });
+
             const dataBusA = dataSorted.filter(p => (p.bus || 'A') === 'A');
             const dataBusB = dataSorted.filter(p => (p.bus || 'A') === 'B');
 
