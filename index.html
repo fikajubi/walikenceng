@@ -287,7 +287,17 @@
             </div>
 
             <!-- VIEW TAB PESERTA -->
-            <div id="view-tab-peserta" class="hidden space-y-4">
+            <div id="view-tab-peserta" class="hidden space-y-3">
+                <!-- OPSI PILIHAN BUS PESERTA -->
+                <div class="flex gap-1.5 pt-1">
+                    <button id="btn-peserta-bus-a" onclick="switchPesertaBusView('A')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700">
+                        <i class="fa-solid fa-bus"></i> BUS 1 (A)
+                    </button>
+                    <button id="btn-peserta-bus-b" onclick="switchPesertaBusView('B')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200">
+                        <i class="fa-solid fa-bus"></i> BUS 2 (B)
+                    </button>
+                </div>
+
                 <!-- TABEL PESERTA BUS 1 (A) -->
                 <div id="section-tabel-peserta-a" class="w-full space-y-1">
                     <div class="pb-0.5 border-b-2 border-blue-600 flex justify-between items-center">
@@ -316,7 +326,7 @@
                 </div>
 
                 <!-- TABEL PESERTA BUS 2 (B) -->
-                <div id="section-tabel-peserta-b" class="w-full space-y-1 pt-1">
+                <div id="section-tabel-peserta-b" class="hidden w-full space-y-1">
                     <div class="pb-0.5 border-b-2 border-purple-600 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-xs text-purple-700 uppercase tracking-wide flex items-center gap-1.5">
                             <i class="fa-solid fa-bus text-purple-600"></i> DATA PESERTA BUS 2 (B) - Urut Nomor Kursi
@@ -961,6 +971,7 @@
 
         let currentTab = 'kursi';
         let currentBusView = 'A'; 
+        let currentPesertaBusView = 'A';
         let currentAbsensiBusView = 'A';
         let syncTimeoutTimer = null;
 
@@ -1078,6 +1089,7 @@
                 controlsPeserta.classList.remove('hidden');
                 cardTotalSaldo.classList.remove('hidden');
                 subTitle.innerText = "DATA PESERTA ZIARAH WALI KENCENG";
+                switchPesertaBusView(currentPesertaBusView);
                 renderTables();
             } else if (tabName === 'absensi') {
                 btnAbsensi.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm";
@@ -1132,6 +1144,28 @@
 
             renderBusSeatsLegend();
             renderInteractiveSeatOverlay();
+        }
+
+        function switchPesertaBusView(bus) {
+            currentPesertaBusView = bus;
+            const btnA = document.getElementById('btn-peserta-bus-a');
+            const btnB = document.getElementById('btn-peserta-bus-b');
+            const secA = document.getElementById('section-tabel-peserta-a');
+            const secB = document.getElementById('section-tabel-peserta-b');
+
+            if (!btnA || !btnB || !secA || !secB) return;
+
+            if (bus === 'A') {
+                btnA.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700";
+                btnB.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200";
+                secA.classList.remove('hidden');
+                secB.classList.add('hidden');
+            } else {
+                btnA.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200";
+                btnB.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-600 text-white shadow-sm border border-purple-700";
+                secA.classList.add('hidden');
+                secB.classList.remove('hidden');
+            }
         }
 
         function switchAbsensiBusView(bus) {
@@ -1389,6 +1423,9 @@
             
             if(currentTab === 'kursi') {
                 switchBusView(currentBusView);
+            }
+            if(currentTab === 'peserta') {
+                switchPesertaBusView(currentPesertaBusView);
             }
             if(currentTab === 'absensi') {
                 switchAbsensiBusView(currentAbsensiBusView);
