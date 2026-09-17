@@ -349,7 +349,17 @@
             </div>
 
             <!-- VIEW TAB ABSENSI -->
-            <div id="view-tab-absensi" class="hidden space-y-4">
+            <div id="view-tab-absensi" class="hidden space-y-3">
+                <!-- OPSI PILIHAN BUS ABSENSI -->
+                <div class="flex gap-1.5 pt-1">
+                    <button id="btn-absensi-bus-a" onclick="switchAbsensiBusView('A')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700">
+                        <i class="fa-solid fa-bus"></i> BUS 1 (A)
+                    </button>
+                    <button id="btn-absensi-bus-b" onclick="switchAbsensiBusView('B')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200">
+                        <i class="fa-solid fa-bus"></i> BUS 2 (B)
+                    </button>
+                </div>
+
                 <!-- REKAP ABSENSI BUS 1 (A) -->
                 <div id="section-absensi-a" class="w-full space-y-1">
                     <div class="pb-0.5 border-b-2 border-blue-600 flex justify-between items-center">
@@ -381,7 +391,7 @@
                 </div>
 
                 <!-- REKAP ABSENSI BUS 2 (B) -->
-                <div id="section-absensi-b" class="w-full space-y-1 pt-1">
+                <div id="section-absensi-b" class="hidden w-full space-y-1">
                     <div class="pb-0.5 border-b-2 border-purple-600 flex justify-between items-center">
                         <h2 class="font-black text-[11px] sm:text-xs text-purple-700 uppercase tracking-wide flex items-center gap-1.5">
                             <i class="fa-solid fa-clipboard-check text-purple-600"></i> REKAP ABSENSI PESERTA - BUS 2 (B)
@@ -951,6 +961,7 @@
 
         let currentTab = 'kursi';
         let currentBusView = 'A'; 
+        let currentAbsensiBusView = 'A';
         let syncTimeoutTimer = null;
 
         // KOORDINAT KURSI BUS A (60 KURSI)
@@ -1074,6 +1085,7 @@
                 controlsAbsensi.classList.remove('hidden');
                 cardTotalSaldo.classList.add('hidden');
                 subTitle.innerText = "ABSENSI KUNJUNGAN DESTINASI 1 - 7";
+                switchAbsensiBusView(currentAbsensiBusView);
                 renderTableAbsensi();
             } else if (tabName === 'roadmaps') {
                 btnRoadmaps.className = "flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-emerald-800 text-white shadow-sm";
@@ -1120,6 +1132,28 @@
 
             renderBusSeatsLegend();
             renderInteractiveSeatOverlay();
+        }
+
+        function switchAbsensiBusView(bus) {
+            currentAbsensiBusView = bus;
+            const btnA = document.getElementById('btn-absensi-bus-a');
+            const btnB = document.getElementById('btn-absensi-bus-b');
+            const secA = document.getElementById('section-absensi-a');
+            const secB = document.getElementById('section-absensi-b');
+
+            if (!btnA || !btnB || !secA || !secB) return;
+
+            if (bus === 'A') {
+                btnA.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700";
+                btnB.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200";
+                secA.classList.remove('hidden');
+                secB.classList.add('hidden');
+            } else {
+                btnA.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200";
+                btnB.className = "flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-600 text-white shadow-sm border border-purple-700";
+                secA.classList.add('hidden');
+                secB.classList.remove('hidden');
+            }
         }
 
         function renderInteractiveSeatOverlay() {
@@ -1355,6 +1389,9 @@
             
             if(currentTab === 'kursi') {
                 switchBusView(currentBusView);
+            }
+            if(currentTab === 'absensi') {
+                switchAbsensiBusView(currentAbsensiBusView);
             }
         }
 
