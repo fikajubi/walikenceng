@@ -288,6 +288,18 @@
 
             <!-- VIEW TAB PESERTA -->
             <div id="view-tab-peserta" class="hidden space-y-3">
+                <!-- AKUMULASI KARTU TIAP BUS -->
+                <div class="grid grid-cols-2 gap-1.5">
+                    <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg text-center shadow-xs">
+                        <p class="text-[8px] sm:text-[9px] font-black text-blue-600 uppercase tracking-wide">AKUMULASI BUS 1 (A)</p>
+                        <p id="summary-bus-a" class="text-xs sm:text-sm font-black text-blue-900 mt-0.5">0 Peserta | Rp. 0</p>
+                    </div>
+                    <div class="bg-purple-50 border border-purple-200 p-2 rounded-lg text-center shadow-xs">
+                        <p class="text-[8px] sm:text-[9px] font-black text-purple-600 uppercase tracking-wide">AKUMULASI BUS 2 (B)</p>
+                        <p id="summary-bus-b" class="text-xs sm:text-sm font-black text-purple-900 mt-0.5">0 Peserta | Rp. 0</p>
+                    </div>
+                </div>
+
                 <!-- OPSI PILIHAN BUS PESERTA -->
                 <div class="flex gap-1.5 pt-1">
                     <button id="btn-peserta-bus-a" onclick="switchPesertaBusView('A')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700">
@@ -304,6 +316,9 @@
                         <h2 class="font-black text-[11px] sm:text-xs text-blue-700 uppercase tracking-wide flex items-center gap-1.5">
                             <i class="fa-solid fa-bus text-blue-600"></i> DATA PESERTA BUS 1 (A) - Urut Nomor Kursi
                         </h2>
+                        <span id="badge-total-bus-a" class="bg-blue-100 text-blue-800 text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                            0 Peserta | Rp. 0
+                        </span>
                     </div>
                     <div class="w-full border border-slate-200 rounded-lg bg-white overflow-hidden shadow-xs">
                         <table class="w-full text-left border-collapse table-fixed">
@@ -331,6 +346,9 @@
                         <h2 class="font-black text-[11px] sm:text-xs text-purple-700 uppercase tracking-wide flex items-center gap-1.5">
                             <i class="fa-solid fa-bus text-purple-600"></i> DATA PESERTA BUS 2 (B) - Urut Nomor Kursi
                         </h2>
+                        <span id="badge-total-bus-b" class="bg-purple-100 text-purple-800 text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                            0 Peserta | Rp. 0
+                        </span>
                     </div>
                     <div class="w-full border border-slate-200 rounded-lg bg-white overflow-hidden shadow-xs">
                         <table class="w-full text-left border-collapse table-fixed">
@@ -1542,6 +1560,8 @@
             const dataBusB = dataSorted.filter(p => (p.bus || 'A') === 'B');
 
             let totalGrand = 0;
+            let totalBayarA = 0;
+            let totalBayarB = 0;
             let globalNo = 1;
 
             if (dataBusA.length === 0) {
@@ -1550,9 +1570,20 @@
                 dataBusA.forEach((item) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
                     const totalBayar = cicilanArr.reduce((sum, c) => sum + (parseNominalClean(c.nominal) || 0), 0);
+                    totalBayarA += totalBayar;
                     totalGrand += totalBayar;
                     tableA.appendChild(createRowElement(item, totalBayar, globalNo++));
                 });
+
+                // ROW AKUMULASI BUS A
+                const trTotA = document.createElement('tr');
+                trTotA.className = "bg-blue-600 text-white font-black tracking-wider uppercase";
+                trTotA.innerHTML = `
+                    <td colspan="3" class="py-2.5 pl-2 text-left font-black text-[8px] sm:text-xs">TOTAL BUS 1 (A) (${dataBusA.length} PESERTA)</td>
+                    <td colspan="3"></td>
+                    <td class="py-2.5 px-0.5 text-right font-black text-[8.5px] sm:text-xs pr-1 sm:pr-2 whitespace-nowrap">${formatRupiah(totalBayarA)}</td>
+                `;
+                tableA.appendChild(trTotA);
             }
 
             if (dataBusB.length === 0) {
@@ -1561,10 +1592,35 @@
                 dataBusB.forEach((item) => {
                     const cicilanArr = Array.isArray(item.cicilan) ? item.cicilan : [];
                     const totalBayar = cicilanArr.reduce((sum, c) => sum + (parseNominalClean(c.nominal) || 0), 0);
+                    totalBayarB += totalBayar;
                     totalGrand += totalBayar;
                     tableB.appendChild(createRowElement(item, totalBayar, globalNo++));
                 });
+
+                // ROW AKUMULASI BUS B
+                const trTotB = document.createElement('tr');
+                trTotB.className = "bg-purple-600 text-white font-black tracking-wider uppercase";
+                trTotB.innerHTML = `
+                    <td colspan="3" class="py-2.5 pl-2 text-left font-black text-[8px] sm:text-xs">TOTAL BUS 2 (B) (${dataBusB.length} PESERTA)</td>
+                    <td colspan="3"></td>
+                    <td class="py-2.5 px-0.5 text-right font-black text-[8.5px] sm:text-xs pr-1 sm:pr-2 whitespace-nowrap">${formatRupiah(totalBayarB)}</td>
+                `;
+                tableB.appendChild(trTotB);
             }
+
+            // Update Ringkasan Akumulasi Bus A & B di Bagian Atas Peserta
+            const sumA = document.getElementById('summary-bus-a');
+            if (sumA) sumA.innerText = `${dataBusA.length} Peserta | ${formatRupiah(totalBayarA)}`;
+
+            const sumB = document.getElementById('summary-bus-b');
+            if (sumB) sumB.innerText = `${dataBusB.length} Peserta | ${formatRupiah(totalBayarB)}`;
+
+            // Update Badge Akumulasi Tiap Bus
+            const badgeA = document.getElementById('badge-total-bus-a');
+            if (badgeA) badgeA.innerText = `${dataBusA.length} Peserta | ${formatRupiah(totalBayarA)}`;
+
+            const badgeB = document.getElementById('badge-total-bus-b');
+            if (badgeB) badgeB.innerText = `${dataBusB.length} Peserta | ${formatRupiah(totalBayarB)}`;
 
             const elTotal = document.getElementById('total-pembayaran-header');
             if (elTotal) elTotal.innerText = formatRupiah(totalGrand);
