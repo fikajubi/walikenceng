@@ -138,6 +138,53 @@
         table {
             page-break-inside: auto;
         }
+
+        /* --- STYLES KHUSUS EXPORT PDF UHD --- */
+        @media print, .pdf-export-active {
+            #snow-container,
+            #controls-peserta,
+            #controls-absensi,
+            .no-print,
+            .nav-tabs-container,
+            #footer-mbs,
+            #pin-modal,
+            #modalPdf,
+            #modalRincian,
+            #modalPesertaForm,
+            #modalBayarForm,
+            #modalKeuanganForm,
+            #modalAksi,
+            #modalAksiKeuangan,
+            #modalNotaViewer {
+                display: none !important;
+            }
+
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            #main-web-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: #ffffff !important;
+            }
+
+            .bus-body-wrapper {
+                box-shadow: none !important;
+            }
+
+            .no-break, tr, table, .rounded-xl {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-1 px-1 sm:py-3 sm:px-2 relative overflow-x-hidden">
@@ -184,7 +231,7 @@
         </div>
 
         <!-- TABS NAVIGASI -->
-        <div class="w-full flex flex-wrap gap-1 p-1 bg-white rounded-lg shadow-sm border border-slate-200">
+        <div class="nav-tabs-container w-full flex flex-wrap gap-1 p-1 bg-white rounded-lg shadow-sm border border-slate-200">
             <button id="btn-tab-kursi" onclick="switchTab('kursi')" class="flex-1 min-w-[30%] py-2 rounded-md font-black text-[9px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-purple-700 text-white shadow-sm">
                 <i class="fa-solid fa-chair"></i> Denah Kursi
             </button>
@@ -207,7 +254,7 @@
 
         <div class="w-full bg-white rounded-lg shadow-sm p-2 sm:p-3 space-y-3">
             
-            <div id="controls-peserta" class="hidden flex flex-col sm:flex-row justify-between items-center gap-1.5">
+            <div id="controls-peserta" class="hidden flex flex-col sm:flex-row justify-between items-center gap-1.5 no-print">
                 <div class="relative w-full sm:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                     <input type="text" id="search-input" onkeyup="filterPeserta()" placeholder="Cari nama peserta..." class="w-full pl-8 pr-3 py-1 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs font-semibold">
@@ -217,7 +264,7 @@
                 </button>
             </div>
 
-            <div id="controls-absensi" class="hidden flex justify-between items-center gap-1.5">
+            <div id="controls-absensi" class="hidden flex justify-between items-center gap-1.5 no-print">
                 <div class="relative w-full sm:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                     <input type="text" id="search-absensi-input" onkeyup="filterPeserta()" placeholder="Cari nama di absensi..." class="w-full pl-8 pr-3 py-1 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs font-semibold">
@@ -235,7 +282,7 @@
                     </span>
                 </div>
 
-                <div class="flex gap-1.5 pt-1">
+                <div class="flex gap-1.5 pt-1 no-print">
                     <button id="btn-bus-a" onclick="switchBusView('A')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700">
                         <i class="fa-solid fa-bus"></i> BUS 1 (A)
                     </button>
@@ -244,7 +291,7 @@
                     </button>
                 </div>
 
-                <div class="bg-amber-50 border-l-4 border-amber-500 p-2.5 rounded-r-lg shadow-sm space-y-2 mt-2">
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-2.5 rounded-r-lg shadow-sm space-y-2 mt-2 no-print">
                     <p class="text-[10px] sm:text-xs text-amber-900 leading-relaxed font-medium">
                         <span class="font-black text-amber-800 uppercase flex items-center gap-1 mb-0.5">
                             <i class="fa-solid fa-circle-info text-amber-600"></i> NB / PERHATIAN:
@@ -271,7 +318,7 @@
                     </div>
                 </div>
 
-                <div class="bus-body-wrapper">
+                <div class="bus-body-wrapper no-break">
                     <div class="relative w-full">
                         <img id="bus-img-element" src="https://lh3.googleusercontent.com/d/1Gt7VGMjA6CLkBoyDwWT-vR0mqqj6C4nW" alt="Denah Body Bus">
                         <div id="bus-seat-overlay-container" class="absolute inset-0 pointer-events-auto"></div>
@@ -301,7 +348,7 @@
                 </div>
 
                 <!-- OPSI PILIHAN BUS PESERTA -->
-                <div class="flex gap-1.5 pt-1">
+                <div class="flex gap-1.5 pt-1 no-print">
                     <button id="btn-peserta-bus-a" onclick="switchPesertaBusView('A')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700">
                         <i class="fa-solid fa-bus"></i> BUS 1 (A)
                     </button>
@@ -370,7 +417,7 @@
                     </div>
                 </div>
 
-                <p id="info-keterangan-bawah" class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic">
+                <p id="info-keterangan-bawah" class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5 italic no-print">
                     * Klik 1x untuk lihat detail angsuran.<br>
                     * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus.
                 </p>
@@ -379,7 +426,7 @@
             <!-- VIEW TAB ABSENSI -->
             <div id="view-tab-absensi" class="hidden space-y-3">
                 <!-- OPSI PILIHAN BUS ABSENSI -->
-                <div class="flex gap-1.5 pt-1">
+                <div class="flex gap-1.5 pt-1 no-print">
                     <button id="btn-absensi-bus-a" onclick="switchAbsensiBusView('A')" class="flex-1 py-1.5 rounded-md font-black text-[10px] sm:text-xs uppercase tracking-wider transition flex items-center justify-center gap-1 bg-blue-600 text-white shadow-sm border border-blue-700">
                         <i class="fa-solid fa-bus"></i> BUS 1 (A)
                     </button>
@@ -460,7 +507,7 @@
                     </span>
                 </div>
 
-                <div class="w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-300 shadow-md relative group">
+                <div class="w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-300 shadow-md relative group no-break">
                     <img src="https://lh3.googleusercontent.com/d/1Oe776X2WPDdDFxpOZg7noq7U5PghtTGO" alt="Peta Roadmap Ziarah" class="w-full object-contain max-h-[600px] mx-auto block">
                     <div id="roadmap-map-pins-overlay" class="absolute inset-0 pointer-events-none"></div>
                 </div>
@@ -508,7 +555,7 @@
                     </div>
                 </div>
 
-                <button onclick="requestAccess('add_keuangan')" class="w-full py-2.5 sm:py-3 bg-[#10b981] hover:bg-emerald-600 text-white font-black rounded-lg text-[10px] sm:text-xs uppercase tracking-wider shadow-sm transition flex justify-center items-center gap-2">
+                <button onclick="requestAccess('add_keuangan')" class="no-print w-full py-2.5 sm:py-3 bg-[#10b981] hover:bg-emerald-600 text-white font-black rounded-lg text-[10px] sm:text-xs uppercase tracking-wider shadow-sm transition flex justify-center items-center gap-2">
                     <i class="fa-solid fa-plus"></i> INPUT DATA KEUANGAN
                 </button>
 
@@ -581,7 +628,7 @@
                     </div>
                 </div>
                 
-                <p class="text-[8px] sm:text-[9px] text-slate-400 mt-1 italic">
+                <p class="text-[8px] sm:text-[9px] text-slate-400 mt-1 italic no-print">
                     * <b>Tekan & tahan baris selama 3 detik</b> untuk memunculkan menu Edit & Hapus transaksi.
                 </p>
             </div>
@@ -592,7 +639,7 @@
                     <h2 class="font-black text-[10px] sm:text-xs text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-file-invoice-dollar text-indigo-600"></i> LAPORAN PERTANGGUNGJAWABAN (LPJ) ZIARAH
                     </h2>
-                    <button onclick="openPdfModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black text-[8px] sm:text-[9px] px-2.5 py-1.5 rounded flex items-center gap-1 shadow-sm uppercase">
+                    <button onclick="openPdfModal()" class="no-print bg-indigo-600 hover:bg-indigo-700 text-white font-black text-[8px] sm:text-[9px] px-2.5 py-1.5 rounded flex items-center gap-1 shadow-sm uppercase">
                         <i class="fa-solid fa-print"></i> Cetak / Download LPJ
                     </button>
                 </div>
@@ -653,7 +700,7 @@
                     </div>
 
                     <!-- TANDA TANGAN KETUA & BENDAHARA -->
-                    <div class="flex justify-between items-start mt-8 px-2 sm:px-8 text-[9px] sm:text-[10px] font-bold text-slate-700 text-center">
+                    <div class="flex justify-between items-start mt-8 px-2 sm:px-8 text-[9px] sm:text-[10px] font-bold text-slate-700 text-center no-break">
                         <div class="flex flex-col items-center">
                             <p class="mb-14 uppercase font-black">KETUA RT 08 / KETUA TAKMIR</p>
                             <p class="uppercase underline font-black whitespace-nowrap">BP. PURNOMO</p>
@@ -665,7 +712,7 @@
                     </div>
 
                     <!-- PARAF TAKMIR -->
-                    <div class="mt-8 pt-4 border-t border-slate-200 text-center">
+                    <div class="mt-8 pt-4 border-t border-slate-200 text-center no-break">
                         <p class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest">Mengetahui:</p>
                         <p class="text-[10px] sm:text-xs font-black text-slate-800 uppercase tracking-wider mt-0.5 mb-3">
                             TAKMIR MUSHOLA WAKAF AN-NUR
@@ -682,7 +729,7 @@
             
         </div>
 
-        <div id="footer-mbs" class="text-center py-0.5">
+        <div id="footer-mbs" class="text-center py-0.5 no-print">
             <p onclick="requestAccess('download_pdf')" class="text-[8px] sm:text-[10px] font-bold tracking-widest text-slate-400 uppercase cursor-pointer hover:text-slate-600 transition select-none">
                 POWERED BY : MBS ID
             </p>
@@ -941,26 +988,26 @@
         </div>
     </div>
 
-    <!-- MODAL DOWNLOAD PDF -->
+    <!-- MODAL DOWNLOAD PDF UHD -->
     <div id="modalPdf" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden text-center border border-slate-200">
             <div class="bg-emerald-800 text-white p-3 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-file-pdf text-emerald-300 text-base"></i>
-                    <h3 id="pdf-modal-title" class="font-black text-xs uppercase tracking-wider">Download Web PDF (UHD)</h3>
+                    <h3 id="pdf-modal-title" class="font-black text-xs uppercase tracking-wider">Download PDF UHD (A4)</h3>
                 </div>
                 <button onclick="closeModal('modalPdf')" class="text-emerald-200 hover:text-white text-base font-bold">&times;</button>
             </div>
             <div class="p-4 space-y-3">
                 <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-left text-[10px] text-emerald-900">
                     <p class="font-bold uppercase flex items-center gap-1 mb-0.5">
-                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Mode Cetak Presisi Tinggi:
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Mode Cetak Vektor & Presisi Tinggi:
                     </p>
-                    <p id="pdf-modal-desc" class="text-slate-600 font-semibold">Meng-capture seluruh tampilan web dengan resolusi UHD 300 DPI.</p>
+                    <p id="pdf-modal-desc" class="text-slate-600 font-semibold">Meng-capture tampilan web secara utuh & tajam dengan resolusi UHD 300 DPI Siap Cetak (Print-Ready) Ukuran A4 Portrait.</p>
                 </div>
                 <div class="pt-1 flex flex-col gap-2">
                     <button id="btnDownloadPdfProcess" onclick="generatePdfUHD()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-lg shadow-md transition uppercase tracking-wider flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-download"></i> Download PDF Web 300 DPI
+                        <i class="fa-solid fa-download"></i> DOWNLOAD PDF UHD
                     </button>
                     <button onclick="closeModal('modalPdf')" class="w-full py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded-lg uppercase">
                         Batal
@@ -1575,7 +1622,6 @@
                     tableA.appendChild(createRowElement(item, totalBayar, globalNo++));
                 });
 
-                // ROW AKUMULASI BUS A
                 const trTotA = document.createElement('tr');
                 trTotA.className = "bg-blue-600 text-white font-black tracking-wider uppercase";
                 trTotA.innerHTML = `
@@ -1597,7 +1643,6 @@
                     tableB.appendChild(createRowElement(item, totalBayar, globalNo++));
                 });
 
-                // ROW AKUMULASI BUS B
                 const trTotB = document.createElement('tr');
                 trTotB.className = "bg-purple-600 text-white font-black tracking-wider uppercase";
                 trTotB.innerHTML = `
@@ -1608,14 +1653,12 @@
                 tableB.appendChild(trTotB);
             }
 
-            // Update Ringkasan Akumulasi Bus A & B di Bagian Atas Peserta
             const sumA = document.getElementById('summary-bus-a');
             if (sumA) sumA.innerText = `${dataBusA.length} Peserta | ${formatRupiah(totalBayarA)}`;
 
             const sumB = document.getElementById('summary-bus-b');
             if (sumB) sumB.innerText = `${dataBusB.length} Peserta | ${formatRupiah(totalBayarB)}`;
 
-            // Update Badge Akumulasi Tiap Bus
             const badgeA = document.getElementById('badge-total-bus-a');
             if (badgeA) badgeA.innerText = `${dataBusA.length} Peserta | ${formatRupiah(totalBayarA)}`;
 
@@ -1786,10 +1829,10 @@
                     const safeKet = (trx.ket || '').replace(/'/g, "\\'");
                     
                     if (trx.link && trx.link !== "") {
-                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link)}', '${safeKet}')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 mr-2 cursor-pointer"><i class="fa-solid fa-file-invoice"></i> Lihat Nota</button>`;
+                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link)}', '${safeKet}')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 mr-2 cursor-pointer no-print"><i class="fa-solid fa-file-invoice"></i> Lihat Nota</button>`;
                     }
                     if (trx.link2 && trx.link2 !== "") {
-                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link2)}', '${safeKet} (1)')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 cursor-pointer"><i class="fa-solid fa-file-invoice"></i> Lihat Nota 1</button>`;
+                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link2)}', '${safeKet} (1)')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 cursor-pointer no-print"><i class="fa-solid fa-file-invoice"></i> Lihat Nota 1</button>`;
                     }
                     if (linksHtml !== "") {
                         ketHtml += `<br>${linksHtml}`;
@@ -1827,10 +1870,10 @@
                     const safeKet = (trx.ket || '').replace(/'/g, "\\'");
 
                     if (trx.link && trx.link !== "") {
-                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link)}', '${safeKet}')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 mr-2 cursor-pointer"><i class="fa-solid fa-file-invoice"></i> Lihat Nota</button>`;
+                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link)}', '${safeKet}')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 mr-2 cursor-pointer no-print"><i class="fa-solid fa-file-invoice"></i> Lihat Nota</button>`;
                     }
                     if (trx.link2 && trx.link2 !== "") {
-                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link2)}', '${safeKet} (1)')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 cursor-pointer"><i class="fa-solid fa-file-invoice"></i> Lihat Nota 1</button>`;
+                        linksHtml += `<button type="button" onclick="event.stopPropagation(); openNotaModal('${encodeURIComponent(trx.link2)}', '${safeKet} (1)')" class="text-[6px] sm:text-[8px] text-blue-600 font-black hover:underline inline-flex items-center gap-0.5 cursor-pointer no-print"><i class="fa-solid fa-file-invoice"></i> Lihat Nota 1</button>`;
                     }
                     if (linksHtml !== "") {
                         ketHtml += `<br>${linksHtml}`;
@@ -2426,70 +2469,84 @@
             const desc = document.getElementById('pdf-modal-desc');
 
             if (currentTab === 'peserta') {
-                title.innerText = "Download PDF Data Peserta (UHD)";
-                desc.innerText = "Meng-capture tabel Data Peserta Ziarah (Semua Peserta) dengan resolusi UHD 300 DPI.";
+                title.innerText = "Download PDF Data Peserta (UHD A4)";
+                desc.innerText = "Meng-capture tabel Data Peserta Ziarah (Semua Peserta) secara utuh, presisi, dan tajam siap cetak A4 Portrait.";
             } else if (currentTab === 'absensi') {
-                title.innerText = "Download PDF Absensi Destinasi (UHD)";
-                desc.innerText = "Meng-capture tabel Rekap Absensi Destinasi 1 - 7 dengan resolusi UHD 300 DPI.";
+                title.innerText = "Download PDF Absensi Destinasi (UHD A4)";
+                desc.innerText = "Meng-capture tabel Rekap Absensi Destinasi 1 - 7 secara utuh, presisi, dan tajam siap cetak A4 Portrait.";
             } else if (currentTab === 'roadmaps') {
-                title.innerText = "Download PDF Roadmap & Rute (UHD)";
-                desc.innerText = "Meng-capture peta roadmap & status kunjungan destinasi ziarah dengan resolusi UHD 300 DPI.";
+                title.innerText = "Download PDF Roadmap & Rute (UHD A4)";
+                desc.innerText = "Meng-capture peta roadmap & status kunjungan destinasi ziarah secara utuh, presisi, dan tajam siap cetak A4 Portrait.";
             } else if (currentTab === 'keuangan') {
-                title.innerText = "Download PDF Keuangan (UHD)";
-                desc.innerText = "Meng-capture laporan data keuangan dengan resolusi UHD 300 DPI.";
+                title.innerText = "Download PDF Keuangan (UHD A4)";
+                desc.innerText = "Meng-capture laporan data keuangan pemasukan & pengeluaran secara utuh, presisi, dan tajam siap cetak A4 Portrait.";
             } else if (currentTab === 'lpj') {
-                title.innerText = "Download PDF LPJ (UHD)";
-                desc.innerText = "Meng-capture laporan pertanggungjawaban (LPJ) dengan resolusi UHD 300 DPI.";
+                title.innerText = "Download PDF LPJ (UHD A4)";
+                desc.innerText = "Meng-capture Laporan Pertanggungjawaban (LPJ) secara utuh, presisi, dan tajam siap cetak A4 Portrait.";
             } else {
-                title.innerText = "Download PDF Denah Kursi Bus (UHD)";
-                desc.innerText = "Meng-capture data pemetaan nomor kursi beserta keterangan nama dengan resolusi UHD 300 DPI.";
+                title.innerText = "Download PDF Denah Kursi Bus (UHD A4)";
+                desc.innerText = "Meng-capture pemetaan nomor kursi beserta keterangan nama secara utuh, presisi, dan tajam siap cetak A4 Portrait.";
             }
 
             document.getElementById('modalPdf').classList.remove('hidden');
         }
 
+        // FUNGSIONALITAS UTAMA EKSPORT PDF UHD A4 PORTRAIT PRESI TINGGI
         function generatePdfUHD() {
             const btn = document.getElementById('btnDownloadPdfProcess');
-            const originalBtnHtml = btn.innerHTML;
-            
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDF...';
-            btn.disabled = true;
+            const originalBtnHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDF UHD...';
+                btn.disabled = true;
+            }
 
             closeModal('modalPdf');
 
-            setTimeout(() => {
-                const element = document.getElementById('main-web-content');
-                let fileNamePrefix = 'Denah_Kursi_Bus';
-                
-                if (currentTab === 'peserta') fileNamePrefix = 'Data_Peserta_Ziarah';
-                else if (currentTab === 'absensi') fileNamePrefix = 'Absensi_Destinasi_1-7';
-                else if (currentTab === 'roadmaps') fileNamePrefix = 'Roadmap_Peta_Ziarah';
-                else if (currentTab === 'keuangan') fileNamePrefix = 'Laporan_Keuangan_Pemasukan_Pengeluaran';
-                else if (currentTab === 'lpj') fileNamePrefix = 'Laporan_LPJ';
+            const mainContent = document.getElementById('main-web-content');
+            document.body.classList.add('pdf-export-active');
 
+            const tabTitleMap = {
+                'kursi': 'Denah_Kursi_Bus',
+                'peserta': 'Data_Peserta',
+                'absensi': 'Rekap_Absensi',
+                'roadmaps': 'Roadmap_Ziarah',
+                'keuangan': 'Laporan_Keuangan',
+                'lpj': 'Laporan_LPJ'
+            };
+            const tabName = tabTitleMap[currentTab] || 'Dokumen';
+            const fileName = `Ziarah_Wali_Kenceng_${tabName}_UHD_A4.pdf`;
+
+            setTimeout(() => {
                 const opt = {
-                    margin:       [10, 5, 10, 5], 
-                    filename:     `${fileNamePrefix}_${getTodayYYYYMMDD()}.pdf`,
-                    image:        { type: 'jpeg', quality: 1.0 }, 
-                    pagebreak:    { mode: ['css', 'legacy'], avoid: 'tr' }, 
+                    margin:       [8, 6, 8, 6],
+                    filename:     fileName,
+                    image:        { type: 'jpeg', quality: 1.0 },
+                    pagebreak:    { mode: ['css', 'legacy'], avoid: ['tr', 'table', '.no-break'] },
                     html2canvas:  { 
-                        scale: 4, 
+                        scale: 3,             
                         useCORS: true, 
+                        allowTaint: true,
                         logging: false,
-                        scrollY: 0
+                        scrollY: 0,
+                        windowWidth: 1024     
                     },
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
                 };
 
-                html2pdf().set(opt).from(element).save().then(() => {
-                    btn.innerHTML = originalBtnHtml;
-                    btn.disabled = false;
+                html2pdf().set(opt).from(mainContent).save().then(() => {
+                    document.body.classList.remove('pdf-export-active');
+                    if (btn) {
+                        btn.innerHTML = originalBtnHtml;
+                        btn.disabled = false;
+                    }
                 }).catch(err => {
+                    document.body.classList.remove('pdf-export-active');
                     alert("Gagal membuat PDF: " + err);
-                    btn.innerHTML = originalBtnHtml;
-                    btn.disabled = false;
+                    if (btn) {
+                        btn.innerHTML = originalBtnHtml;
+                        btn.disabled = false;
+                    }
                 });
-
             }, 350);
         }
 
